@@ -1,0 +1,114 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Inventario</title>
+  <link rel="icon" type="image/png" href="{% static 'demostracion/imgs/favicon.ico' %}">
+  <link href="{% static 'fenimarket/vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css">
+  <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+  <link href="{% static 'fenimarket/css/sb-admin-2.min.css' %}" rel="stylesheet">
+  {% block extracss %}{% endblock extracss %}
+</head>
+<body id="page-top">
+  <div id="wrapper">
+    <!-- Barra Lateral-->
+    <ul class="navbar-nav bg-gradient-info sidebar sidebar-dark accordion" id="accordionSidebar">
+      <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{% url 'inv_inicio' %}">
+        <div class="sidebar-brand-icon rotate-n-15">
+          <i class="fa fa-file" aria-hidden="true"></i>
+        </div>
+        <div class="sidebar-brand-text mx-3">Informes</div>
+      </a>
+      <hr class="sidebar-divider my-0">
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'inicio' %}">
+          <i class="fa fa-home" aria-hidden="true"></i>
+          <span>Inicio</span></a>
+      </li>
+      <hr class="sidebar-divider">
+      <!-- MOVIMIENTOS -->
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapse6" aria-expanded="true" aria-controls="collapse5">
+          <i class="fa fa-book fa-fw"></i>
+          <span>Documento</span>
+        </a>
+        <div id="collapse6" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
+          <div class="bg-white py-2 collapse-inner rounded">
+            <h6 class="collapse-header">Documento:</h6>
+            <a class="collapse-item" href="{% url 'inc_reporte' %}">
+              <i class="fas fa-braille"></i> &nbsp;  Reporte
+            </a>
+          </div>
+        </div>
+      </li>
+      <hr class="sidebar-divider d-none d-md-block">
+      <div class="text-center d-none d-md-inline">
+        <button class="rounded-circle border-0" id="sidebarToggle"></button>
+      </div>
+    </ul>
+    <!-- Fin de la barra lateral -->
+    <div id="content-wrapper" class="d-flex flex-column">
+      <div id="content">
+        <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+          <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+            <i class="fa fa-bars"></i>
+          </button>
+          <div class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
+            <h3>SISCARCOOP<sup>&reg;</sup></h3>
+          </div>
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item dropdown no-arrow mx-1">
+              <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-map-marker-alt"></i>&nbsp;&nbsp;
+                <span class="mr-2 d-none d-lg-inline text-gray-600 small">{{ suc.sucursal }}</span>
+              </a>
+            </li>
+            <div class="topbar-divider d-none d-sm-block"></div>
+            <li class="nav-item dropdown no-arrow">
+              <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span class="mr-2 d-none d-lg-inline text-gray-600 small">{{ user }}</span>
+                <img class="img-profile rounded-circle" src="{% static 'demostracion/imgs/logo-feni.png' %}">
+              </a>
+              <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
+                <a class="dropdown-item" href="#">
+                  <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>Perfil
+                </a>
+                <a class="dropdown-item" href="#">
+                  <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>Configuraci&oacute;n
+                </a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="{% url 'salir' %}">
+                  <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>Salirse
+                </a>
+              </div>
+            </li>
+          </ul>
+        </nav>
+        <div class="container-fluid">
+          {% block contenido %}
+          {% endblock contenido %}
+        </div>
+      </div>
+      <footer class="sticky-footer bg-white">
+        <div class="container my-auto">
+          <div class="copyright text-center my-auto">
+            <p>Sistema Integral de Control de Recursos Corporativos</p>
+          </div>
+        </div>
+      </footer>
+    </div>
+  </div>
+  <a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+  </a>
+  {% block extramodal %}{% endblock extramodal %}
+  <script src="{% static 'fenimarket/vendor/jquery/jquery.min.js' %}"></script>
+  <script src="{% static 'fenimarket/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+  <script src="{% static 'fenimarket/vendor/jquery-easing/jquery.easing.min.js' %}"></script>
+  <script src="{% static 'fenimarket/js/sb-admin-2.js' %}"></script>
+  {% block extrascripts %}{% endblock extrascripts %}
+</body>
+</html>

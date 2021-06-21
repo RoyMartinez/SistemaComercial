@@ -1,0 +1,67 @@
+{% extends 'vta/base_vta.html' %}
+{% load static %}
+{% block contenido %}
+<div class="modal fade" tabindex="-1" role="dialog" id="modal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content"></div>
+    </div>
+</div>
+<div class="container">
+    {% if messages %}
+        {% for i in messages %}
+            <div class="alert alert-{{ i.tags }}">{{ i }}</div>
+        {% endfor %}
+    {% endif %}
+    <div class="card" style="max-width: 25rem; margin: auto;">
+        <div class="card-header">
+            <h3>Colores para veh&iacute;culos</h3>
+        </div>
+        <div class="card-body">
+            <form method="POST" autocomplete="off">
+                {% csrf_token %}
+                <div class="form-group row">
+                    <label for="id_codigo" class="col-sm-4 col-form-label">Color:</label>
+                    <div class="col-sm-8">
+                        <input type="color" class="form-control" name="codigo" id="id_codigo" required>
+                        <small style="color:red;">{{ form.codigo.errors }}</small>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="id_descripcion" class="col-sm-4 col-form-label">Descripci&oacute;n:</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" name="descripcion" maxlength="20" required="" id="id_descripcion">
+                        <small style="color:red;">{{ form.descripcion.errors }}</small>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-sm-10">
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                    </div>
+                </div>
+            </form>
+            <hr>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Color</th>
+                        <th scope="col">Descripci&oacute;n</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for i in colores %}
+                        <tr>
+                            <td><button style="background-color:{{ i.pk }}; width:20px; height:20px;"></button></td>
+                            <td>{{ i.descripcion }}</td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="2"><h3>No hay registros</h3></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="card-footer text-muted"></div>
+    </div>
+</div>
+{% endblock contenido %}

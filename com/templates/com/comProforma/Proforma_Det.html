@@ -1,0 +1,136 @@
+{% extends 'com/base/combase.html' %}
+{% load widget_tweaks %}
+{% load static %}
+{% block contenido %}
+<div class="row">
+    <div class="col-md-12">
+        <form autocomplete="off">
+            <div class="card border-left-danger shadow h-100 py-2">
+                <a href="#collapseCardExample" class="d-block card-header py-3" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="collapseCardExample">
+                    <h6 class="m-0 font-weight-bold text-primary">{{ Proforma.referencia }}</h6>
+                </a>
+                <div class="collapse show" id="collapseCardExample">
+                    <div class="card-body">
+                        <div class="form-row">
+                            <div class="form-group col-md-2">
+                                <label for="fecha">Fecha:</label>
+                                <input id="fecha" type="text" class="form-control form-control-sm" value="{{ Proforma.fecha|date:'d M Y P' }}" readonly>
+                            </div>
+                            <div class="form-group col-md-3">
+                                <label for="proveedor">Proveedor:</label>
+                                <input type="text" class="form-control form-control-sm" value="{{ Proforma.proveedor }}" readonly>
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label for="proveedor">Cotizacion:</label>
+                                <input type="text" class="form-control form-control-sm" value="{{ Proforma.cotizacion|default_if_none:'Ninguno' }}" readonly>
+                            </div>
+                            <div class="form-group col-md-3">
+                                <label for="proveedor">Notas:</label>
+                                <input type="text" class="form-control form-control-sm" value="{{ Proforma.notas }}" readonly>
+                            </div>
+                            <div class="form-group col-md-2">
+                                <br>
+                                <button type="button" class="btn btn-info btn-sm editar">
+                                    <i class="fas fa-pencil-alt"></i>&nbsp; Editar
+                                </button> 
+                            </div>
+                        </div>    
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<br>
+{% if messages %}
+    {% for i in messages %}
+        <div class="alert alert-{{ i.tags }}">{{ i }}</div>
+    {% endfor %}
+{% endif %}
+<div class="row">
+    <div class="col">
+        <div class="card py-3 border-left-danger">
+            <div class="card-body">
+                <form method="POST" autocomplete="off" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ formset.management_form }}
+                    <div class="table-responsive">  
+                        <table class="table table-sm">
+                            {% for form in formset.forms %}
+                                {% if forloop.first %}
+                                    <thead>
+                                        {% for field in form.visible_fields %}
+                                            <th>{{ field.label_tag }}</th>
+                                        {% endfor %}
+                                    </thead>
+                                    <tbody>
+                                {% endif %}
+                                <tr>
+                                    {% for field in form.visible_fields %}
+                                        <td>
+                                            {% if forloop.first %}
+                                                {% for hidden in form.hidden_fields %}
+                                                    {{ hidden }}
+                                                {% endfor %}
+                                            {% endif %}
+                                            {{ field.errors.as_ul }}
+                                            {% render_field field class="form-control form-control-sm" placeholder=field.label %}
+                                        </td>
+                                    {% endfor %}
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <button type="submit" name="submit_aplicar" class="btn btn-danger btn-sm">Aplicar</button>
+                            <a role="button" class="btn btn-secondary btn-sm" href="{% url 'com_proforma' %}">Regresar</a>
+                        </div>
+                        <div class="col-sm-6">
+                            <input id="id_document" type="file" name="document">
+                            <button type="submit" name="submit_csv" class="btn btn-success btn-sm">Cargar</button>
+                            <p><i class="fas fa-file-download"></i>&nbsp;<a href="{% url 'com_pro_download' %}">Descargar plantilla</a></p>
+                        </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock contenido %}
+{% block extramodal %}
+<div class="modal fade" tabindex="-1" role="dialog" id="modal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content"></div>
+    </div>
+</div>
+{% endblock extramodal %}
+{% block extrascripts %}
+<script src="{% static 'vta/js/jquery.bootstrap.modal.forms.min.js' %}"></script>
+<script type="text/javascript">
+    $(".editar").modalForm({ formURL: "{% url 'com_proformaEdit' Proforma.pk %}" });
+    $('input[type=number]').on('change',function(){
+        if (this.value < 0){
+            this.value=parseFloat(this.value) * -1;
+        }    
+    });
+</script>
+    
+<script>    
+    //Script que bloquea los tipos number
+    jQuery('input[type=number]').keypress(function(tecla){
+        // console.log(tecla.charCode);
+        // console.log(this.value.length)
+        //46 = .
+        //45 = -
+        //se ponen las teclas que no se admiten solo admitir numeros y la primera son los numeros los otros son la e y el punto
+        if((tecla.charCode < 48 || tecla.charCode > 57) && tecla.charCode != 46){
+            return false;
+        }
+        var regex = /^[0-9]{0,7}$|^[0-9]{0,7}.{0,1}[0-9]{0,1}$/; // number with 2 decimal places
+        if (!regex.test(this.value)) {
+            return false;
+        }
+    });
+</script>
+{% endblock extrascripts %}

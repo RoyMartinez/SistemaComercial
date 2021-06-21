@@ -1,0 +1,84 @@
+{% extends 'vta/base_vta.html' %}
+{% load static %}
+{% block contenido %}
+<div class="modal fade" tabindex="-1" role="dialog" id="modal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content"></div>
+    </div>
+</div> 
+{% if messages %}
+    {% for i in messages %}
+        <div class="alert alert-{{ i.tags }}">{{ i }}</div>
+    {% endfor %}
+{% endif %}
+<div class="row">
+    <div class="col">
+        <div class="card py-3 border-left-success">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md">
+                        <h4 class="m-0 font-weight-bold text-primary">Cat&aacute;logo de uniones</h4>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <form method="POST" class="form-inline" autocomplete="off">
+                        {% csrf_token %}
+                        <div class="form-group mx-sm-3 mb-2">
+                            {{ formu.nombre.label_tag }} &nbsp; &nbsp;
+                            {{ formu.nombre }}
+                        </div>
+                        &nbsp; &nbsp;<button class="btn btn-outline-primary mb-2" type="submit">
+                            <i class="fa fa-plus"></i> Agregar
+                        </button>
+                    </form>
+                </div>
+                <small id="errores" style="color: red;">{{ formu.nombre.errors }}</small>
+                <hr>
+                <div class="table-responsive">
+                    <table class="table table-sm table-bordered">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th scope="col">No.</th>
+                                <th scope="col">Uni&oacute;n</th>
+                                <th scope="col">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for i in uniones %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+                                <td>{{ i.nombre }}</td>
+                                <td>
+                                    {% if i.pk == 1 %}
+                                        <span><small>System record</small></span>
+                                    {% else %}
+                                        <button type="button" class="btn btn-outline-info btn-sm editar" data-id="{% url 'vta_union_editar' i.pk %}">
+                                            <i class="fas fa-pencil-alt"></i>&nbsp;Editar
+                                        </button>&nbsp;
+                                        <button type="button" class="btn btn-outline-danger btn-sm supr" data-id="{% url 'vta_union_eliminar' i.pk %}">
+                                            <i class="fas fa-trash-alt"></i>&nbsp;Delete
+                                        </button>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% empty %}
+                                <tr><td colspan="3"><h4>No hay registros</h4></td><tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock contenido %}
+{% block extrascripts %}
+    <script src="{% static 'vta/js/jquery.bootstrap.modal.forms.min.js' %}"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $(".editar").each(function(){ $(this).modalForm({formURL: $(this).data('id')}); });
+            $(".supr").each(function(){ $(this).modalForm({formURL: $(this).data('id')}); });
+        });
+    </script>
+{% endblock extrascripts %}

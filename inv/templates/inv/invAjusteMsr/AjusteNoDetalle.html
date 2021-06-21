@@ -1,0 +1,96 @@
+{% load static %}
+{% load humanize %}
+<!DOCTYPE html>
+<html lang="es">
+	<head>
+		<meta charset="utf-8">
+		<title>Ajuste {{ msr.referencia }}</title>
+		<link rel="stylesheet" href="{% static 'vta/estilos/factura.css' %}">
+		<link rel="license" href="https://www.opensource.org/licenses/mit-license/">
+	</head>
+	<body>
+		<header>
+			<h1>AJUSTE {{ msr.ajuste }}</h1>
+			<address>
+				<p>FENICOOTAXI, R.L.</p>
+				<p>{{ suc.sucursal.direccion }}<br>Sucursal {{ suc.sucursal }}</p>
+				<p>{{ suc.sucursal.telefonos }}</p>
+			</address>
+			<span>
+                <img width="100" height="100" src="{% static 'demostracion/imgs/logo-feni.png' %}">
+            </span>
+		</header>
+		<article>
+			<address>	
+				<p>{{ proforma.nombre }}</p>
+				<p>{{ proforma.cliente.apellidos|title }}<br>{{ proforma.cliente.nombres|title }}</p>
+			</address>
+			<table class="meta">
+				<tr>
+					<th><span>Referencia:</span></th>
+					<td><span>{{ msr.referencia }}</span></td>
+				</tr>
+				<tr>
+					<th><span>Fecha emision:</span></th>
+					<td><span>{{ msr.fecha|date:"SHORT_DATE_FORMAT" }}</span></td>
+				</tr>
+				<tr>
+					<th><span>Hora Creacion</span></th>
+					<td><span id="prefix"></span><span>{{ msr.fecha|date:'P' }}</span></td>
+				</tr>
+				<tr>
+					<th><span>Usuario:</span></th>
+					<td><span>{{ suc.user }}</span></td>
+				</tr>
+			</table>
+			<table class="inventory">
+				<thead>
+					<tr>
+						<th style="width:110px;"><span>Item</span></th>
+						<th style="width:360px;"><span>Descripci&oacute;n</span></th>
+						<th><span>P.Unitario</span></th>
+						<th><span>Cantidad</span></th>
+						<th><span>Costo</span></th>
+					</tr>
+				</thead>
+				<tbody>
+                    <tr>
+                        <td colspan="5">
+                            Detalle en el Ajuste no encontrados
+                            Para poder imprimir el ajuste debe ingresarle items primero
+                            Ingrese items y vuelva a darle al boton de imprimir
+                        </td>
+                    </tr>
+				</tbody>
+			</table>
+		</article>
+		<br>
+		<aside>
+			<h1><span>Comentarios</span></h1>
+			<div contenteditable>
+				<p>Ajuste {{ msr.ajuste }} realizado en sucursal {{ suc.sucursal }} </p>
+				<p>Creado por {{ suc.user.first_name }} {{ suc.user.last_name }}</p>
+			</div>
+		</aside>
+        <br>
+        <br>
+        <br>
+        <br>
+        <footer>
+            <table aria-rowspan="15">
+                <tr style="height: 20px;">
+                    <th><strong>Elaborado:</strong></th>
+                    <td><span></span></td>
+                    <th><strong>Autorizado:</strong></th>
+                    <td><span></span></td>
+                </tr>
+                <tr>
+                    <th><span>Entregado:</span></th>
+                    <td><span></span></td>
+                    <th><strong>Recibido:</strong></th>
+                    <td><span></span></td>
+                </tr>
+            </table>
+        </footer>
+	</body>
+</html>

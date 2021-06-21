@@ -1,0 +1,107 @@
+{% extends 'panel/base.html' %}
+{% load static %}
+{% block contenido %}
+<main role="main" class="container">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="content-section">
+                <div class="row"><h4 style="color:gray;">Movimientos</h4></div>    
+                <div class="border-top pt-3"></div>
+                <br>
+                <div class="table-responsive">
+                    <table class="table table-sm table-bordered">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th scope="col">C&oacute;digo</th>
+                                <th scope="col">Naturaleza</th>
+                                <th scope="col">Movimiento</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for i in tabla %}
+                            <tr>
+                                <td>
+                                    <div class="custom-control custom-radio">
+                                        <input type="radio" id="{{ i.codigo }}" name="movimiento" class="custom-control-input" {% if forloop.counter == 1 %} checked {% endif %} value="{{ i.codigo }}">
+                                        <label class="custom-control-label" for="{{ i.codigo }}">{{ i.codigo }}</label>
+                                    </div>
+                                </td>
+                                <td>{{ i.naturaleza }}</td>
+                                <td>{{ i.movimiento }}</td>
+                            </tr>
+                            {% empty %}
+                                <tr><td colspan="3"><h4>No hay registros</h4></td><tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="border-top pt-3" style="text-align: center;"> 
+                    <small>Sistema Integral de Control de Recursos Corporativos</small>
+                </div>
+                <input type="text" value="" id="ruta">
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="content-section">
+                <h3>Men&uacute; Contextual</h3>
+                <p class='text-muted'>Acciones
+                    <ul class="list-group">
+                        <li class="list-group-item list-group-item-light">
+                            <button type="button" class="btn btn-outline-primary btn-sm nuevo" >
+                                <i class="fas fa-plus"></i> Nuevo
+                            </button>
+                        </li>
+                        <li class="list-group-item list-group-item-light">
+                            <button type="button" class="btn btn-outline-success btn-sm editar" >
+                                <i class="fas fa-pencil-alt"></i> Editar
+                            </button>
+                        </li>
+                        <li class="list-group-item list-group-item-light">
+                            <button type="button" class="btn btn-outline-danger btn-sm" >
+                                <i class="fas fa-trash-alt"></i> Delete
+                            </button>
+                        </li>
+                    </ul>
+                </p>
+                <h3>Quick links</h3>
+                <ul class="list-group">
+                    <li class="list-group-item list-group-item-light">
+                        <a href="{% url 'conf_naturaleza' %}">Naturaleza</a>
+                    </li>
+                    <li class="list-group-item list-group-item-light">
+                        <a href="{% url 'conf_tipocambio' %}">Tipos de cambio</a>
+                    </li>
+                    <li class="list-group-item list-group-item-light">
+                        <a href="{% url 'configuracion' %}">Regresar al men&uacute;</a>
+                    </li>
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock contenido %}
+{% block extramodal %}
+<div class="modal fade" tabindex="-1" role="dialog" id="modal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content"></div>
+    </div>
+</div>    
+{% endblock extramodal %}
+{% block extrascripts %}
+    <script src="{% static 'vta/js/jquery.bootstrap.modal.forms.min.js' %}"></script>
+    <script>
+        $(".nuevo").modalForm({ formURL: "{% url 'caja_movnuevo' %}" });
+        //var seleccion = $('input[type=radio]');
+        var ruta ='caja/tipo/movimiento/editar/'
+        $('input[type=radio]').on('click', function(){
+            if (this.checked){
+                $("#ruta").val(ruta + this.value);
+                console.log($("#ruta").val());
+            }
+        });
+
+        $(".editar").modalForm({ formURL: $("#ruta").val() });
+    </script>
+{% endblock extrascripts %}

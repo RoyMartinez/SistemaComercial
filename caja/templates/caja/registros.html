@@ -1,0 +1,77 @@
+{% extends 'caja/cajabase.html' %}
+{% load static %}
+{% load humanize %}
+{% block contenido %}
+<div class="row">
+    <div class="col">
+        <div class="card py-3 border-left-info">
+            <div class="card-header">
+                <h4 class="m-0 font-weight-bold text-primary">Registros de caja</h4>
+                <br>
+                <form class="form-inline" method="POST">
+                    {% csrf_token %}
+                    <div class="form-group mx-sm-3 mb-2">
+                        <label for="id_caja">Caja:&nbsp;</label>
+                        <select id="id_caja" class="form-control form-control-sm">
+                            <option value="todo" selected>Todos</option>
+                            {% for i in caja %}
+                                <option value="{{ i.pk }}">{{ i.codigo }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group mx-sm-3 mb-2">
+                        <label for="id_fecha">Periodo:&nbsp;</label>
+                        <select id="id_fecha" class="form-control form-control-sm" name="intervalo">
+                            <option value="hoy" selected>Hoy</option>
+                            <option value="ayer">Ayer</option>
+                            <option value="semana">La semana pasada</option>
+                            <option value="mes">Este mes</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-info mb-2">
+                        <i class="fas fa-search"></i>&nbsp;Buscar
+                    </button>
+                </form>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-sm table-bordered table-striped">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th scope="col">Caja</th>
+                                <th scope="col">Fecha</th>
+                                <th scope="col">Tipo</th>
+                                <th scope="col">Referencia</th>
+                                <th scope="col">Total</th>
+                                <th scope="col">NIO-IN</th>
+                                <th scope="col">NIO-OUT</th>
+                                <th scope="col">Tarjeta</th>
+                                <th scope="col">Fenibillete</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for i in registros %}
+                                <tr>
+                                    <td>{{ i.caja.codigo }}</td>
+                                    <td>{{ i.fecha|date:"SHORT_DATE_FORMAT" }}</td>
+                                    <td>{{ i.tipo }}</td>
+                                    <td>{{ i.referencia }}</td>
+                                    <td>{{ i.total|floatformat:2|intcomma }}</td>
+                                    <td>{{ i.nio_in|intcomma }}</td>
+                                    <td>{{ i.nio_out }}</td>
+                                    <td>{{ i.tarjeta }}</td>
+                                    <td>{{ i.fenibillete }}</td>
+                                </tr>
+                            {% empty %}
+                                <tr><td colspan="9"><h4>Sin registros</h4></td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock contenido %}
+{% block extramodal %} {% endblock extramodal %}
+{% block extrascripts %} {% endblock extrascripts %}

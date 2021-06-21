@@ -1,0 +1,85 @@
+{% extends 'com/base/combase.html' %}
+{% load static %}
+{% block contenido %}
+<div class="row">
+    <div class="col">
+        <div class="card py-3 border-left-danger">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-7">
+                        <h4 class="m-0 font-weight-bold text-primary">Entrada de mercader&iacute;a</h4>
+                    </div>
+                    <div class="col-md-5">
+                        <form action="{% url 'com_emlist' %}" class="form-inline" method="POST">
+                            {% csrf_token %}
+                            <select class="custom-select my-1 mr-sm-2" name="cmboc" required>
+                                <option value="" selected="">Orden de compra</option>
+                                {% for i in oc %}
+                                    <option value="{{ i.pk }}">{{ i }}</option>
+                                {% endfor %}
+                            </select>
+                            <button type="submit" class="btn btn-outline-danger mb-2 btn-sm">
+                                <i class="fa fa-plus"></i> Nuevo
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                <hr>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-sm" id="Pantalla-table" >
+                        <thead class="thead-dark">
+                            <tr>
+                                <th scope="col">Referencia</th>
+                                <th scope="col">Orden Compra</th>
+                                <th scope="col">Proveedor</th>
+                                <th scope="col">Fecha</th>
+                                <th scope="col">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for i in entradamercaderia %}
+                            <tr>
+                                <td>{{ i.referencia }}</td>
+                                <td>{{ i.ordenes_compra }}</td>
+                                <td>{{ i.proveedor }}</td>
+                                <td>{{ i.fecha|date:"SHORT_DATE_FORMAT" }}</td>
+                                <td>
+                                    <a role="button" class="btn btn-outline-dark btn-sm" href="{% url 'com_imprimir' i.pk %}" target="_blank">
+                                        <i class="fa fa-info"></i>&nbsp;Detalles 
+                                    </a>
+                                    {% if i.estado.pk == 3 %}  
+                                        <strong style="color:green;">Ready</strong>
+                                    {% elif i.estado.pk == 2 %}
+                                        <strong style="color:red;">Rechazada</strong>
+                                    {% else %}
+                                        <strong style="color:orange;">Esperando aprobaci&oacute;n</strong>
+                                        {% comment %}
+                                            <a role="button" class="btn btn-outline-danger btn-sm" href="{% url 'com_finalizar' i.referencia %}">
+                                                <i class="fas fa-flag-checkered"></i>&nbsp; Cerrar
+                                            </a>
+                                        {% endcomment %}
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% empty %}
+                                <tr><td colspan="4"><h3>Sin registros</h3></td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock contenido %}
+{% block extramodal %}    
+<div class="modal fade" id="modal-Pantalla">
+    <div class="modal-dialog">
+        <div class="modal-content"></div>
+    </div>
+</div>
+{% endblock extramodal %}
+{% block extrascripts %}
+    <script src="{% static 'com/js/modal.js' %}">  </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.23.0/moment.min.js" integrity="sha256-VBLiveTKyUZMEzJd6z2mhfxIqz3ZATCuVMawPZGzIfA=" crossorigin="anonymous"></script>
+{% endblock extrascripts %}

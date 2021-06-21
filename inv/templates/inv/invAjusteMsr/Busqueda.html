@@ -1,0 +1,136 @@
+{% extends 'inv/invBase.html' %}
+{% load static %}
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+{% block extracss %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.1.2/css/tempusdominus-bootstrap-4.min.css" integrity="sha256-XPTBwC3SBoWHSmKasAk01c08M6sIA5gF5+sRxqak2Qs=" crossorigin="anonymous" />
+{% endblock extracss %}
+{% block contenido %}
+<div class="row">
+    <div class="col">
+        <div class="card py-3 border-left-primary">
+            <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-10">
+                            <h4 class="m-0 font-weight-bold text-primary">Ajustes del sistema</h4>
+                        </div>
+                    </div>
+                    <hr>
+                    <form method="POST" data-url="{% url 'AjusteMsr_Buscar' %}" class="create-form" autocomplete="off">
+                        <div class="row">
+                            {% csrf_token %}
+                            <div class="col-md-1">
+                                <h5 class="modal-title text-center">Ref: </h5>
+                            </div>
+                            <div class="col-md-9">
+                                    {% for field in form.visible_fields %}
+                                        <td>
+                                            {% if forloop.first %}
+                                                {% for hidden in form.hidden_fields %}
+                                                    {{ hidden }}
+                                                {% endfor %}
+                                            {% endif %}
+                                            {{ field.errors.as_ul }}
+                                            {% render_field field class="form-control form-control-sm" placeholder=field.label %}
+                                        </td>
+                                    {% endfor %}
+                            </div>
+                            <div class="col-md-1">
+                                <button class="btn btn-primary" type="submit">
+                                    <span class="fa fa-search"> Buscar</span>
+                                </button>
+                            </div>
+                            <div class="col-md-1">
+                                <button type="button" class="btn btn-primary show-form" data-url="{% url 'AjusteMsr_Crear' %}">
+                                    <span class="fa fa-plus"> Nuevo</span>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                    <hr>
+                    <div class="table-responsive row">
+                        <table class="table table-sm table-bordered" id="Pantalla-table" >
+                                <thead class="thead-dark">
+                                        <tr>
+                                            <th scope="col">Referencia</th>
+                                            <th scope="col">Fecha</th>
+                                            <th scope="col">Nota</th>
+                                            <th scope="col">Sucursal</th>
+                                            <th scope="col">Estado</th>
+                                            <th scope="col">Centro Costo</th>
+                                            <th scope="col">Tipo Ajuste</th>
+                                            <th scope="col">Acciones</th>
+                                        </tr>
+                                </thead>
+                                <tbody>
+                                        {% for i in ajustebuscado %}
+                                        <tr>
+                                                <td>{{ i.referencia }}</td>
+                                                <td>{{ i.fecha }}</td>
+                                                <td>{{ i.nota }}</td>
+                                                <td>{{ i.sucursal }}</td>
+                                                <td>{{ i.estado }}</td>
+                                                <td>{{ i.centro_costo }}</td>
+                                                <td>{{ i.ajuste }}</td>
+                                                <td>
+                                                    <button type="button" class="btn btn-info btn-sm show-form-update" data-url="{% url 'AjusteMsr_Editar' i.referencia %}">
+                                                        <i class="fas fa-pencil-alt"></i>&nbsp;Editar
+                                                    </button>
+                                                    </button>
+                                                    <a role="button" class="btn btn-dark btn-sm" href="{% url 'AjusteMaestroDetalle' i.referencia %}">
+                                                        <i class="fa fa-info"></i>&nbsp;Detalles
+                                                    </a>
+                                                </td>
+                                        </tr>
+                                        {% empty %}
+                                        <tr><td colspan="8"><h3>No se encontraron registros</h3></td></tr>
+                                        {% endfor %}
+                                </tbody>
+                        </table>
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+{% endblock contenido %}
+{% block extramodal %}
+<div class="modal fade" id="modal-Pantalla">
+    <div class="modal-dialog">
+        <div class="modal-content"></div>
+    </div>
+</div>
+{% endblock extramodal %}
+{% block extrascripts %}  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.23.0/moment.min.js" integrity="sha256-VBLiveTKyUZMEzJd6z2mhfxIqz3ZATCuVMawPZGzIfA=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.1.2/js/tempusdominus-bootstrap-4.min.js" integrity="sha256-z0oKYg6xiLq3yJGsp/LsY9XykbweQlHl42jHv2XTBz4=" crossorigin="anonymous"></script>
+  <script src="{% static 'vta/js/jquery.bootstrap.modal.forms.min.js' %}"></script>
+
+  <script src="{% static 'inv/js/modal.js' %}">  </script>  
+  <script type="text/javascript" src="{% static 'fenimarket/vendor/datatables/jquery.dataTables.js' %}"></script>
+  <script type="text/javascript" src="{% static 'fenimarket/vendor/datatables/dataTables.bootstrap4.min.js' %}"></script>
+  <script type="text/javascript">
+  
+    $(document).ready(function() {
+                $('#Pantalla-table').DataTable({
+                    "language":{
+                        "lengthMenu":"Mostrar  _MENU_  filas",
+                        "zeroRecords":"No se encontraron coincidencias",
+                        "info": "Página _PAGE_ de _PAGES_",
+                        "infoEmpty":"No hay registros",
+                        "infoFiltered":"(filtrado de un total de _MAX_ registros)",
+                        "search":"Buscar:",
+                        "paginate":{
+                            "first":"Primero",
+                            "last":"Último",
+                            "next":"Siguiente",
+                            "previous":"Anterior",
+                        }
+                    },
+                    "ordering": false 
+                });  
+        });
+  </script>
+{% endblock extrascripts %}

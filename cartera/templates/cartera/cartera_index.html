@@ -1,0 +1,35 @@
+{% extends 'cartera/base_cart.html' %}
+{% load static %}
+{% block titulo %}Men&uacute; Principal{% endblock titulo %}
+{% block contenido %}
+    <div class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="header"></div>
+                        <div class="content">
+                            <img src="{% static 'cartera/imgs/logo.png' %}" class="img-responsive">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock contenido %}
+{% block extra_javascript %}
+<script type="text/javascript">
+    $(document).ready(function(){
+        demo.initChartist();
+        $.notify({
+            icon: 'pe-7s-smile',
+            message: "Bienvenido a <b>SICRED</b> - Sistema de Cartera y Credito Cooperativo"
+
+        },{
+            type: 'info',
+            timer: 2000
+        });
+        document.querySelector('#item1').setAttribute('class','active');
+    });
+</script>
+{% endblock extra_javascript %}

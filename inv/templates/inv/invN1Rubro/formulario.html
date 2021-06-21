@@ -1,0 +1,66 @@
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+<form method="post" autocomplete="off" action="">
+    {% csrf_token %}
+    <div class="modal-header">
+        <h3 class="modal-title">Nuevo Rubro</h3>
+    </div>
+        <div class="modal-body">
+                <div class="form-group col-md-12" id="div_referencia">
+                    {{ form.id_n1.label_tag }}
+                    {% render_field form.id_n1 class="form-control form-control-sm" %}
+                    <div class="{% if form.n1.errors %} invalid{% endif %}">
+                        {% for error in form.id_n1.errors %}
+                            <p class="help-block" style="color:red;">{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="form-group col-md-12" id="div_referencia">
+                    {{ form.descripcion.label_tag }}
+                    {% render_field form.descripcion class="form-control form-control-sm" %}
+                    <div class="{% if form.descripcion.errors %} invalid{% endif %}">
+                        {% for error in form.descripcion.errors %}
+                            <p class="help-block" style="color:red;">{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="form-group col-md-12" id="div_referencia">
+                    {{ form.codigo_sac.label_tag }}
+                    {% render_field form.codigo_sac class="form-control form-control-sm" %}
+                    <div class="{% if form.codigo_sac.errors %} invalid{% endif %}">
+                        {% for error in form.codigo_sac.errors %}
+                            <p class="help-block" style="color:red;">{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="submit-btn btn btn-primary" id="btnActualiza">
+                <i class="fa fa-plus"></i>&nbsp; Guardar
+            </button>
+            <button type="button" class="btn btn-danger" data-dismiss="modal" aria-label="close">
+                <i class="fa fa-times"></i>&nbsp; cancelar
+            </button>
+        </div>
+</form>
+<script type="text/javascript">
+    
+    if ($('#id_id_n1').val()!=''){
+        $('.modal-title').html('Editar Rubro');
+        $('#btnActualiza').html('<i class="fas fa-pencil-alt"></i>&nbsp; Actualizar');
+        $('#id_codigo').prop('readonly',true);
+        $('#id_rubro').prop('disabled',true);
+    }
+    else{
+        $('.modal-title').html('Nuevo Rubro');
+        $('#btnActualiza').html('<i class="fas fa-plus"></i>&nbsp; Crear');
+        $('#id_codigo').prop('readonly',false);
+        $('#id_rubro').prop('disabled',false);
+    } 
+
+    var codigo = $('#id_id_n1').val();
+    if (codigo){
+        $('#id_id_n1').attr('readonly',true);
+        $(".modal-title").html('Editar rubro');
+    }
+</script>

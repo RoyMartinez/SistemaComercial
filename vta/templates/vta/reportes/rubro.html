@@ -1,0 +1,143 @@
+{% extends 'vta/base_vta.html' %}
+{% load static %}
+{% block contenido %}
+<!-- Page Heading -->
+<h1 class="h3 mb-2 text-gray-800">Reportes por rubro, Item, Productos</h1>
+<p class="mb-4">Haga clic en el enlace debajo de cada cuadro para descargar o imprimir las tablas asociadas</p>
+
+<!-- Content Row -->
+<div class="row">
+
+  <div class="col-xl-8 col-lg-7">
+
+    <!-- Area Chart -->
+    <div class="card shadow mb-4">
+      <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Ventas Mensuales</h6>
+      </div>
+      <div class="card-body">
+        <div class="chart-area">
+          <canvas id="myAreaChart"></canvas>
+        </div>
+        <hr>
+        Reporte de ventas mensuales
+      </div>
+    </div>
+
+    <!-- Bar Chart -->
+    <div class="card shadow mb-4">
+      <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Cuadro</h6>
+      </div>
+      <div class="card-body">
+        <div class="chart-bar">
+          <canvas id="myBarChart"></canvas>
+         
+        </div>
+        <hr>
+        <a href="#">Descargar</a>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Donut Chart -->
+  <div class="col-xl-4 col-lg-5">
+    <div class="card shadow mb-4">
+      <!-- Card Header - Dropdown -->
+      <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Tabla</h6>
+      </div>
+      <!-- Card Body -->
+      <div class="card-body">
+        <div>
+          <!--<canvas id="myPieChart"></canvas>-->
+          <table class="table table-bordered table-sm">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">Mes</th>
+                        <th scope="col">Ingresos</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <!-- data: [0, 100,200 , 350, 110, 400, 360, 390, 560, 500, 520, 700],-->
+                        <td>Enero</td>
+                        <td>0</td>
+                    </tr>
+                    <tr>
+                        <td>Febrero</td>
+                        <td>100</td>
+                    </tr>
+                    <tr>
+                        <td>Marzo</td>
+                        <td>200</td>
+                    </tr>
+                    <tr>
+                            <td>Abril</td>
+                            <td>350</td>
+                        </tr>
+                        <tr>
+                            <td>Mayo</td>
+                            <td>110</td>
+                        </tr>
+                        <tr>
+                                <td>Junio</td>
+                                <td>400</td>
+                            </tr>
+                            <tr>
+                                    <td>Julio</td>
+                                    <td>360</td>
+                                </tr>
+                                <tr>
+                                        <td>Agosto</td>
+                                        <td>390</td>
+                                    </tr>
+                                    <tr>
+                                            <td>Septiembre</td>
+                                            <td>560</td>
+                                        </tr>
+                                        <tr>
+                                                <td>Octubre</td>
+                                                <td>500</td>
+                                            </tr>
+                                            <tr>
+                                                    <td>Noviembre</td>
+                                                    <td>520</td>
+                                                </tr>
+                                                <tr>
+                                                        <td>Diciembre</td>
+                                                        <td>700</td>
+                                                    </tr>
+                </tbody>
+    
+              </table>
+        </div>
+       
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+
+</div>
+
+
+{% endblock contenido %}
+{% block extramodal %}
+<div class="modal fade" tabindex="-1" role="dialog" id="modal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content"></div>
+    </div>
+</div>    
+{% endblock extramodal %}
+{% block extrascripts %}
+<script src="{% static 'fenimarket/vendor/chart.js/Chart.min.js' %}"></script>
+
+<!-- Page level custom scripts -->
+<script src="{% static 'fenimarket/js/demo/chart-area-demo.js' %}"></script>
+<script src="{% static 'fenimarket/js/demo/chart-pie-demo.js' %}"></script>
+<script src="{% static 'fenimarket/js/demo/chart-bar-demo.js' %}"></script>
+{% endblock extrascripts %}

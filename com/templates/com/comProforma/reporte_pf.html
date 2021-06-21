@@ -1,0 +1,92 @@
+{% load static %}
+{% load humanize %}
+<!DOCTYPE html>
+<html lang="es">
+	<head>
+		<meta charset="utf-8">
+		<title>{{ maestro.referencia }}</title>
+		<link rel="stylesheet" href="{% static 'vta/estilos/factura.css' %}">
+		<link rel="license" href="https://www.opensource.org/licenses/mit-license/">
+	</head>
+	<body>
+		<header>
+			<h1>PROFORMA</h1>
+			<address>
+				<p>FENICOOTAXI, R.L.</p>
+				<p>{{ suc.sucursal.direccion }}<br>Sucursal {{ suc.sucursal }}</p>
+				<p>{{ suc.sucursal.telefonos }}</p>
+			</address>
+			<span>
+                <img width="100" height="100" src="{% static 'demostracion/imgs/logo-feni.png' %}">
+            </span>
+		</header>
+		<article>
+			<table class="meta">
+				<tr>
+					<th><span>Referencia:</span></th>
+					<td><span>{{ maestro.referencia }}</span></td>
+				</tr>
+				<tr>
+					<th><span>Fecha emision:</span></th>
+					<td><span>{{ maestro.fecha|date:"d M Y P" }}</span></td>
+				</tr>
+				<tr>
+					<th><span>Proveedor</span></th>
+					<td><span id="prefix"></span><span>{{ maestro.proveedor }}</span></td>
+				</tr>
+				<tr>
+					<th><span>Cotizaci&oacute;n</span></th>
+					<td><span id="prefix"></span><span>{{ maestro.cotizacion }}</span></td>
+				</tr>
+				<tr>
+					<th><span>Usuario:</span></th>
+					<td><span>{{ suc.user }}</span></td>
+				</tr>
+			</table>
+			<table class="inventory">
+				<thead>
+					<tr>
+						<th style="width:120px;"><span>Item</span></th>
+						<th style="width:300px;"><span>Descripci&oacute;n</span></th>
+						<th><span>Cantidad</span></th>
+						<th><span>Costo</span></th>
+						<th><span>Impuesto</span></th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for i in detalle %}
+						<tr>
+							<td><span>{{ i.item.pk }}</span></td>	
+							<td><span>{{ i.item.n3.familia.descripcion }} {{ i.item.n3.descripcion }} {{ i.item.marca.marca }} {{ i.item.descripcion }}</span></td>
+							<td><span>{{ i.unidades }}</span></td>
+							<td><span>{{ i.costo }}</span></td>
+							<td><span>{{ i.impuesto }}</span></td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</article>
+		<br>
+		<aside>
+			<h1><span>Comentarios</span></h1>
+			<div contenteditable>
+				<p>{{ maestro.notas }} </p>
+			</div>
+		</aside>
+		<br><br><br><br><br><br>
+		<table>
+			<tr>
+				<th><span>Elaborado:</span></th>
+				<td><span></span></td>
+				<th><strong>Autorizado:</strong></th>
+				<td><span></span></td>
+			</tr>
+			<tr>
+				<th><strong>Entregado:</strong></th>
+				<td><span></span></td>
+				<th><strong>Recibido:</strong></th>
+				<td><span></span></td>
+			</tr>
+		</table>
+	</body>
+</html>

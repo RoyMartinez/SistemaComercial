@@ -1,0 +1,121 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="{% static 'aprobaciones/css/basicos.css' %}" rel="stylesheet">
+    <title>Aprobaciones</title>
+    <link rel="icon" type="image/png" href="{% static 'demostracion/imgs/favicon.ico' %}">
+    <link href="{% static 'aprobaciones/vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link href="{% static 'aprobaciones/css/sb-admin-2.min.css' %}" rel="stylesheet">
+    {% block extracss %}
+    {% endblock extracss %}
+</head>
+<body id="page-top">
+  <div id="wrapper">
+    <!-- Barra Lateral-->
+    <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+      <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{% url 'inicio' %}">
+        <div class="sidebar-brand-icon rotate-n-15">
+          <i class="fas fa-archway" aria-hidden="true"></i>
+        </div>
+        <div class="sidebar-brand-text mx-3">Gerencia</div>
+      </a>
+      <hr class="sidebar-divider my-0">
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'inicio' %}">
+          <i class="fa fa-home" aria-hidden="true"></i>
+          <span>Inicio</span></a>
+      </li>
+      <hr class="sidebar-divider">
+      <!-- Aprobaciones -->
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapse6" aria-expanded="true" aria-controls="collapse5">
+          <i class="fas fa-thumbs-up"></i>
+          <span>Aprobaciones</span>
+        </a>
+        <div id="collapse6" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
+          <div class="bg-white py-2 collapse-inner rounded">
+            <h6 class="collapse-header">Aprobaciones:</h6>
+            <a class="collapse-item" href="{% url 'aprobaciones_oc_list' %}">
+              <i class="fas fa-shopping-bag"></i> &nbsp; Orden Compra
+            </a>
+            <a class="collapse-item" href="{% url 'aprobaciones_em_list' %}">
+              <i class="fas fa-truck-loading"></i> &nbsp; Entrada Mercaderia
+            </a>
+          </div>
+        </div>
+      </li>
+      <!-- DashBoard -->
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+          <i class="far fa-object-group"></i>
+          <span>Dash Board</span>
+        </a>
+        <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+          <div class="bg-white py-2 collapse-inner rounded">
+            <h6 class="collapse-header">Dash Boards</h6>
+            <a class="collapse-item" href="{% url 'aprobaciones_rv_siscarcoop' %}">
+              <i class="fab fa-python" aria-hidden="true"></i> &nbsp; SISCARCOOP
+            </a>
+          </div>
+        </div>
+      </li>
+      <hr class="sidebar-divider d-none d-md-block">
+      <div class="text-center d-none d-md-inline">
+        <button class="rounded-circle border-0" id="sidebarToggle"></button>
+      </div>
+    </ul>
+    <!-- NAV BAR -->
+    <div id="content-wrapper" class="d-flex flex-column">
+      <div id="content">
+        <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+            <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+              <i class="fa fa-bars"></i>
+            </button>
+            <div class="d-none d-sm-inline-block form-inline mr-auto ml-md-4 my-3 my-md-0 mw-100">
+              <h3><a href="{% url 'inicio' %}">SISCARCOOP<sup>&reg;</sup></a> - {{ titulo }} </h3>
+            </div>
+            <ul class="navbar-nav ml-auto">
+              <div class="topbar-divider d-none d-sm-block"></div>
+              <li class="nav-item dropdown no-arrow">
+                <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <span class="mr-2 d-none d-lg-inline text-gray-600 small">{{ user }}</span>
+                  <img class="img-profile rounded-circle" src="{% static 'aprobaciones/resources/logo-feni.png' %}">
+                </a>
+                <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
+                  <a class="dropdown-item" href="{% url 'salir' %}">
+                    <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>Salirse
+                  </a>
+                </div>
+              </li>
+            </ul>
+        </nav>
+        <div class="container-fluid">
+          {% block contenido %}
+          {% endblock contenido %}
+        </div>
+      </div>
+      <footer class="sticky-footer bg-white">
+        <div class="container my-auto">
+          <div class="copyright text-center my-auto">
+            <p>Sistema Integral de Control de Recursos Corporativos</p>
+          </div>
+        </div>
+      </footer>
+    </div>
+  </div>
+  <a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+  </a>
+    <script src="{% static 'aprobaciones/vendor/jquery/jquery.min.js' %}"></script>
+    <script src="{% static 'aprobaciones/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'aprobaciones/vendor/jquery-easing/jquery.easing.min.js' %}"></script>
+    <script src="{% static 'aprobaciones/js/sb-admin-2.js' %}"></script>
+    {% block extrascript %}
+    {% endblock extrascript %}
+</body>
+</html>

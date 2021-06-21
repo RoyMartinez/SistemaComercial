@@ -1,0 +1,76 @@
+{% extends 'caja/cajabase.html' %}
+{% load static %}
+{% block sucursal %}{{ suc.sucursal }}{% endblock sucursal %}
+{% block contenido %}
+{% if messages %}
+    {% for i in messages %}
+        <div class="alert alert-{{ i.tags }}">{{ i }}</div>
+    {% endfor %}
+{% endif %}
+<div class="row">
+    <div class="col">
+        <div class="card py-3 border-left-info">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-10">
+                        <h4 class="m-0 font-weight-bold text-primary">Tipo de cambio</h4>
+                    </div>
+                    <div class="col-md-2">
+                        <button type="button" class="btn btn-primary nuevo">
+                            <i class="fa fa-plus"></i> A&ntilde;adir</a>
+                        </button>
+                    </div>
+                </div>
+                <hr>
+                <div class="table-responsive">
+                    <table class="table table-sm table-bordered">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th scope="col">Fecha</th>
+                                <th scope="col">Compra</th>
+                                <th scope="col">Oficial</th>
+                                <th scope="col">Venta</th>
+                                <th scope="col">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for i in tc %}
+                                <tr>
+                                    <td>{{ i.fecha|date:"SHORT_DATE_FORMAT" }}</td>
+                                    <td>{{ i.compra }}</td>
+                                    <td>{{ i.oficial }}</td>
+                                    <td>{{ i.venta }}</td>
+                                    <td>
+                                        <button type="button" class="btn btn-info btn-sm editar" data-id="{% url 'caja_tcedit' i.pk %}">
+                                            <i class="fas fa-pencil-alt"></i>&nbsp;Editar
+                                        </button>
+                                        <button type="button" class="btn btn-danger btn-sm borrar" data-id="">
+                                            <i class="fas fa-trash-alt"></i>&nbsp;Borrar
+                                        </button>
+                                    </td>
+                                </tr>
+                            {% empty %}
+                                <tr><td colspan="4"><h3>No hay registros</h3></td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock contenido %}
+{% block extramodal %}
+<div class="modal fade" tabindex="-1" role="dialog" id="modal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content"></div>
+    </div>
+</div>    
+{% endblock extramodal %}
+{% block extrascripts %}
+    <script src="{% static 'vta/js/jquery.bootstrap.modal.forms.min.js' %}"></script>
+    <script>
+        $(".nuevo").modalForm({ formURL: "{% url 'caja_tcnuevo' %}" });
+        $(".editar").each(function(){ $(this).modalForm({formURL: $(this).data('id')}); });
+    </script>
+{% endblock extrascripts %}

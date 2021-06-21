@@ -1,0 +1,219 @@
+{% extends 'inv/invBase.html' %}
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block extracss %}
+    <link rel="stylesheet" href="{% static 'fenimarket/vendor/datatables/dataTables.bootstrap4.min.css' %}">
+    <link rel="stylesheet" href="{% static 'inv/css/select2.min.css' %}">
+{% endblock extracss %}
+{% block contenido %}
+{% if messages %}
+    {% for i in messages %}
+        <div class="alert alert-{{ i.tags }}">{{ i }}</div>
+    {% endfor %}
+{% endif %}
+<div class="row">
+    <div class="col">
+        <div class="card py-3 border-left-primary">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-1">
+                        <h4 class="m-0 font-weight-bold text-primary">Items</h4>
+                    </div>
+
+                    <div class="col-md-10">
+                        <form  method="POST" class="inline-form" >
+                            <div class="form-row">
+                                {% csrf_token %}
+                                <div class="col-md-2" id="div_rubro">
+                                    {{ form.rubro.label_tag }}
+                                    {% render_field form.rubro class="form-control form-control-sm rubro" %}
+                                    <div class="{% if form.rubro.errors %} invalid{% endif %}">
+                                        {% for error in form.rubro.errors %}
+                                            <p class="help-block" style="color:red;">{{ error }}</p>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <div class="col-md-2" id="div_familia">
+                                    {{ form.familia.label_tag }}
+                                    {% render_field form.familia class="form-control form-control-sm familia" %}
+                                    <div class="{% if form.familia.errors %} invalid{% endif %}">
+                                        {% for error in form.familia.errors %}
+                                            <p class="help-block" style="color:red;">{{ error }}</p>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <div class="col-md-2" id="div_producto">
+                                    {{ form.producto.label_tag }}
+                                    {% render_field form.producto class="form-control form-control-sm producto" %}
+                                    <div class="{% if form.producto.errors %} invalid{% endif %}">
+                                        {% for error in form.producto.errors %}
+                                            <p class="help-block" style="color:red;">{{ error }}</p>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <div class="col-md-2" id="div_tipo">
+                                    {{ form.tipo.label_tag }}
+                                    {% render_field form.tipo class="form-control form-control-sm tipo" %}
+                                    <div class="{% if form.tipo.errors %} invalid{% endif %}">
+                                        {% for error in form.tipo.errors %}
+                                            <p class="help-block" style="color:red;">{{ error }}</p>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <div class="col-md-2" id="div_descontinuado">
+                                    {{ form.descontinuado.label_tag }}
+                                    {% render_field form.descontinuado class="form-control form-control-sm descontinuado" %}
+                                    <div class="{% if form.rangos_especificos.errors %} invalid{% endif %}">
+                                        {% for error in form.descontinuado.errors %}
+                                            <p class="help-block" style="color:red;">{{ error }}</p>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <div class="col-md-2" >
+                                    <br>
+                                    <button class="btn btn-primary"  type="submit">
+                                        <span class="fa fa-search"> Buscar Items</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+
+
+
+                    {% if suc.user.is_staff %}
+                    <div class="col-md-1">
+                        <button type="button" class="btn btn-primary btn-sm show-form" data-url="{% url 'N4Item_Crear' %}">
+                            <span class="fa fa-plus"> Nuevo</span>
+                        </button>
+                        <a role="button" class="btn btn-success btn-sm" href="{% url 'N4Item_Csv' %}">
+                            <i class="fa fa-file-excel" aria-hidden="true"></i> &nbsp; Excel
+                        </a>
+                    </div>
+                    {% endif %}
+                </div>
+                <hr>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-sm" id="Pantalla-table" >
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>C&oacute;digo</th>
+                                <th>Item</th>
+                                <th>Cod. Anterior</th>
+                                <th>Precio</th>
+                                <th>Existencias</th> 
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% include 'inv/invN4Item/N4Item_List_Details.html' %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card-footer" >
+                <a role="button" class="btn btn-success btn-sm" href="{% url 'N4Item_Consolidado' %}">
+                    <i class="fa fa-file-excel" aria-hidden="true"></i> &nbsp; Consolidado
+                </a>
+                <a role="button" class="btn btn-success btn-sm" href="{% url 'N4Item_Lista_Inventario' %}">
+                    <i class="fa fa-file-excel" aria-hidden="true"></i> &nbsp; Lista de Inventario
+                </a>
+                {% if suc.user.is_staff %}
+                    <a role="button" class="btn btn-success btn-sm" href="{% url 'N4Item_Consolidado_Costo' %}">
+                        <i class="fa fa-file-excel" aria-hidden="true"></i> &nbsp; Consolidado Costo
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock contenido %}
+
+{% block extramodal %}
+    <div class="modal fade" id="modal-Pantalla">
+        <div class="modal-dialog">
+            <div class="modal-content"></div>
+        </div>
+    </div>
+{% endblock extramodal %}
+
+{% block extrascripts %}
+<script src="{% static 'inv/js/modal.js' %}">  </script>  
+<script type="text/javascript" src="{% static 'fenimarket/vendor/datatables/jquery.dataTables.js' %}"></script>
+<script type="text/javascript" src="{% static 'fenimarket/vendor/datatables/dataTables.bootstrap4.min.js' %}"></script>
+<script src="{% static 'inv/js/select2.min.js' %}"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+            $('#Pantalla-table').DataTable({
+                "language":{
+                    "lengthMenu":"Mostrar  _MENU_  filas",
+                    "zeroRecords":"No se encontraron coincidencias",
+                    "info": "Página _PAGE_ de _PAGES_",
+                    "infoEmpty":"No hay registros",
+                    "infoFiltered":"(filtrado de un total de _MAX_ registros)",
+                    "search":"Buscar:",
+                    "paginate":{
+                        "first":"Primero",
+                        "last":"Último",
+                        "next":"Siguiente",
+                        "previous":"Anterior",
+                    }
+                },
+                "ordering": false 
+            });  
+    });
+</script>
+<script type="text/javascript">
+    function completarcampo(){
+        var co = $('#id_N3').val()+'.'+$('#id_Marca').val();
+        document.getElementById("id_Id").value=co;
+    }
+    $(".familia").html("<option value='' selected='selected'>---------</option>");
+    $(".producto").html("<option value='' selected='selected'>---------</option>");
+    $('.rubro').on("change",getFamiliasL);
+    $('.familia').on("change",getProductosL);
+    function getFamiliasL() {
+        var rubroId = $('.rubro').val();
+        if(rubroId){
+            $('.familia').html("");
+            var request = $.ajax({
+                type : "GET",
+                url : "{% url 'get_familias' %}",
+                data:{
+                    "rubro_id" : rubroId,
+                },
+            });
+            request.done(asignar);
+            function asignar(response) {
+                $(".familia").html(response.familias);
+            }
+        }
+        else{
+            $(".familia").html("<option value='' selected='selected'>---------</option>");
+            $(".producto").html("<option value='' selected='selected'>---------</option>");
+        }
+    }
+    function getProductosL() {
+        var familiaId = $('.familia').val();
+        if(familiaId){
+            $('.producto').html("");
+            var request = $.ajax({
+                type : "GET",
+                url : "{% url 'get_productos' %}",
+                data:{
+                    "familia_id" : familiaId,
+                },
+            });
+            request.done(asignar);
+            function asignar(response) {
+                $(".producto").html(response.productos);
+            }
+        }
+        else{
+            $(".producto").html("<option value='' selected='selected'>---------</option>");
+        }
+    }
+</script>
+{% endblock extrascripts %}

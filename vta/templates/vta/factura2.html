@@ -1,0 +1,510 @@
+{% extends 'vta/base_vta.html' %}
+{% load static %}
+{% load humanize %}
+{% block extracss %}
+    <style type="text/css">
+        .form-control-sm{
+            text-align: right;
+        }
+        .delete{
+            text-decoration: none; 
+            color: red;
+        }
+    </style>
+{% endblock extracss %}
+{% block contenido %}
+{% if messages %}
+    {% for i in messages %}
+        <div class="alert alert-danger"><i class="fas fa-exclamation-circle"></i> {{ i }}</div>
+    {% endfor %}
+{% endif %}
+<div class="row">
+    <div class="col">
+        <form method="POST" autocomplete="off" id="form_fact">
+            {% csrf_token %}
+            <div class="card border-left-success shadow h-100 py-2">
+                <a href="#collapseCardExample" class="d-block card-header py-3" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="collapseCardExample">
+                    <h6 class="m-0 font-weight-bold text-primary">Nueva factura {{ borra }}</h6>
+                </a>
+                <div class="collapse show" id="collapseCardExample">
+                    <div class="card-body">
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <button class="btn btn-outline-primary" type="button" id="btn_cliente" data-toggle="modal" data-target="#modalcliente" style="z-index:0;">
+                                    <i class="fa fa-user" aria-hidden="true"></i> Cliente
+                                </button>
+                            </div>
+                            <input id="cliente_personalizado" type="text" class="form-control prevenir" placeholder="PARTICULAR / INDIVIDUAL" value="{{ cliente.nombre }}" required>
+                            <div class="input-group-append">
+                                <span class="input-group-text">Disponible:</span>
+                                <span class="input-group-text" id="txtsaldo">{{ cliente2.saldo }}</span>
+                              </div>
+                            <input id="nombre_extra" type="hidden" name="nombre" value="">
+                            <input type="hidden" name="cliente" id="cliente_oculto" value="{{ cliente.cedula }}" required>
+                        </div>
+                        <div class="input-group input-group-sm mb-3">
+                            <div class="input-group-prepend">
+                              <label class="input-group-text" for="id_membresia">Categ</label>
+                            </div>
+                            <input type="text" class="form-control" name="membresia" id="id_membresia" value="particular/individual" readonly>
+                            {% comment %}
+                            <select class="custom-select" name="membresia" id="id_membresia">
+                              {% for i in cliente2.membresia.all %}
+                                <option value="{{ i.pk }}" {% if i.pk == cliente.membresia %} selected {% endif %}>{{ i }}</option>
+                              {% endfor %}
+                            </select>
+                            {% endcomment %}
+                            <div class="input-group-prepend">
+                                <label class="input-group-text" for="id_cooperativa">Coop</label>
+                            </div>
+                            <select name="cooperativa" class="custom-select" id="id_cooperativa">
+                                {% for i in cliente2.cooperativa.all %}
+                                    <option value="{{ i.pk }}" {% if i.pk == cliente.cooperativa %} selected {% endif %}>{{ i }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <button class="btn btn-outline-primary" type="button" id="btn_item" onclick="myFunction();" style="z-index: 0;">
+                                    <i class="fa fa-barcode" aria-hidden="true"></i> Producto
+                                </button>
+                            </div>
+                            <input id="txt_producto" type="text" class="form-control">                        
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-4">
+                                <label for="id_formapago">Pago:</label>
+                                <select name="formapago" class="form-control form-control-sm" required="" id="id_formapago">
+                                    {% for i in pago %}
+                                        <option value="{{ i.pk }}" {% if i.pk == cliente.tipopago %} selected {% endif %}>{{ i.nombre }}</option>
+                                    {% endfor %}
+                                </select>
+                                <div class="custom-control custom-switch" style="margin-bottom: 0.5em;">
+                                    <input type="checkbox" class="custom-control-input" id="cct">
+                                    <label class="custom-control-label" for="cct">CCT Ref: </label>
+                                </div>
+                                <div id="cct_cuadro" style="display:none;">
+                                    {{ form.cct }}
+                                    {{ form.monto_cct.label_tag }}
+                                    {{ form.monto_cct }}
+                                </div>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="id_descuentotal">Descuento:</label>
+                                <input type="number" name="descuentotal" step="any" readonly="" value="{{ descuento|floatformat:2 }}" class="form-control form-control-sm" required="" id="id_descuentotal">
+                                <div class="custom-control custom-switch" style="margin-bottom: 0.5em;">
+                                    <input type="checkbox" class="custom-control-input" id="desc">
+                                    <label class="custom-control-label" for="desc">Xtra Descto (%): </label>
+                                </div>
+                                <div id="xtra" style="display: none;">
+                                    <input id="xinput" min="0" name="extradescuento" type="number" value="0" class="form-control form-control-sm prevenir" step="any">
+                                </div>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="txt_st">&nbsp;&nbsp; Subtotal:</label>
+                                <input type="text" class="form-control form-control-sm" id="txt_st" value="{{ subtotal|floatformat:2 }}" readonly>
+                                <label for="txt_iva">&nbsp;&nbsp; IVA:</label>
+                                <input type="text" class="form-control form-control-sm" id="txt_iva" name="impuestototal" value="{{ iva|floatformat:2 }}" readonly>
+                                <label for="txt_total">&nbsp;&nbsp; Total:</label>
+                                <input type="text" name="preciofinaltotal" class="form-control form-control-sm" id="txt_total" value="{{ total|floatformat:2 }}" readonly>
+                            </div>
+                        </div>
+                        <div id="insuficiente" style="color:red; display: none;">
+                            <small>** Credito insuficiente para finalizar la facturaci&oacute;n. </small>
+                        </div>
+                    </div> <!-- Fin del cardbody-->
+                    <input id="txtcredito" type="hidden" value="{{ cliente2.saldo }}">
+                    <input id="txtlimite" type="hidden" value="{{ cliente2.limite_credito }}">
+                    <input id="iva_aux" type="hidden" value="{{ iva|floatformat:2 }}">
+                    <div class="card-footer text-muted">
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-outline-primary" name="submit_nuevo">Nuevo</button>
+                            <button type="submit" class="btn btn-outline-info" name="submit_proforma" formtarget="_blank">Proforma</button>
+                            <button type="submit" id='btn_facturar' class="btn btn-outline-danger">Grabar</button>
+                        </div> 
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="col">
+        <div class="card border-left-success shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Detalle</div>
+                    </div>
+                    <div class="col-auto">
+                        <a href="#" data-toggle="modal" data-target="#modal_ayuda">
+                            <i class="fas fa-question-circle fa-2x"></i>
+                        </a>
+                    </div>
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th scope="col">C&oacute;digo</th>
+                                <th scope="col">Bodega</th>
+                                <th scope="col">Cant</th>
+                                <th scope="col">Total</th>
+                                <th scope="col">Supr</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbl_detalle">
+                            {% for i in tempo %}
+                                <tr>
+                                    <td>{{ i.articulo.pk }}</td>
+                                    <td>{{ i.bodega.pk }}</td>
+                                    <td>
+                                        <input id="{{ i.pk }}" class="form-control form-control-sm cant" style="width:4em;" type="number" value="{{ i.cantidad }}" min="1" step="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57 || event.charCode == 13;" onchange="multiplicar(this);">
+                                    </td>
+                                    <td>{{ i.factor|floatformat:2|intcomma }}</td>
+                                    <td>&nbsp;
+                                        <a href="{% url 'vta_quitar_item' i.pk %}" class="delete" title="Eliminar" data-placement="auto">
+                                            <i class="fa fa-trash" aria-hidden="true"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% empty %}
+                                <tr><td colspan="4"></td></tr>
+                            {% endfor %}
+                            <tr>
+                                <td colspan="4" style="text-align: center;"><a href="#" onclick="location.reload();"><i class="fas fa-sync-alt"></i> Haga clic aqu&iacute; para refrescar</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock contenido %}
+{% block extramodal %}
+    <!-- -------------------------------------------------------------------- -->
+    <!--         Formulario modal para agregar clientes  -->
+    <!-- -------------------------------------------------------------------- -->
+    <div class="modal fade" id="modalcliente" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Selecci&oacute;n de cliente</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input id="txtcedula" type="text" style="color:white;" class="form-control form-control-sm" autofocus>
+                    <p>Selecccione el cliente, digite el c&oacute;digo o usa el carnet</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- -------------------------------------------------------------------- -->
+    <!--         Formulario modal para agregar combo  -->
+    <!-- -------------------------------------------------------------------- -->
+    <div class="modal fade" id="modalcombo" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Opciones de Combo</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div id="cuerpo">
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="btncombo" type="button" class="btn btn-success" data-dismiss="modal">
+                        <i class="fas fa-check"></i>&nbsp;Aplicar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- -------------------------------------------------------------------- -->
+    <!--         Formulario modal para abrir la ayuda  -->
+    <!-- -------------------------------------------------------------------- -->
+    <div class="modal fade" tabindex="-1" role="dialog" id="modal_ayuda">
+        <div class="modal-dialog modal-xl" role="document">
+            <div class="modal-content">
+                {% include 'vta/ayuda/facturacion.html' %}
+            </div>
+        </div>
+    </div> 
+    <!-- -------------------------------------------------------------------- -->
+    <!--         Formulario modal para seleccionar clientes  -->
+    <!-- -------------------------------------------------------------------- -->
+    <div class="modal fade" id="modalselectcliente" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Selecci&oacute;n de cliente</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <select id="cliente3" class="form-control">
+                        {% for i in cliente3 %}
+                            <option value="{{ i.magnetico }}">{{ i.nombres }} {{ i.apellidos }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <button id="btn_cliente3" type="button" class="btn btn-outline-success">
+                        <i class="far fa-check-circle"></i>&nbsp;Elegir
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- -------------------------------------------------------------------- -->
+    <!--         Formulario modal para extra descuento -->
+    <!-- -------------------------------------------------------------------- -->
+    <div class="modal fade" id="modalxtradisccount" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">C&oacute;digo de autorizaci&oacute;n</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input id="txtauth" type ="text" style="color: white;" class="form-control form-control-sm" autofocus>
+                    <p>Deslice el carnet ... solamente dispone de 3 segundos</p>
+                </div>
+                <div class="modal-footer">
+                    <button id="btn_xdisccount" type="button" class="btn btn-success">Aceptar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock extramodal %}
+{% block extrascripts %}
+<script type="text/javascript" src="{% static 'vta/js/codigo.js' %}"></script>
+<script type="text/javascript">
+    var arreglo = [];
+// ************** Updates quantity at item details **************************
+    function multiplicar(x){
+        $('#desc').prop('checked',false);
+        $('#xtra').css('display','none');
+        $('#xinput').val(0);
+        if (x.value <= 0) {
+            alert('No se admiten numeros negativos ni valores en cero');
+            x.value = 1;
+        } else{
+            var lista = [x.id, x.value]
+            var request =$.ajax({type:"GET", 
+                url: "{% url 'vta_ajax_updateitem' borra %}", 
+                data: {"cantidad": lista.toString()}
+                });
+            request.done(function(response){
+                if (response.excedente){
+                    alert('Cantidad excedida')
+                    x.value = 1;
+                }
+                $('#tbl_detalle').html(response.tabla);
+                $('#txt_st').val(response.subtotal);
+                $('#id_descuentotal').val(response.descuento);
+                $('#txt_iva').val(response.iva);
+                $('#iva_aux').val(response.iva);
+                $('#txt_total').val(response.total);  
+                alertacredito();
+            });  
+        }
+    }
+
+$('#btncombo').on('click', function(){
+    var x  = $('.combo');
+    var arreglocombo = [];
+    for (var i=0; i < x.length; i++){
+        if (x[i].checked)
+            arreglocombo.push(x[i].value);
+    }
+    if (arreglocombo){
+        var request = $.ajax({ type:"GET", url:"{% url 'vta_ajax_combo' borra %}", data:{"seleccion":arreglocombo.toString(),}});
+        request.done(function(response){
+            $('#tbl_detalle').html(response.tabla);
+            $('#txt_st').val(response.subtotal.toFixed(2));
+            $('#txt_iva').val(response.iva.toFixed(2));
+            $('#iva_aux').val(response.iva);
+            $('#txt_total').val((response.iva + response.subtotal).toFixed(2));
+        })
+    }
+});
+
+// ************** Todos los combos **************************
+$('#id_cooperativa').on('change',{objeto:1},combos);
+$('#id_membresia').on('change',{objeto:2},combos);
+$('#id_formapago').on('change',{objeto:3},combos);
+$('#xinput').on('change',{objeto:4},combos);
+
+function combos(event){
+    if (event.data.objeto < 4){
+        $('#desc').prop('checked',false);
+        $('#xtra').css('display','none');
+        $('#xinput').val(0);
+        $('#insuficiente').css('display','none');
+    }
+    if (event.data.objeto == 3) 
+        alertacredito();
+    var request = $.ajax({
+        type:"GET",
+        url:"{% url 'vta_ajax_changecoop' borra %}",
+        data:{'cooperativa':$('#id_cooperativa').val(),
+            'membresia':$('#id_membresia').val(), 'tipopago':$('#id_formapago').val(),
+            'extra':$('#xinput').val(),}
+    });
+    request.done(function(response){
+        $('#txt_st').val(response.subtotal);
+        $('#txt_iva').val(response.iva);
+        $('#iva_aux').val(response.iva);
+        $('#id_descuentotal').val(response.descuento);
+        $('#txt_total').val(response.total); 
+        if (event.data.objeto == 4)
+            alertacredito();
+    });
+}
+
+// ************** All about customer **************************
+function obtenerid(){
+    var cedula = $('#txtcedula').val();
+    var request = $.ajax({
+        type:"GET",
+        url: "{% url 'vta_ajax_cliente' borra %}",
+        data: {"cedula":cedula,},
+    });
+    request.done(function(response){
+        if (response.existe == 0){
+            $('#cliente_personalizado').val(response.nombre);
+            $('#cliente_oculto').val(response.cedula);
+            $('#id_membresia').html(response.membresia);
+            $('#id_cooperativa').html(response.cooperativa);
+            $('#txt_st').val(response.subtotal);
+            $('#id_descuentotal').val(response.descuento);
+            $('#txt_iva').val(response.iva);
+            $('#iva_aux').val(response.iva);
+            $('#txt_total').val(response.total);
+            $('#txtsaldo').html(response.credito);
+            alertacredito();
+        }else if(response.existe == 1 ){ /*SI se ingreso la contraseña*/
+            $('#modalcliente').modal('hide');
+            $('#modalselectcliente').modal('show');
+        }
+        else{ alert('Cliente no encontrado'); }
+        $('#modalcliente').modal('hide');
+    });
+}
+
+function predeterminar_cliente(){    
+    $('#desc').prop('checked',false);
+    $('#xtra').css('display','none');
+    $('#xinput').val(0);
+    var a = this.value;
+    if (a.length > 0){ 
+        $('#cliente_oculto').val('0'); 
+        $('#nombre_extra').val($('#cliente_personalizado').val());
+        $('#id_membresia').html('<option value="1" selected>particular/individual</option>');
+        $('#id_cooperativa').html('<option value="1" selected>PARTICULAR/INDIVIDUAL</option>');
+        $('#id_formapago').val(2);
+        $('#txtsaldo').html('0.0');
+        $('#id_descuentotal').val(0);
+        $('#insuficiente').css('display','none');
+    }
+    else{ $('#cliente_oculto').val(''); }
+    var request = $.ajax({
+        type:"GET",
+        url: "{% url 'vta_ajax_reset' borra %}",
+        data: {},
+    });
+    request.done(function(response){
+        $('#txt_st').val(response.subtotal);
+        $('#txt_iva').val(response.iva);
+        $('#iva_aux').val(response.iva);
+        $('#txt_total').val(response.total);
+    });
+}
+
+// Selector manual de cliente
+$('#btn_cliente3').on('click', function(){
+    var request = $.ajax({
+        type:"GET",
+        url: "{% url 'vta_ajax_cliente' borra %}",
+        data: {"cedula":$('#cliente3').val(),},
+    });
+    request.done(function(response){
+        $('#cliente_personalizado').val(response.nombre);
+        $('#cliente_oculto').val(response.cedula);
+        $('#id_membresia').html(response.membresia);
+        $('#id_cooperativa').html(response.cooperativa);
+        $('#id_descuentotal').val(response.descuento);
+        $('#txt_st').val(response.subtotal);
+        $('#txt_iva').val(response.iva);
+        $('#iva_aux').val(response.iva);
+        $('#txt_total').val(response.total);
+        $('#txtsaldo').html(response.credito);
+        alertacredito();
+        $('#modalselectcliente').modal('hide');
+    });
+});
+
+// ************** Function that resets to the default values on the Temp Master Table ************
+function myFunction() {
+    $('#desc').prop('checked',false);
+    $('#xtra').css('display','none');
+    $('#xinput').val(0);
+    var myWindow = window.open("{% url 'vta_catalogo' borra %}", "_blank", "toolbar=no, menubar=no, scrollbars=yes,resizable=yes,top=100,left=1000,width=1000,height=500");
+}
+
+// ************** Function that looks up for an specific item ************
+$('#txt_producto').keypress(function(event){
+    var keycode = (event.keyCode ? event.keyCode : event.which);
+    if (keycode == '13'){
+        event.preventDefault();
+        var producto = $('#txt_producto').val();
+        $('#desc').prop('checked',false);
+        $('#xtra').css('display','none');
+        $('#xinput').val(0);
+        var request = $.ajax({
+            type:"GET",
+            url:"{% url 'mk_producto' borra %}",
+            data:{"producto":producto,},
+        });
+        request.done(function(response){
+            $('#txt_producto').val('');
+            if (response.encontrado){
+                if (response.combo){
+                    if (response.modal){
+                        $('#modalcombo').modal('show');
+                        $('#cuerpo').html(response.opciones);
+                        var x  = $('.combo');
+                        var arreglocombo = [];
+                        for (var i=0; i < x.length; i++){
+                            if (x[i].checked)
+                                arreglocombo.push(x[i].value);
+                        }
+                        if (arreglocombo)
+                            $('#txt_combo').val(arreglocombo);  
+                    }
+                }else{
+                    if (response.existe){
+                    }else{ alert('Existencia excedida'); }   
+                }
+            }else{ alert('No se encontro el codigo'); }
+            $('#tbl_detalle').html(response.tabla);
+            $('#txt_st').val(response.subtotal.toFixed(2));
+            $('#txt_iva').val(response.iva.toFixed(2));
+            $('#iva_aux').val(response.iva);
+            $('#txt_total').val((response.iva + response.subtotal).toFixed(2));
+            alertacredito();
+        });
+    }
+}); 
+</script>
+{% endblock extrascripts %}

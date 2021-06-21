@@ -1,0 +1,21 @@
+{% load humanize %}
+{% for i in historial %}
+<tr>
+    <td>{{ i.item }}</td>
+    <td>{{ i.fecha }}</td>
+    <td>{{ i.referencia }}</td>
+    <td>{{ i.cantidad }}</td>
+    <td>{{ i.nota }}</td>
+    <td>
+        <button type="button" class="btn btn-sm btn-info show-form-update" data-url="{% url 'N4Item_Producir_kardex' i.referencia i.item.id_n4  %}">
+            <i class="fas fa-bars"></i>&nbsp; Detalle
+        </button>
+        <a role="button" class="btn btn-sm btn-success" href="{% url 'N4Item_Producir_imprimir' i.referencia i.item.id_n4  %}" target="_blank" >
+            <i class="fas fa-print" ></i>&nbsp; Imprimir
+        </a>
+    </td>
+</tr>
+{% empty %}
+<tr><td colspan="6"><h3>No hay Registros</h3></td></tr>
+{% endfor %}
+ 

@@ -1,0 +1,8 @@
+{% for f in existenciabodega %}
+<tr>
+    <td>{{ f.bodega }}</td>
+    <td>{{ f.cantidad }}</td>
+</tr>
+{% empty %}
+    <tr><td colspan="2"><h3>No hay Registro en Bodega</h3></td></tr>
+{% endfor %}

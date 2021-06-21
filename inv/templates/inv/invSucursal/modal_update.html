@@ -1,0 +1,108 @@
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+<form method="POST" data-url="{% url 'Sucursal_Editar' form.instance.siglas %}" class="update-form" autocomplete="off">
+    {% csrf_token %}
+    <div class="modal-header">
+        <h5 class="modal-title text-center">Editar Sucursal</h5>
+    </div>
+    <div class="modal-body">
+        <div class="{% if form.non_field_errors %}invalid{% endif %} mb-2">
+            {% for error in form.non_field_errors %}
+                {{ error }}
+            {% endfor %}
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-4">
+                {{ form.siglas.label_tag }}
+                {% render_field form.siglas class="form-control form-control-sm" %}
+                <div class="{% if form.siglas.errors %} invalid{% endif %}">
+                    {% for error in form.siglas.errors %}
+                        <p class="help-block" style="color:red;">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="form-group col-md-4">
+                {{ form.nombre.label_tag }}
+                {% render_field form.nombre class="form-control form-control-sm" %}
+                <div class="{% if form.nombre.errors %} invalid{% endif %}">
+                    {% for error in form.nombre.errors %}
+                        <p class="help-block" style="color:red;">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="form-group col-md-4">
+                {{ form.telefonos.label_tag }}
+                {% render_field form.telefonos class="form-control form-control-sm" %}
+                <div class="{% if form.telefonos.errors %} invalid{% endif %}">
+                    {% for error in form.telefonos.errors %}
+                        <p class="help-block" style="color:red;">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                {{ form.direccion.label_tag }}
+                {% render_field form.direccion class="form-control form-control-sm" %}
+                <div class="{% if form.direccion.errors %} invalid{% endif %}">
+                    {% for error in form.direccion.errors %}
+                        <p class="help-block" style="color:red;">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                {{ form.encabezado.label_tag }}
+                {% render_field form.encabezado class="form-control form-control-sm" %}
+                <div class="{% if form.encabezado.errors %} invalid{% endif %}">
+                    {% for error in form.encabezado.errors %}
+                        <p class="help-block" style="color:red;">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                {{ form.pie_pagina.label_tag }}
+                {% render_field form.pie_pagina class="form-control form-control-sm" %}
+                <div class="{% if form.pie_pagina.errors %} invalid{% endif %}">
+                    {% for error in form.pie_pagina.errors %}
+                        <p class="help-block" style="color:red;">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-8">
+                {{ form.usuarios.label_tag }}
+                {% render_field form.usuarios class="form-control form-control-sm" %}
+                <div class="{% if form.usuarios.errors %} invalid{% endif %}">
+                    {% for error in form.usuarios.errors %}
+                        <p class="help-block" style="color:red;">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="form-group col-md-4">
+                {{ form.serie.label_tag }}
+                {% render_field form.serie class="form-control form-control-sm" %}
+                <div class="{% if form.serie.errors %} invalid{% endif %}">
+                    {% for error in form.serie.errors %}
+                        <p class="help-block" style="color:red;">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="submit-btn btn btn-primary" id ="btnActualiza">
+            <i class="fas fa-plus"></i>&nbsp; Actualizar
+        </button>
+        <button type="button" class="submit-btn btn btn-danger" data-dismiss="modal" aria-label="close">
+            <i class="fa fa-times"></i>&nbsp; cancelar
+        </button>
+    </div>
+</form>
+<script>
+    $('#id_siglas').prop('readonly', true);
+</script>

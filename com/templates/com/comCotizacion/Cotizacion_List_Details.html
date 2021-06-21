@@ -1,0 +1,22 @@
+{% for i in cotizacion %}
+<tr>
+    <td>{{ i.referencia }}</td>
+    <td>{{ i.proveedor }}</td>
+    <td>{{ i.fecha|date:"SHORT_DATE_FORMAT" }}</td>
+    <td>{{ i.notas }}</td>
+    {% if i.finalizado %}
+        <td>La cotizacion ya esta finalizada</td>
+    {% else %}
+    <td>
+        <button type="button" class="btn btn-info btn-sm show-form-update" data-url="{% url 'com_cotizacionEdit' i.pk %}">
+            <i class="fas fa-pencil-alt"></i>&nbsp; Editar
+        </button>&nbsp;   
+        <a role="button" class="btn btn-dark btn-sm" href="{% url 'com_cotizacionDetail' i.referencia %}">
+            <i class="fas fa-info"></i>&nbsp; Detalles
+        </a>
+    </td>
+    {% endif %}
+</tr>
+{% empty %}
+    <tr><td colspan="5"><h3>No existen registros</h3></td></tr>
+{% endfor %}

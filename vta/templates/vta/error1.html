@@ -1,0 +1,24 @@
+{% extends 'vta/base_vta.html' %}
+{% load static %}
+{% block contenido %}
+<div class="container">
+    {% if messages %}
+        {% for i in messages %}
+            <div class="alert alert-{{ i.tags }}">{{ i }}</div>
+        {% endfor %}
+    {% endif %}
+    <div class="card text-center" style="max-width: 30rem; margin: auto;">
+        <div class="card-header">
+            <h2>Advertencia</h2>
+        </div>
+        <div class="card-body">
+            <img src="{% static 'vta/imgs/warning.png' %}">
+            <br>
+            <p class="card-text">{{ texto }}</p>
+        </div>
+        <div class="card-footer text-muted">
+            <a href="{% url 'vta_vendedor' %}" class="btn btn-primary active" role="button" aria-pressed="true">Vendedores</a>
+        </div>
+    </div>
+</div>
+{% endblock contenido %}

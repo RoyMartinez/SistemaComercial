@@ -1,0 +1,127 @@
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+<form method="POST" data-url="{% url 'DevolucionMsr_Editar' form.instance.referencia %}" class="update-form" autocomplete="off">
+    {% csrf_token %}
+    <div class="modal-header">
+        <h5 class="modal-title text-center">Editar Devolucion </h5>
+    </div>
+    <div class="modal-body">        
+        <div class="form-group col-md-12" id="div_referencia">
+            {{ form.referencia.label_tag }}
+            {% render_field form.referencia class="form-control form-control-sm" %}
+            <div class="{% if form.referencia.errors %} invalid{% endif %}">
+                {% for error in form.referencia.errors %}
+                    <p class="help-block" style="color:red;">{{ error }}</p>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="form-group col-md-12" id = "div_nota">
+            {{ form.nota.label_tag }}
+            {% render_field form.nota class="form-control form-control-sm" %}
+            <div class="{% if form.nota.errors %} invalid{% endif %}">
+                {% for error in form.nota.errors %}
+                    <p class="help-block" style="color:red;">{{ error }}</p>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="form-group col-md-12" id="div_rem">
+                {{ form.rem.label_tag }}
+                {% render_field form.rem class="form-control form-control-sm" %}
+                <div class="{% if form.rem.errors %} invalid{% endif %}">
+                    {% for error in form.rem.errors %}
+                        <p class="help-block" style="color:red;">{{ error }}</p>
+                    {% endfor %}
+                </div>
+        </div>
+        <div class="form-group col-md-12" id="div_factura">
+                {{ form.factura.label_tag }}
+                {% render_field form.factura class="form-control form-control-sm" %}
+                <div class="{% if form.factura.errors %} invalid{% endif %}">
+                    {% for error in form.factura.errors %}
+                        <p class="help-block" style="color:red;">{{ error }}</p>
+                    {% endfor %}
+                </div>
+        </div>
+        <div class="form-group col-md-12" id="div_estado">
+                {{ form.estado.label_tag }}
+                {% render_field form.estado class="form-control form-control-sm" %}
+                <div class="{% if form.estado.errors %} invalid{% endif %}">
+                    {% for error in form.estado.errors %}
+                        <p class="help-block" style="color:red;">{{ error }}</p>
+                    {% endfor %}
+                </div>
+        </div>
+        <div class="form-group col-md-12" id="div_sucursal">
+                {{ form.sucursal.label_tag }}
+                {% render_field form.sucursal class="form-control form-control-sm" %}
+                <div class="{% if form.sucursal.errors %} invalid{% endif %}">
+                    {% for error in form.sucursal.errors %}
+                        <p class="help-block" style="color:red;">{{ error }}</p>
+                    {% endfor %}
+                </div>
+        </div>
+        <div class="form-group col-md-12" id="div_fecha">
+                {{ form.fecha.label_tag }}
+                {% render_field form.fecha class="form-control form-control-sm" %}
+                <div class="{% if form.fecha.errors %} invalid{% endif %}">
+                    {% for error in form.fecha.errors %}
+                        <p class="help-block" style="color:red;">{{ error }}</p>
+                    {% endfor %}
+                </div>
+        </div>
+        <div class="form-group col-md-12" id="div_notacredito">
+                {{ form.notacredito.label_tag }}
+                {% render_field form.notacredito class="form-control form-control-sm" %}
+                <div class="{% if form.notacredito.errors %} invalid{% endif %}">
+                    {% for error in form.notacredito.errors %}
+                        <p class="help-block" style="color:red;">{{ error }}</p>
+                    {% endfor %}
+                </div>
+        </div>
+        <div class="form-group col-md-12" id="div_fecha_venc">
+                {{ form.fecha_venc.label_tag }}
+                {% render_field form.fecha_venc class="form-control form-control-sm" %}
+                <div class="{% if form.fecha_venc.errors %} invalid{% endif %}">
+                    {% for error in form.fecha_venc.errors %}
+                        <p class="help-block" style="color:red;">{{ error }}</p>
+                    {% endfor %}
+                </div>
+        </div>
+        <!-- {{form|crispy}} -->
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="submit-btn btn btn-primary" id ="btnActualiza">
+            <i class="fas fa-plus"></i>&nbsp; Actualizar
+        </button>
+        <button type="button" class="submit-btn btn btn-danger" data-dismiss="modal" aria-label="close">
+            <i class="fa fa-times"></i>&nbsp; cancelar
+        </button>
+    </div>
+</form>
+<script>
+    $('#div_rem').hide();
+    $('#div_factura').hide();
+    $('#div_referencia').hide();
+    $('#div_estado').hide();
+    $('#div_sucursal').hide();
+    $('#div_fecha').hide();
+    $('#div_fecha_venc').hide();
+    $('#div_notacredito').hide();
+    $('#div_rem').hide();
+    $(document).ready(function(){
+        if(($('#id_referencia').val()).includes("-SD-")){
+            $('#div_rem').show();
+            $('#div_factura').hide();
+            $('#id_rem').prop('readonly', true);
+        }
+        else if(($('#id_referencia').val()).includes("-ED-")){
+            $('#div_rem').hide();
+            $('#div_factura').show();
+            $('#id_factura').prop('readonly', true);
+        }
+        else{
+            $('#div_rem').hide();
+            $('#div_factura').hide();
+        }
+    });
+</script>

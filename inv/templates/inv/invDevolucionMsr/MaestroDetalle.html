@@ -1,0 +1,365 @@
+{% extends 'inv/invBase.html' %}
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block extracss %}
+    <!-- <link rel="stylesheet" href="{% static 'inv/css/cabecera.css' %}"> -->
+    <link rel="stylesheet" href="{% static 'fenimarket/vendor/datatables/dataTables.bootstrap4.min.css' %}">
+{% endblock extracss %}
+{% block contenido %}
+<div class="row">
+    <div class="col">
+        <div class="card py-3 border-left-primary">
+            <a href="#collapseCardExample" class="d-block card-header py-3" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="collapseCardExample">
+                <h6 class="m-0 font-weight-bold text-primary">Devolucion {{ Devolucion.referencia }}</h6>
+            </a>
+            <div class="collapse show" id="collapseCardExample">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="input-group col-md-3">
+                            <div class="input-group-prepend">
+                                <button class="btn btn-outline-primary" type="button" id="btn_cliente" data-toggle="modal" data-target="#modalcliente" style="z-index:0;">
+                                    <i class="fas fa-asterisk" aria-hidden="true"></i> Referencia
+                                </button>
+                            </div>
+                            <input id = "id_referencia" readonly type="text" class="form-control" value="{{ Devolucion.referencia }}" > 
+                        </div>
+                        <div class="input-group col-md-3">
+                            <div class="input-group-prepend">
+                                <button class="btn btn-outline-primary" type="button" id="btn_cliente" data-toggle="modal" data-target="#modalcliente" style="z-index:0;">
+                                    <i class="fab fa-etsy" aria-hidden="true"></i> Estado
+                                </button>
+                            </div>
+                            <input readonly type="text" class="form-control" value="{{ Devolucion.estado }}" > 
+                        </div>
+                        <div class="input-group col-md-3">
+                            <div class="input-group-prepend">
+                                <button class="btn btn-outline-primary" type="button" id="btn_cliente" data-toggle="modal" data-target="#modalcliente" style="z-index:0;">
+                                    <i class="far fa-calendar-plus" aria-hidden="true"></i> Creacion
+                                </button>
+                            </div>
+                            <input readonly type="text" class="form-control" value="{{ Devolucion.fecha|date:'Y-m-d h:i a' }}" > 
+                        </div>
+                        <div class="input-group col-md-3" id="div_facturacab">
+                            <div class="input-group-prepend">
+                                <button class="btn btn-outline-primary" type="button" id="btn_cliente" data-toggle="modal" data-target="#modalcliente" style="z-index:0;">
+                                    <i class="fas fa-file-alt" aria-hidden="true"></i> Factura
+                                </button>
+                            </div>
+                            <input id="p_factura" readonly type="text" class="form-control" value="{{ Devolucion.factura }}" > 
+                        </div>
+                        <div class="input-group col-md-3" id="div_remcab">
+                            <div class="input-group-prepend">
+                                <button class="btn btn-outline-primary" type="button" id="btn_cliente" data-toggle="modal" data-target="#modalcliente" style="z-index:0;">
+                                    <i class="fa fa-file-alt" aria-hidden="true"></i> REM
+                                </button>
+                            </div>
+                            <input id="p_rem" readonly type="text" class="form-control" value="{{ Devolucion.rem }}" > 
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="input-group col-md-12">
+                            <div class="input-group-prepend">
+                                <button class="btn btn-outline-primary" type="button" id="btn_cliente" data-toggle="modal" data-target="#modalcliente" style="z-index:0;">
+                                    <i class="fas fa-file-signature" aria-hidden="true"></i> Nota
+                                </button>
+                            </div>
+                            <input readonly type="text" class="form-control" value="{{ Devolucion.nota }}" > 
+                        </div>
+                    </div>
+                    <br>
+                    {% if entrada %}
+                    <div class="row">
+                        <div class="input-group col-md-12">
+                            <div class="input-group-prepend">
+                                <button class="btn btn-outline-primary" type="button" id="btn_cliente" data-toggle="modal" data-target="#modalcliente" style="z-index:0;">
+                                    <i class="fa fa-user" aria-hidden="true"></i> Proveedor
+                                </button>
+                            </div>
+                            <input readonly type="text" class="form-control" value="{{ documento.proveedor }}" > 
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="row">
+                        <div class="input-group col-md-12">
+                            <div class="input-group-prepend">
+                                <button class="btn btn-outline-primary" type="button" id="btn_cliente" data-toggle="modal" data-target="#modalcliente" style="z-index:0;">
+                                    <i class="fa fa-user" aria-hidden="true"></i> Cliente
+                                </button>
+                            </div>
+                            <input readonly type="text" class="form-control" value="{{ documento.cliente }}" > 
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="card-footer text-muted">
+                    <a role="button" class="btn btn-info btn-sm" target="_blank"   href="{% url 'DevolucionMsr_Imprimir' Devolucion.referencia %}">
+                        <i class="fas fa-print"></i>&nbsp;Imprimir
+                    </a>
+                    {% if Devolucion.estado.id == 4 %}
+                        <button type="button" class="btn btn-sm btn-info show-form" data-url="{% url 'DevolucionMsr_Editar' Devolucion.referencia %}">
+                            <i class="fas fa-pencil-alt"></i>&nbsp;Editar
+                        </button>         
+                        <a role="button" class="btn btn-sm btn-danger" href="{% url 'DevolucionMsr_Finalizar' Devolucion.referencia %}">
+                            <i class="far fa-check-circle"></i>&nbsp;Grabar
+                        </a>                     
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<br>
+{% if messages %}
+    {% for i in messages %}
+        <div class="alert alert-{{ i.tags }}">{{ i }}</div>
+    {% endfor %}
+{% endif %}
+<div class="row">
+    <div class="col">
+        <div class="card py-3 border-left-primary">
+            <a href="#collapseCardExample2" class="d-block card-header py-3" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="collapseCardExample">
+                <h6 class="m-0 font-weight-bold text-primary">Detalle</h6>
+            </a>
+            <div class="collapse show" id="collapseCardExample2">
+                <div class="card-body">
+                    {% if Devolucion.estado.id == 4 %}
+                        <form  id="CreateForm" method="POST">
+                            <div class="card text-center">
+                                {% csrf_token %}
+                                {{ formset.management_form }}
+                                <div class="table-responsive">
+                                    <table class="table table-sm">
+                                        {% for form in formset.forms %}
+                                        {% if forloop.first %}
+                                        <thead class="thead-dark">
+                                            <tr>
+                                                <!-- <th>Id</th> -->
+                                                <th class="th-bodega" >Bodega</th>
+                                                <th>Item</th>
+                                                <th class="th-estado">Estado</thid="td-estado">
+                                                <th>Unidades</th>
+                                                <th class="th-costo">Costo</th>
+                                                <th class="th-precio">Precio</th>
+                                                <th class="th-monto">Monto</th>
+                                                <th class="th-impuesto">impuesto</th>
+                                                <th class="th-penalizacion">Penalizacion</th> 
+                                                <th class="th-fecha_venc">Vencimiento</th>
+                                                <th>Acciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% endif %}
+                                            <tr>
+                                                <td class="td-bodega">
+                                                    {% render_field form.bodega class="form-control form-control-sm" %}
+                                                    <div class="{% if form.bodega.errors %} invalid{% endif %}">
+                                                        {% for error in form.bodega.errors %}
+                                                            <p class="help-block" style="color:red;">{{ error }}</p>
+                                                        {% endfor %}
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    {% render_field form.id class="form-control form-control-sm" %}
+                                                    {% render_field form.item class="form-control form-control-sm item" %}
+                                                    <div class="{% if form.item.errors %} invalid{% endif %}">
+                                                        {% for error in form.item.errors %}
+                                                            <p class="help-block" style="color:red;">{{ error }}</p>
+                                                        {% endfor %}
+                                                    </div>
+                                                </td>
+                                                <td class="td-estado">
+                                                    {% render_field form.estado class="form-control form-control-sm" %}
+                                                    <div class="{% if form.estado.errors %} invalid{% endif %}">
+                                                        {% for error in form.estado.errors %}
+                                                            <p class="help-block" style="color:red;">{{ error }}</p>
+                                                        {% endfor %}
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    {% render_field form.cantidad class="form-control form-control-sm" %}
+                                                    <div class="{% if form.cantidad.errors %} invalid{% endif %}">
+                                                        {% for error in form.cantidad.errors %}
+                                                            <p class="help-block" style="color:red;">{{ error }}</p>
+                                                        {% endfor %}
+                                                    </div>
+                                                </td>
+                                                <td class="td-costo">
+                                                    {% render_field form.costo class="form-control form-control-sm" %}
+                                                    <div class="{% if form.costo.errors %} invalid{% endif %}">
+                                                        {% for error in form.costo.errors %}
+                                                            <p class="help-block" style="color:red;">{{ error }}</p>
+                                                        {% endfor %}
+                                                    </div>
+                                                </td>
+                                                <td class="td-precio">
+                                                    {% render_field form.precio class="form-control form-control-sm" %}
+                                                    <div class="{% if form.precio.errors %} invalid{% endif %}">
+                                                        {% for error in form.precio.errors %}
+                                                            <p class="help-block" style="color:red;">{{ error }}</p>
+                                                        {% endfor %}
+                                                    </div>
+                                                </td>
+                                                <td class="td-monto">
+                                                    {% render_field form.monto class="form-control form-control-sm" %}
+                                                    <div class="{% if form.monto.errors %} invalid{% endif %}">
+                                                        {% for error in form.monto.errors %}
+                                                            <p class="help-block" style="color:red;">{{ error }}</p>
+                                                        {% endfor %}
+                                                    </div>
+                                                </td>
+                                                <td class="td-impuesto">
+                                                    {% render_field form.impuesto class="form-control form-control-sm" %}
+                                                    <div class="{% if form.impuesto.errors %} invalid{% endif %}">
+                                                        {% for error in form.impuesto.errors %}
+                                                            <p class="help-block" style="color:red;">{{ error }}</p>
+                                                        {% endfor %}
+                                                    </div>
+                                                </td>
+                                                <td class="td-penalizacion">
+                                                    {% render_field form.penalizacion class="form-control form-control-sm" min=0  %}
+                                                    <div class="{% if form.penalizacion.errors %} invalid{% endif %}">
+                                                        {% for error in form.penalizacion.errors %}
+                                                            <p class="help-block" style="color:red;">{{ error }}</p>
+                                                        {% endfor %}
+                                                    </div>
+                                                </td>
+                                                <td class="td-fecha_venc">
+                                                    {% render_field form.fecha_venc type="date" class="form-control form-control-sm" %}
+                                                    <div class="{% if form.fecha_venc.errors %} invalid{% endif %}">
+                                                        {% for error in form.fecha_venc.errors %}
+                                                            <p class="help-block" style="color:red;">{{ error }}</p>
+                                                        {% endfor %}
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="custom-control custom-switch" style="margin-bottom: 0.5em;">
+                                                        {% render_field form.DELETE class="custom-control-input" %}
+                                                        <label class="custom-control-label" for="{{form.DELETE.id_for_label }}">Borrar</label>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                              </div>
+                        </form>
+                    {% elif Devolucion.estado.id == 1 %}
+                        <table  class="table table-sm table-bordered" id="Pantalla-table">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <!-- <th>Id</th> -->
+                                    <th>Bodega</th>
+                                    <th>Item</th>
+                                    <th class="th-estado">Estado</thid="td-estado">
+                                    <th>Unidades</th>
+                                    <th class="th-costo">Costo</th>
+                                    <th class="th-precio">Precio</th>
+                                    <th class="th-precio">Impuesto</th>
+                                    <th class="th-penalizacion">Penalizado</th>
+                                    <th class="th-monto2">Monto</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for i in lineas %}
+                                    <tr>
+                                        <td>{{ i.bodega }}</td>
+                                        <td>{{ i.item }}</td>
+                                        <td class="td-estado">{{ i.estado }}</td>
+                                        <td>{{ i.cantidad }}</td>
+                                        <td class="td-costo">{{ i.costo }}</td>
+                                        <td class="td-precio">{{ i.precio }}</td>
+                                        <td class="td-precio">{{ i.impuesto }}</td>
+                                        <td class="td-penalizacion">{{ i.penalizacion }}</td>
+                                        <td class="td-monto2">{{ i.monto }}</td>
+                                    </tr>
+                                {% empty %}
+                                    <tr><td colspan="8"><h3>No se encontraron registros</h3></td></tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% endif %}
+                </div>
+                <div class="card-footer text-muted">
+                    {% if Devolucion.estado.id == 4 %}
+                        <button class="btn btn-danger btn-sm" type="submit" form="CreateForm">
+                            <i class="fas fa-ellipsis-v"></i>&nbsp;Aplicar
+                        </button>
+                    {% endif %}
+                    <a role="button" class="btn btn-secondary btn-sm"  href="{% url 'DevolucionMsr_Listar' %}">
+                        <i class="fas fa-reply"></i>&nbsp;Volver a la lista
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock contenido %}
+{% block extramodal %}
+    <div class="modal fade" id="modal-Pantalla">
+        <div class="modal-dialog">
+            <div class="modal-content"></div>
+        </div>
+    </div>
+{% endblock extramodal %}
+
+{% block extrascripts %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.23.0/moment.min.js" integrity="sha256-VBLiveTKyUZMEzJd6z2mhfxIqz3ZATCuVMawPZGzIfA=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.1.2/js/tempusdominus-bootstrap-4.min.js" integrity="sha256-z0oKYg6xiLq3yJGsp/LsY9XykbweQlHl42jHv2XTBz4=" crossorigin="anonymous"></script>
+    <script src="{% static 'vta/js/jquery.bootstrap.modal.forms.min.js' %}"></script>
+    <script src="{% static 'inv/js/modal.js' %}"></script> 
+    <script type="text/javascript" src="{% static 'fenimarket/vendor/datatables/jquery.dataTables.js' %}"></script>
+    <script type="text/javascript" src="{% static 'fenimarket/vendor/datatables/dataTables.bootstrap4.min.js' %}"></script>
+    
+    <script>    
+        //Script que bloquea los tipos number
+        jQuery('input[type=number]').keypress(function(tecla){
+            // console.log(tecla.charCode);
+            // console.log(this.value.length)
+            //46 = .
+            //45 = -
+            //se ponen las teclas que no se admiten solo admitir numeros y la primera son los numeros los otros son la e y el punto
+            if((tecla.charCode < 48 || tecla.charCode > 57) && tecla.charCode != 46){
+                return false;
+            }
+            var regex = /^[0-9]{0,7}$|^[0-9]{0,7}.{0,1}[0-9]{0,1}$/; // number with 2 decimal places
+            if (!regex.test(this.value)) {
+                return false;
+            }
+        });
+    </script>
+    <script>
+        // $('.alert-warning').fadeOut(7000);
+        $('#div_remcab').hide();
+        $('#div_facturacab').hide();
+        $('.th-costo').hide();
+        $('.td-costo').hide();
+        $('.th-bodega').hide();
+        $('.td-bodega').hide();
+        $('.th-monto').hide();
+        $('.td-monto').hide();
+        var rem = $('#p_rem').val();
+        var factura = $('#p_factura').val();
+        if(rem!='None'){
+            $('#div_remcab').show();
+            $('.th-estado').hide(); 
+            $('.td-estado').hide();
+        }
+        else if(factura!='None'){
+            $('#div_facturacab').show();
+        }
+        if(($('#id_referencia').val()).includes("-SD-")){
+            $('.th-costo').show();
+            $('.td-costo').show();
+            $('.th-precio').hide();
+            $('.td-precio').hide();
+            $('.th-penalizacion').hide();
+            $('.td-penalizacion').hide();
+            $('.th-fecha_venc').hide();
+            $('.td-fecha_venc').hide();
+        }
+    </script>
+{% endblock extrascripts %}
+

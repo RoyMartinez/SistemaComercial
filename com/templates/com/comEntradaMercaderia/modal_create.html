@@ -1,0 +1,100 @@
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+<form method="POST" data-url="{% url 'com_emNew' %}" class="create-form" autocomplete="off">
+    {% csrf_token %}
+    <div class="modal-header">
+        <h5 class="modal-title text-center">Nueva Entrada de mercader&iacute;a</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="{% if form.non_field_errors %}invalid{% endif %} mb-2">
+            {% for error in form.non_field_errors %}
+                {{ error }}
+            {% endfor %}
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-4">
+                <label for="fecha">Fecha:</label>
+                <input type="text" class="form-control" value="{{ fecha|date:'d.m.y' }} {{ fecha|time:'H:i' }}" readonly>
+            </div>
+            <div class="form-group col-md-4">
+                {{ form.condicion.label_tag }}
+                {% render_field form.condicion class="form-control" %}
+                <div class="{% if form.condicion.errors %} invalid{% endif %}">
+                    {% for error in form.condicion.errors %}
+                        <p class="help-block" style="color:red;">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="form-group col-md-4">
+                <label for="id_validez">Validez (d&iacute;as):</label>
+                {% render_field form.validez class="form-control" value="0" min="0" max="999" readonly="true" %}
+                <div class="{% if form.validez %} invalid{% endif %}">
+                    {% for error in form.validez.errors %}
+                        <p class="help-block" style="color:red;">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <p>{{ referencia }}</p>
+        <div class="form-group">
+            {{ form.proveedor.label_tag }}
+            {% render_field form.proveedor class="form-control" %}
+            <div class="{% if form.proveedor.errors %} invalid{% endif %}">
+                {% for error in form.proveedor.errors %}
+                    <p class="help-block" style="color:red;">{{ error }}</p>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-4">
+                {{ form.facturas.label_tag }}
+                {% render_field form.facturas class="form-control" %}
+                <div class="{% if form.facturas.errors %} invalid{% endif %}">
+                    {% for error in form.facturas.errors %}
+                        <p class="help-block" style="color:red;">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="form-group col-md-4">
+                {{ form.poliza.label_tag }}
+                {% render_field form.poliza class="form-control" %}
+                <div class="{% if form.poliza.errors %} invalid{% endif %}">
+                    {% for error in form.poliza.errors %}
+                        <p class="help-block" style="color:red;">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="form-group col-md-4">
+                {{ form.ordenes_compra.label_tag }}
+                {% render_field form.ordenes_compra class="form-control" %}
+                <div class="{% if form.ordenes_compra.errors %} invalid{% endif %}">
+                    {% for error in form.ordenes_compra.errors %}
+                        <p class="help-block" style="color:red;">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-danger" type="submit">
+            <i class="fa fa-plus"></i>&nbsp; Crear
+        </button>
+    </div>
+    <script type="text/javascript">
+        $('#id_condicion').on('change',function(){
+            if (this.value == 1){
+                $('#id_validez').val(0);
+                $('#id_validez').prop('readonly',true);   
+            }else{ $('#id_validez').prop('readonly',false); }
+        });
+        $('#id_validez').on('change', function(){
+            if (this.value < 0){
+                alert('No se admiten valores negativos');
+                this.value = 0;
+            }
+        });
+    </script>
+</form>

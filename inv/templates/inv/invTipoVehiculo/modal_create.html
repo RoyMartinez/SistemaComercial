@@ -1,0 +1,19 @@
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+<form method="POST" data-url="{% url 'TipoVehiculo_Crear' %}" class="create-form" autocomplete="off">
+    {% csrf_token %}
+    <div class="modal-header">
+        <h5 class="modal-title text-center">Crear TipoVehiculo</h5>
+    </div>
+    <div class="modal-body">
+        {{form|crispy}}
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="submit-btn btn btn-primary">
+            <i class="fas fa-plus"></i>&nbsp; Crear
+        </button>
+        <button type="button" class="submit-btn btn btn-danger" data-dismiss="modal" aria-label="close">
+            <i class="fa fa-times"></i>&nbsp; cancelar
+        </button>
+    </div>
+</form>

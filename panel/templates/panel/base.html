@@ -1,0 +1,56 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <link rel="stylesheet" href="{% static 'panel/bootstrap.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'usuarios/estilos.css' %}" />
+    <link
+      rel="stylesheet"
+      href="{% static 'fenimarket/vendor/fontawesome-free/css/all.min.css' %}"
+    />
+    <title>Configuraci&oacute;n</title>
+    <style>
+      .col-md-3:hover {
+        border: solid 1px #c0c0c0;
+        cursor: pointer;
+      }
+      .margen {
+        margin-top: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <header class="site-header">
+      <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
+        <div class="container">
+          <a class="navbar-brand mr-4" href="#">MultiComercial, S.P.</a>
+          <button
+            class="navbar-toggler"
+            type="button"
+            data-toggle="collapse"
+            data-target="#navbarToggle"
+            aria-controls="navbarToggle"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarToggle">
+            <div class="navbar-nav mr-auto"></div>
+            <div class="navbar-nav"></div>
+          </div>
+        </div>
+      </nav>
+    </header>
+    {% block contenido %} {% endblock contenido %} {% block extramodal %}
+    {%endblock extramodal %}
+    <script src="{% static 'fenimarket/vendor/jquery/jquery.min.js' %}"></script>
+    <script src="{% static 'fenimarket/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+    {% block extrascripts %} {% endblock extrascripts %}
+  </body>
+</html>

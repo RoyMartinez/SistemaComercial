@@ -1,0 +1,29 @@
+{% load static %} 
+{% for i in trasladomsr %}
+<tr>
+    <td>{{ i.referencia }}</td>
+    <td>{{ i.fecha|date:'SHORT_DATE_FORMAT' }}</td>
+    <td>{{ i.nota }}</td>
+    {% if i.estado.id == 1 %}
+        <td style="color:green"><strong>{{ i.estado }}</strong></td>
+    {% elif i.estado.id == 4 %}
+        <td style="color: blue;"><strong>{{ i.estado }}</strong></td>
+    {% endif %}
+    <td>
+        {% if i.estado.id == 1 %}
+            <a role="button" class="btn btn-info btn-sm" target="_blank"   href="{% url 'TrasladoMsr_Imprimir' i.referencia %}">
+                <i class="fas fa-print"></i>&nbsp; Imprimir
+            </a>
+            <a role="button" class="btn btn-sm btn-dark" href="{% url 'LocalesMaestroDetalle' i.referencia %}">
+                <i class="fas fa-info"></i>&nbsp; Ver detalles
+            </a>
+        {% elif i.estado.id == 4 %}
+            <a role="button" class="btn btn-sm btn-dark" href="{% url 'LocalesMaestroDetalle' i.referencia %}">
+                <i class="fas fa-info"></i>&nbsp; Editar detalles
+            </a>
+        {% endif %}
+    </td>
+</tr>
+{% empty %}
+    <tr><td colspan="6"><h3>No se encontraron registros</h3></td></tr>
+{% endfor %}

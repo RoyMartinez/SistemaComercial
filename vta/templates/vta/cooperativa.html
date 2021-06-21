@@ -1,0 +1,125 @@
+{% extends 'vta/base_vta.html' %}
+{% load static %}
+{% load widget_tweaks %}
+{% block extracss %}
+    <link href="{% static 'vta/vendor/datatables/dataTables.bootstrap4.min.css' %}" rel="stylesheet">
+{% endblock extracss %}
+{% block contenido %}
+{% if messages %}
+    {% for i in messages %}
+        <div class="alert alert-{{ i.tags }}">{{ i }}</div>
+    {% endfor %}
+{% endif %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card border-left-success shadow h-100 py-2">
+            <a href="#collapseCardExample" class="d-block card-header py-3" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="collapseCardExample">
+                <h6 class="m-0 font-weight-bold text-primary">Cooperativas</h6>
+            </a>
+            <div class="collapse show" id="collapseCardExample">
+                <div class="card-body">
+                    <form id="myForm" method="POST" autocomplete="off" id="form_fact">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-md-10">
+                                <div class="form-row">
+                                    <div class="form-group col-md-6">
+                                        {{ form.nombre.label_tag }}
+                                        {% render_field form.nombre class="form-control form-control-sm" %}
+                                        <div class="{% if form.nombre.errors %} invalid{% endif %}">
+                                            {% for error in form.nombre.errors %}
+                                                <p class="help-block" style="color:red;">{{ error }}</p>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        {{ form.union.label_tag }}
+                                        {% render_field form.union class="form-control form-control-sm" %}
+                                        <div class="{% if form.union %} invalid{% endif %}">
+                                            {% for error in form.union.errors %}
+                                                <p class="help-block" style="color:red;">{{ error }}</p>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-2">
+                                        {{ form.segmento.label_tag }}
+                                        {% render_field form.segmento class="form-control form-control-sm" %}
+                                        <div class="{% if form.segmento %} invalid{% endif %}">
+                                            {% for error in form.segmento.errors %}
+                                                <p class="help-block" style="color:red;">{{ error }}</p>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>       
+                            </div>
+                            <div class="col-md-2" style="border-left: 1px solid #C0C0C0;">
+                                <br>
+                                <button type="submit" name='grabar' id='btn_save' class="btn btn-outline-primary">
+                                    <i class="fas fa-save"></i> Nuevo</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<br>
+<div class="row">
+    <div class="col">
+        <div class="card py-3 border-left-success">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table id="dataTable" class="table table-sm table-bordered">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th scope="col">Organizaci&oacute;n</th>
+                                <th scope="col">Unión</th>
+                                <th scope="col">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for i in coop %}
+                            <tr>
+                                <td>{{ i.nombre }}</td>
+                                <td>{{ i.union }}</td>
+                                <td>
+                                    {% if i.pk == 1 %}
+                                        <span><small>System record</small></span>
+                                    {% else %}
+                                        <button type="button" class="btn btn-outline-info btn-sm editar" data-id="{% url 'vta_coop_edit' i.pk %}">
+                                            <i class="fas fa-pencil-alt"></i>&nbsp;Editar
+                                        </button>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% empty %}
+                                <tr><td colspan="3"><h4>No hay registros</h4></td><tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock contenido %}
+{% block extramodal %}
+    <div class="modal fade" tabindex="-1" role="dialog" id="modal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content"></div>
+        </div>
+    </div>
+{% endblock extramodal %}
+{% block extrascripts %}
+    <script src="{% static 'vta/js/jquery.bootstrap.modal.forms.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'vta/js/validar.js' %}"></script>
+    <script type="text/javascript" src="{% static 'vta/vendor/datatables/jquery.dataTables.js' %}"></script>
+    <script type="text/javascript" src="{% static 'vta/vendor/datatables/dataTables.bootstrap4.min.js' %}"></script>
+    <script src="{% static 'vta/js/tablas.js' %}" type="text/javascript"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $(".editar").each(function(){ $(this).modalForm({formURL: $(this).data('id')}); });
+        });
+    </script>
+{% endblock extrascripts %}

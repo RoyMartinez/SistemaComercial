@@ -1,0 +1,94 @@
+{% extends 'inv/invBase.html' %}
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block extracss %}
+    <link rel="stylesheet" href="{% static 'fenimarket/vendor/datatables/dataTables.bootstrap4.min.css' %}">
+{% endblock extracss %}
+{% block contenido %}
+<div class="row">
+    <div class="col">
+        <div class="card py-3 border-left-primary">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-10">
+                        <h4 class="m-0 font-weight-bold text-primary">costo de {{ item }}:</h4>
+                    </div>
+                    <div class="col-md-2">
+                        <a role="button" class="btn btn-primary" href="{% url 'N4Item_Listar' %}">
+                            <span class="fas fa-long-arrow-alt-left"> volver a la lista</span>
+                        </a>
+                    </div>
+                </div>
+                <hr>
+                <form method="POST" id="submit">    
+                    {% csrf_token %}
+
+                    <div class="table-responsive">
+                        <table class="table table-sm table-bordered" id="Pantalla-table" >
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th scope="col">Item</th>
+                                    <th scope="col">Existencia Global</th>
+                                    <th scope="col">Costo</th>
+                                    <th scope="col">Saldo</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        {{ item }}
+                                    </td>
+                                    <td>
+                                        {{ costo.existencia }}
+                                    </td>
+                                    <td>
+                                        {{ costo.costo }}
+                                    </td>
+                                    <td>
+                                        {{ costo.saldo }}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock contenido %}
+{% block extramodal %}
+<div class="modal fade" id="modal-Pantalla">
+    <div class="modal-dialog">
+        <div class="modal-content"></div>
+    </div>
+</div>
+{% endblock extramodal %}
+{% block extrascripts %}
+<script src="{% static 'inv/js/modal.js' %}">  </script>  
+<script type="text/javascript" src="{% static 'fenimarket/vendor/datatables/jquery.dataTables.js' %}"></script>
+<script type="text/javascript" src="{% static 'fenimarket/vendor/datatables/dataTables.bootstrap4.min.js' %}"></script>
+<!-- <script type="text/javascript">
+
+$(document).ready(function() {
+          $('#Pantalla-table').DataTable({
+              "language":{
+                  "lengthMenu":"Mostrar  _MENU_  filas",
+                  "zeroRecords":"No se encontraron coincidencias",
+                  "info": "Página _PAGE_ de _PAGES_",
+                  "infoEmpty":"No hay registros",
+                  "infoFiltered":"(filtrado de un total de _MAX_ registros)",
+                  "search":"Buscar:",
+                  "paginate":{
+                      "first":"Primero",
+                      "last":"Último",
+                      "next":"Siguiente",
+                      "previous":"Anterior",
+                  }
+              },
+              "ordering": false 
+          });  
+  });
+</script> -->
+{% endblock extrascripts %}

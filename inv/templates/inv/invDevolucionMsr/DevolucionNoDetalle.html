@@ -1,0 +1,122 @@
+{% load static %} {% load humanize %}
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <title>Devolucion {{ msr.referencia }}</title>
+    <link rel="stylesheet" href="{% static 'vta/estilos/factura.css' %}" />
+    <link
+      rel="license"
+      href="https://www.opensource.org/licenses/mit-license/"
+    />
+  </head>
+  <body>
+    <header>
+      <h1>Devolucion {{ tipo }}</h1>
+      <address>
+        <p>Multicomercial, C.P</p>
+        <p>{{ suc.sucursal.direccion }}<br />Sucursal {{ suc.sucursal }}</p>
+        <p>{{ suc.sucursal.telefonos }}</p>
+      </address>
+      <span>
+        <!-- <img
+          width="100"
+          height="100"
+          src="{% static 'demostracion/imgs/logo-feni.png' %}"
+        /> -->
+      </span>
+    </header>
+    <article>
+      <address>
+        <p>{{ proforma.nombre }}</p>
+        <p>
+          {{ proforma.cliente.apellidos|title }}<br />{{
+          proforma.cliente.nombres|title }}
+        </p>
+      </address>
+      <table class="meta">
+        <tr>
+          <th><span>Referencia:</span></th>
+          <td><span>{{ msr.referencia }}</span></td>
+        </tr>
+        <tr>
+          <th><span>Fecha emision:</span></th>
+          <td><span>{{ msr.fecha|date:"SHORT_DATE_FORMAT" }}</span></td>
+        </tr>
+        <tr>
+          <th><span>Hora Creacion</span></th>
+          <td>
+            <span id="prefix"></span><span>{{ msr.fecha|date:'P' }}</span>
+          </td>
+        </tr>
+        {% if valor%}
+        <tr>
+          <th><span>Factura:</span></th>
+          <td><span>{{ msr.factura }}</span></td>
+        </tr>
+        {% else %}
+        <tr>
+          <th><span>Rem:</span></th>
+          <td><span>{{ msr.rem }}</span></td>
+        </tr>
+        {% endif %}
+        <tr>
+          <th><span>Usuario:</span></th>
+          <td><span>{{ suc.user }}</span></td>
+        </tr>
+      </table>
+      <table class="inventory">
+        <thead>
+          <tr>
+            <th style="width: 110px"><span>Item</span></th>
+            <th style="width: 350px"><span>Descripci&oacute;n</span></th>
+            <th><span>Cantidad</span></th>
+            <th><span>P.Unitario</span></th>
+            <th><span>Total</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td colspan="5">
+              <div class="text">Detalle en Devolucion no encontrados</div>
+              <div class="text">
+                Para poder imprimir la devolucion debe ingresarle items primero
+              </div>
+              <div class="text">
+                Ingrese items y vuelva a darle al boton de imprimir
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </article>
+    <br />
+    <aside>
+      <h1><span>Comentarios</span></h1>
+      <div contenteditable>
+        <p>Devolucion {{ tipo }} realizada en sucursal {{ suc.sucursal }}</p>
+        <p>Creado por {{ suc.user.first_name }} {{ suc.user.last_name }}</p>
+      </div>
+    </aside>
+    <br />
+    <br />
+    <br />
+    <br />
+    <footer>
+      <table aria-rowspan="15">
+        <tr style="height: 20px">
+          <th><strong>Elaborado:</strong></th>
+          <td><span></span></td>
+          <th><strong>Autorizado:</strong></th>
+          <td><span></span></td>
+        </tr>
+        <tr>
+          <th><span>Entregado:</span></th>
+          <td><span></span></td>
+          <th><strong>Recibido:</strong></th>
+          <td><span></span></td>
+        </tr>
+      </table>
+    </footer>
+  </body>
+</html>

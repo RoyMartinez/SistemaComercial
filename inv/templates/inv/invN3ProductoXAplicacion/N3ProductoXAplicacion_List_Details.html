@@ -1,0 +1,14 @@
+{% for f in n3productoxaplicacion %}
+<tr>
+    <td>{{ f.aplicacion }}</td>
+    <td>{{ f.producto }}</td>
+    <td>{{ f.nota }}</td>
+    <td>
+        <button type="button" class="btn show-form-update" data-url="{% url 'N3ProductoXAplicacion_Editar' f.pk %}">
+            <span class="fa fa-edit fa-2x" style="color:green"></span>
+        </button>
+    </td>
+</tr>
+{% empty %}
+    <tr><td><h1>No hay Registro en Producto X Aplicacion</h1></td></tr>
+{% endfor %}

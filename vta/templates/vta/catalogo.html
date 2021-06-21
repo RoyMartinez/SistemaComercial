@@ -1,0 +1,184 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link href="{% static 'fenimarket/vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css">
+</head>
+<body>
+    <div class="container">
+        <nav class="navbar navbar-dark bg-success fixed-top">
+            <a class="navbar-brand" href="#"><h3>Cat&aacute;logo de Repuestos</h3></a>
+            <form class="form-inline my-2 my-lg-0" method="POST" autocomplete="off">
+                {% csrf_token %}
+                <input class="form-control mr-sm-2" name="buscar" type="search" placeholder="B&uacute;squeda" aria-label="Search" required>
+                <button class="btn btn-warning my-2 my-sm-0" type="submit">Buscar</button>
+            </form>
+            <button type="button" class="btn btn-danger" id="save_close">
+                <i class="fas fa-shopping-cart"></i>&nbsp; A&ntilde;adir
+            </button>
+        </nav>
+        <br><br><br><br>
+        <div class="row">
+            <div class="col-md-2" style="border: green 1px solid;">
+                <hr>
+                <h5 style="color:green;">Vehiculo</h5>
+                {% for i in vehiculo %}
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" class="custom-control-input" id="{{ forloop.counter }}" name="marca" value="{{ i.pk }}">
+                        <label class="custom-control-label" for="{{ forloop.counter }}">{{ i.marca|title }}</label>
+                    </div>
+                {% endfor %}
+                <hr>
+                <h5 style="color:green;">Modelo</h5>
+                <select class="form-control form-control-sm" id="modelos">
+                    <option value="" selected="">---------</option>
+                </select>
+                <hr>
+                <h5 style="color:green;">Familia</h5>
+                <select class="form-control form-control-sm">
+                    <option value="" selected="">Todos</option>
+                    {% for i in familia %}
+                        <option value="{{ i.pk }}">{{ i.descripcion|lower }}</option>
+                    {% endfor %}
+                </select>
+                <hr>
+                <h5 style="color:green;">Marca</h5>
+                <select class="form-control form-control-sm">
+                    <option value="" selected="">Todos</option>
+                    {% for i in marcaitem %}
+                        <option value="{{ i.pk }}">{{ i.marca }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-10">
+                <small>Keywords: combo, </small>
+                <table id="tabla-item" class="table table-sm">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th scope="col">C&oacute;digo</th>
+                            <th scope="col">Descripci&oacute;n</th>
+                            <th scope="col">Bodega</th>
+                            <th scope="col">Precio</th>
+                            <th scope="col">Cantidad</th>
+                            <th scope="col">Elegir</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for i in articulos %}
+                            <tr>
+                                <td>{{ i.item.pk }}</td>
+                                <td>{{ i.item.producto.familia.descripcion }} {{ i.item.producto.descripcion }} {{ i.item.marca.marca }} {{ i.item.descripcion }}</td>
+                                <td>{{ i.bodega.pk }}</td>
+                                <td>{{ i.item.preciomax|floatformat:2 }}</td>
+                                <td>{{ i.cantidad }}</td>
+                                <td>
+                                    {% if i.item.n3.naturaleza != 'C' %}
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input" id="check-{{ forloop.counter }}" value="{{ i.pk }}" onclick="alerta(this);">
+                                            <label class="custom-control-label" for="check-{{ forloop.counter }}"></label>
+                                        </div>
+                                    {% else %}
+                                        <div class="custom-control custom-radio">
+                                            <input name="combo-radio" type="radio" class="custom-control-input" id="check-{{ forloop.counter }}" value="{{ i.pk }}" onclick="alerta(this);">
+                                            <label class="custom-control-label" for="check-{{ forloop.counter }}"></label>
+                                        </div>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% empty %}
+                            <tr><td colspan="6"><h4>Nada que mostrar</h4></td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <!-- -------------------------------------------------------------------- -->
+    <!--         Formulario modal para agregar combo  -->
+    <!-- -------------------------------------------------------------------- -->
+    <div class="modal fade" id="modalcombo" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Opciones de Combo</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div id="cuerpo">
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="btncombo" type="button" class="btn btn-success" data-dismiss="modal">
+                        <i class="fas fa-check"></i>&nbsp;Aplicar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="{% static 'demostracion/js/jquery-3.4.1.js' %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script type="text/javascript">
+        var arreglo=[];
+        $(window).blur(function(){ self.close(); });
+// ************** Updates an array with checked items **************************
+        function alerta(item){
+            if (item.checked){ 
+                arreglo.push(item.value); 
+            }
+            else {
+                for (var i=0; i<arreglo.length; i++){
+                    if (arreglo[i] === item.value){ arreglo.splice(i,1); }
+                }
+            }
+        }
+
+// ************** when pressed it saves the array into a Temp-Details Table **************************
+        $('#save_close').on('click', function(){
+            if (arreglo.length > 0){
+                var request =$.ajax({type:"GET", 
+                                    url: "{% url 'vta_ajax_item' borra %}", 
+                                    data: {"item":arreglo.toString(),}
+                                    ,});  
+                request.done(function(response){
+                    if (response.excedente){ alert('No hay exisxtencias para armar este combo'); }
+                    if (response.modal){
+                        $('#modalcombo').modal('show');
+                        $('#cuerpo').html(response.opciones);
+                    }
+                });
+            }
+        });  
+
+        $('#btncombo').on('click', function(){
+            var x  = $('.combo');
+            var arreglocombo = [];
+            for (var i=0; i < x.length; i++){
+                if (x[i].checked){
+                    arreglocombo.push(x[i].value);
+                }
+            }
+            if (arreglocombo){
+                var request = $.ajax({ type:"GET", url:"{% url 'vta_ajax_combo' borra %}", data:{"seleccion":arreglocombo.toString(),}});
+            }
+        });      
+//************** when checked, it asks for the related model **************************
+        $('input[type=radio]').on('click',function(){
+            var request =$.ajax({type:"GET", 
+                url: "{% url 'vta_ajax_modelos' %}", 
+                data: {"marca":this.value,}
+                ,});  
+            request.done(function(response){
+                $('#modelos').html(response.opcion);
+            });
+        });
+
+    </script>
+</body>
+</html>

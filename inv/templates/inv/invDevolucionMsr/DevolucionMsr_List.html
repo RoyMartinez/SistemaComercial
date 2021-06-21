@@ -1,0 +1,158 @@
+{% extends 'inv/invBase.html' %}
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+{% load static %} 
+{% block extracss %}
+    <link rel="stylesheet" href="{% static 'fenimarket/vendor/datatables/dataTables.bootstrap4.min.css' %}">
+{% endblock extracss %}
+{% block contenido %}
+{% if messages %}
+    {% for i in messages %}
+        <div class="alert alert-{{ i.tags }}">{{ i }}</div>
+    {% endfor %}
+{% endif %}
+<div class="row">
+    <div class="col">
+        <div class="card py-3 border-left-primary">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-2">
+                        <h4 class="m-0 font-weight-bold text-primary">Devoluciones</h4>
+                    </div>
+                    <div class="col-md-8">
+                        <form  method="POST" >
+                            <div class="form-row">
+                                {% csrf_token %}
+                                <div class="col-md-3">
+                                    {% render_field form.busqueda class="form-contrl-sm" value="FALSE" %}
+                                    <div class="custom-control custom-switch" style="margin-bottom: 0.5em;">
+                                        <input type="checkbox" class="custom-control-input" name="especificar_rango" id="id_especificar_rango">
+                                        <label class="custom-control-label" for="id_especificar_rango">Especificar rango </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6" id="div_rangos_definidos">
+                                    {% render_field form.rangos_especificos class="form-control form-control-sm" %}
+                                    <div class="{% if form.rangos_especificos.errors %} invalid{% endif %}">
+                                        {% for error in form.rangos_especificos.errors %}
+                                            <p class="help-block" style="color:red;">{{ error }}</p>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <div class="col-md-6" id="div_rangos_especificos">
+                                    <div class="row">
+                                        <div class="col-md-6 form-group row">
+                                            <label for="id_fecha_inicio">Inicio:</label>
+                                            <div class="col-md-10">
+                                                {% render_field form.fecha_inicio class="form-control" name="fecha" type="date" value=fecha_inicio%}
+                                                <div class="{% if form.fecha_inicio.errors %} invalid{% endif %}">
+                                                    {% for error in form.fecha_inicio.errors %}
+                                                        <p class="help-block" style="color:red;">{{ error }}</p>
+                                                    {% endfor %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 form-group row">
+                                            <label for="id_fecha_fin">Fin:   </label>
+                                            <div class="col-md-10">
+                                                {% render_field form.fecha_fin class="form-control" name="fecha" type="date" value=fecha_fin %}
+                                                <div class="{% if form.fecha_fin.errors %} invalid{% endif %}">
+                                                    {% for error in form.fecha_fin.errors %}
+                                                        <p class="help-block" style="color:red;">{{ error }}</p>
+                                                    {% endfor %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3" >
+                                    <button class="btn btn-primary"  type="submit">
+                                        <span class="fa fa-search"> Buscar Devolucion</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-md-2">
+                        <button type="button" class="btn btn-primary show-form" data-url="{% url 'DevolucionMsr_Crear' %}">
+                            <span class="fa fa-plus"> Nuevo</span>
+                        </button>
+                    </div>
+                </div>
+                <hr>
+                <div class="table-responsive">
+                    <table class="table table-sm table-bordered" id="Pantalla-table" >
+                        <thead class="thead-dark">
+                            <tr>
+                                <th scope="col">Referencia</th>
+                                <th scope="col">Fecha</th>
+                                <th scope="col">Nota</th>
+                                <th scope="col">Estado</th>
+                                <th scope="col">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% include 'inv/invDevolucionMsr/DevolucionMsr_List_Details.html' %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock contenido %}
+{% block extramodal %}
+<div class="modal fade" id="modal-Pantalla">
+    <div class="modal-dialog">
+        <div class="modal-content"></div>
+    </div>
+</div>
+{% endblock extramodal %}
+{% block extrascripts %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.23.0/moment.min.js" integrity="sha256-VBLiveTKyUZMEzJd6z2mhfxIqz3ZATCuVMawPZGzIfA=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.1.2/js/tempusdominus-bootstrap-4.min.js" integrity="sha256-z0oKYg6xiLq3yJGsp/LsY9XykbweQlHl42jHv2XTBz4=" crossorigin="anonymous"></script>
+    <script src="{% static 'vta/js/jquery.bootstrap.modal.forms.min.js' %}"></script>
+    <script src="{% static 'inv/js/modal.js' %}"></script> 
+    <script type="text/javascript" src="{% static 'fenimarket/vendor/datatables/jquery.dataTables.js' %}"></script>
+    <script type="text/javascript" src="{% static 'fenimarket/vendor/datatables/dataTables.bootstrap4.min.js' %}"></script>
+    <script type="text/javascript">
+    
+      $(document).ready(function() {
+                  $('#Pantalla-table').DataTable({
+                      "language":{
+                          "lengthMenu":"Mostrar  _MENU_  filas",
+                          "zeroRecords":"No se encontraron coincidencias",
+                          "info": "Página _PAGE_ de _PAGES_",
+                          "infoEmpty":"No hay registros",
+                          "infoFiltered":"(filtrado de un total de _MAX_ registros)",
+                          "search":"Buscar:",
+                          "paginate":{
+                              "first":"Primero",
+                              "last":"Último",
+                              "next":"Siguiente",
+                              "previous":"Anterior",
+                          }
+                      },
+                      "ordering": false 
+                  });  
+          });
+    </script>
+  <script type="text/javascript">
+        $('#id_busqueda').val('FALSE');
+        $('#div_rangos_definidos').show();
+        $('#div_rangos_especificos').hide();
+        $('#id_busqueda').hide();
+        $('#id_especificar_rango').on('change',mostrarocultarrangos);
+        function mostrarocultarrangos(){
+            if($("#id_especificar_rango").is(':checked')){
+                $('#div_rangos_especificos').show();
+                $('#div_rangos_definidos').hide();
+                $('#id_busqueda').val('TRUE');
+            }
+            else{
+                $('#div_rangos_especificos').hide();
+                $('#div_rangos_definidos').show();
+                $('#id_busqueda').val('FALSE');
+            }
+        }
+  </script>
+{% endblock extrascripts %}

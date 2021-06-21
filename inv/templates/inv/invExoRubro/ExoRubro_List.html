@@ -1,0 +1,58 @@
+{% extends 'inv/invBase.html' %}
+{% load static %}
+{% block contenido %}
+{% if messages %}
+    {% for i in messages %}
+        <div class="alert alert-{{ i.tags }}">{{ i }}</div>
+    {% endfor %}
+{% endif %}
+<div class="row">
+    <div class="col">
+        <div class="card py-3 border-left-primary">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-10">
+                        <h4 class="m-0 font-weight-bold text-primary">Exoneraci&oacute;n de rubros</h4>
+                    </div>
+                    <div class="col-md-2">
+                        <button type="button" class="btn btn-primary show-form" data-url="{% url 'ExoRubro_Crear' %}">
+                            <i class="fa fa-plus"> Nuevo</i>
+                        </button>
+                    </div>
+                </div>
+                <hr>
+                <div class="table-responsive">
+                    <table id="Pantalla-table" class="table table-bordered table-sm" >
+                        <thead class="thead-dark">
+                            <tr>
+                                <th scope="col">Nombre</th>
+                                <th scope="col">Unidades</th>
+                                <th scope="col">Costo</th>
+                                <th scope="col">Precio</th>
+                                <th scope="col" class="text-center">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% include 'inv/invExoRubro/ExoRubro_List_Details.html' %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock contenido %}
+{% block extramodal %}
+<div class="modal fade" id="modal-Pantalla">
+    <div class="modal-dialog">
+        <div class="modal-content"></div>
+    </div>
+</div>
+{% endblock extramodal %}
+{% block extrascripts %}
+    <!-- <script src="{% static 'vta/js/jquery.bootstrap.modal.forms.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'fenimarket/vendor/datatables/jquery.dataTables.js' %}"></script>
+    <script type="text/javascript" src="{% static 'fenimarket/vendor/datatables/dataTables.bootstrap4.min.js' %}"></script>
+    <script src="{% static 'fenimarket/js/tablas.js' %}" type="text/javascript"></script> -->
+    <script src="{% static 'inv/js/modal.js' %}"></script>
+{% endblock extrascripts %}

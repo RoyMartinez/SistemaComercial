@@ -1,0 +1,119 @@
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+<div class="modal-header">
+    <h5 class="modal-title text-center">Detalle de Comanda</h5>
+</div>
+<div class="modal-body">
+    <div class="table-responsive">
+
+        <table class="table table-bordered table-sm">
+            <thead class="thead-dark">
+                <th>Ingrediente</th> 
+                <th>Salida</th> 
+            </thead>
+            <tbody>
+                {% for i in kardex %}
+                    <tr>
+                        <td>{{ i.item }}</td>
+                        <td>{{ i.salida }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="3"><h3>No hay Registros</h3></td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="submit-btn btn btn-danger" data-dismiss="modal" aria-label="close">
+        <i class="fa fa-times"></i>&nbsp; Salir
+    </button>
+</div>
+
+
+<script type="text/javascript">
+    $('#id_familia').html("");
+    $('#id_producto').html("");
+    $('#id_item').html("");
+    $('#id_rubro').on("change",getFamilias);
+    $('#id_familia').on("change",getProductos);
+    $('#id_producto').on("change",getItems);
+    
+    $('#btnActualiza').on('click',desactiva);
+    
+    function desactiva(){
+        $('#id_n3').prop('disabled',false);
+        $('#id_marca').prop('disabled',false);
+    }
+
+    // Control para bloquear 
+    $('#id_precio').prop('min','1');
+    $('#id_precio').on('keypress',function(){
+        return event.charCode >= 48 && event.charCode <= 57;
+    });
+    
+    function getFamilias() {
+        var rubroId = $('#id_rubro').val();
+        if(rubroId){
+            $('#id_familia').html("");
+            var request = $.ajax({
+                type : "GET",
+                url : "{% url 'get_familiasT' %}",
+                data:{
+                    "rubro_id" : rubroId,
+                },
+            });
+            request.done(asignar);
+            function asignar(response) {
+                $("#id_familia").html(response.familias);
+            }
+        }
+        else{
+            $("#id_familia").html("<option value='' selected='selected'>---------</option>");
+        }
+    }
+    
+    function getProductos() {
+        var familiaId = $('#id_familia').val();
+        if(familiaId){
+            $('#id_producto').html("");
+            var request = $.ajax({
+                type : "GET",
+                url : "{% url 'get_productosT' %}",
+                data:{
+                    "familia_id" : familiaId,
+                },
+            });
+            request.done(asignar);
+            function asignar(response) {
+                $("#id_producto").html(response.productos);
+            }
+        }
+        else{
+            $("#id_producto").html("<option value='' selected='selected'>---------</option>");
+        }
+    }
+
+    
+    function getItems() {
+        var productoId = $('#id_producto').val();
+        if(productoId){
+            $('#id_item').html("");
+            var request = $.ajax({
+                type : "GET",
+                url : "{% url 'get_items' %}",
+                data:{
+                    "producto_id" : productoId,
+                },
+            });
+            request.done(asignar);
+            function asignar(response) {
+                $("#id_item").html(response.items);
+            }
+        }
+        else{
+            $("#id_item").html("<option value='' selected='selected'>---------</option>");
+        }
+    }
+
+</script>

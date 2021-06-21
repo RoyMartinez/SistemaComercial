@@ -1,0 +1,187 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="{% static 'usuarios/estilos.css' %}" />
+    <link
+      rel="stylesheet"
+      href="{% static 'fenimarket/vendor/fontawesome-free/css/all.min.css' %}"
+    />
+    <title>Configuraci&oacute;n</title>
+    <style>
+      .col-md-3:hover {
+        border: solid 1px #c0c0c0;
+        cursor: pointer;
+      }
+      small a {
+        text-decoration: none;
+      }
+    </style>
+  </head>
+  <body>
+    <header class="site-header">
+      <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
+        <div class="container">
+          <a class="navbar-brand mr-4" href="#">Multicomercial, S.P.</a>
+          <button
+            class="navbar-toggler"
+            type="button"
+            data-toggle="collapse"
+            data-target="#navbarToggle"
+            aria-controls="navbarToggle"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarToggle">
+            <div class="navbar-nav mr-auto"></div>
+            <div class="navbar-nav"></div>
+          </div>
+        </div>
+      </nav>
+    </header>
+    <main role="main" class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="content-section">
+            <div class="row">
+              <div class="col-md-11">
+                <h4 style="color: gray">Panel de Control</h4>
+              </div>
+              <div class="col-md-1">
+                <a href="{% url 'inicio' %}" style="color: red"
+                  ><i class="fas fa-window-close fa-2x"></i
+                ></a>
+              </div>
+            </div>
+            <div class="border-top pt-3"></div>
+            <br />
+            <form
+              autocomplete="off"
+              style="margin-left: 35%; margin-right: 45%"
+            >
+              <input
+                style="width: 300px"
+                type="search"
+                class="form-control form-control-sm"
+                placeholder="Buscar una opci&oacute;n de configuraci&oacute;n"
+              />
+            </form>
+            <br /><br />
+            <div class="container-fluid">
+              <div class="row" style="height: 70px">
+                <div class="col-md-3">
+                  <i
+                    class="far fa-user fa-3x"
+                    style="color: rgb(60, 141, 188)"
+                  ></i>
+                  &nbsp; <a href="{% url 'cuentas_usuario' %}">Cuentas</a>
+                  <br /><small class="text-muted"
+                    >Tus cuentas, contrase&ntilde;as</small
+                  >
+                </div>
+                <div class="col-md-1"></div>
+                <!-- <div class="col-md-3">
+                  <i
+                    class="far fa-handshake fa-3x"
+                    style="color: rgb(60, 141, 188)"
+                  ></i>
+                  &nbsp;
+                  <a
+                    style="text-decoration: none"
+                    href="{% url 'conf_condicion' %}"
+                    >Ventas</a
+                  >
+                  <br />
+                  <small class="text-muted">
+                    Condiciones, Exoneraciones, Formas de pagos, Vendedores
+                  </small>
+                </div> -->
+                <div class="col-md-1"></div>
+                <!-- <div class="col-md-3">
+                  <i
+                    class="fas fa-shopping-basket fa-3x"
+                    style="color: rgb(60, 141, 188)"
+                  ></i>
+                  &nbsp; <a style="text-decoration: none" href="#">Compras</a>
+                  <br /><small class="text-muted"
+                    >Impuestos, Permisos, Proveedores</small
+                  >
+                </div> -->
+              </div>
+              <br /><br />
+              <div class="row" style="height: 70px">
+                <!-- <div class="col-md-3">
+                  <i
+                    class="fas fa-dollar-sign fa-3x"
+                    style="color: rgb(60, 141, 188)"
+                  ></i>
+                  &nbsp; <a style="text-decoration: none" href="#">Caja</a>
+                  <br /><small class="text-muted">
+                    <a href="{% url 'conf_naturaleza' %}">Naturaleza</a>,
+                    <a href="{% url 'conf_tipocambio' %}">Tipos de Cambio</a>,
+                    <a href="{% url 'conf_movimiento' %}">Movimientos</a>
+                  </small>
+                </div> -->
+                <div class="col-md-1"></div>
+                <!-- <div class="col-md-3">
+                  <i
+                    class="fas fa-archive fa-3x"
+                    style="color: rgb(60, 141, 188)"
+                  ></i>
+                  &nbsp;
+                  <a style="text-decoration: none" href="#">Inventarios</a>
+                  <br /><small class="text-muted"
+                    >Anulaciones, Reversiones, Cat&aacute;logos</small
+                  >
+                </div> -->
+                <div class="col-md-1"></div>
+                <!-- <div class="col-md-3">
+                  <i
+                    class="far fa-file-alt fa-3x"
+                    style="color: rgb(60, 141, 188)"
+                  ></i>
+                  &nbsp; <a style="text-decoration: none" href="#">Logs</a>
+                  <br /><small class="text-muted"
+                    >Registros, auditorias, movimientos</small
+                  >
+                </div> -->
+              </div>
+            </div>
+            <br /><br />
+            <div class="border-top pt-3" style="text-align: center">
+              <small>Sistema comercial</small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <script
+      src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+      integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+      integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+      integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>

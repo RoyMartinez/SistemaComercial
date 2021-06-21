@@ -1,0 +1,45 @@
+{% load static %}
+{% load humanize %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Resumen General de Ventas</title>
+        <link rel="stylesheet" href="{% static 'vta/estilos/reporteh.css' %}">
+    </head>
+    <body>
+        <header>
+            <h1>RESUMEN GENERAL DE VENTAS</h1>
+            <h3>Estacion de Servicios</h3>
+        </header>
+        <table>
+            <thead>
+                <tr>
+                    <th>Fecha</th>
+                    <th>Referencia</th>
+                    <th>Cod Cliente</th>
+                    <th>Nombre Cliente</th>
+                    <th>Precio</th>
+                    <th>IVA</th>
+                    <th>Tipo Venta</th>
+                    <th>Vendedor</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for i in tabla %}
+                    <tr>
+                        <td>{{ i.fechaemision|date:"SHORT_DATE_FORMAT" }}</td>
+                        <td>{{ i.serie }}</td>
+                        <td>{{ i.cliente.pk }}</td>
+                        <td>{{ i.cliente }}</td>
+                        <td>{{ i.subtotal|floatformat:2|intcomma }}</td>
+                        <td>{{ i.impuestototal|floatformat:2|intcomma }}</td>
+                        <td>{{ i.formapago.condicion }}</td>
+                        <td>{{ i.vendedor.identificacion.first_name }} {{ i.vendedor.identificacion.last_name }}</td>
+                    </tr>
+                {% empty %}
+                    <tr><td colspan="8">Sin registros</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </body>
+</html>

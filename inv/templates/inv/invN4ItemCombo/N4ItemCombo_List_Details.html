@@ -1,0 +1,16 @@
+{% for f in n4itemcombo %}
+<tr>
+    <td>{{ f.combo }}</td>
+    <td>{{ f.item }}</td>
+    <td>{{ f.opcion }}</td>
+    <td>{{ f.cantidad }}</td>
+    <td>{{ f.precio }}</td>
+    <td>
+        <button type="button" class="btn show-form-update" data-url="{% url 'N4ItemCombo_Editar' f.combo %}">
+            <span class="fa fa-edit fa-2x" style="color:green"></span>
+        </button>
+    </td>
+</tr>
+{% empty %}
+<tr><td><h1>No hay Registro en Combo</h1></td></tr>
+{% endfor %}

@@ -1,0 +1,102 @@
+{% extends 'inv/invBase.html' %}
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block extracss %}
+    <link rel="stylesheet" href="{% static 'inv/css/cabecera.css' %}">
+    <link rel="stylesheet" href="{% static 'fenimarket/vendor/datatables/dataTables.bootstrap4.min.css' %}">
+{% endblock extracss %}
+{% block contenido %}
+<div class="row">
+    <div class="col">
+        <div class="card py-3 border-left-primary">
+            <a href="#collapseCardExample" class="d-block card-header py-3" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="collapseCardExample">
+                <h6 class="m-0 font-weight-bold text-primary">Producto: {{ Producto.id_n3 }}</h6>
+            </a>
+            <div class="collapse show" id="collapseCardExample">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="input-group col-md-12">
+                            <div class="input-group-prepend">
+                                <button class="btn btn-outline-primary" type="button" id="btn_cliente" data-toggle="modal" data-target="#modalcliente" style="z-index:0;">
+                                    <i class="fas fa-asterisk" aria-hidden="true"></i> Descripcion
+                                </button>
+                            </div>
+                            <input id="id_referencia" readonly type="text" class="form-control" value="{{ Producto.descripcion }}" > 
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer text-muted">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<br>
+{% if messages %}
+    {% for i in messages %}
+        <div class="alert alert-{{ i.tags }}">{{ i }}</div>
+    {% endfor %}
+{% endif %}
+<div class="row">
+    <div class="col">
+        <div class="card py-3 border-left-primary">
+            <a href="#collapseCardExample2" class="d-block card-header py-3" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="collapseCardExample">
+                <h6 class="m-0 font-weight-bold text-primary">Detalle</h6>
+            </a>
+            <div class="collapse show" id="collapseCardExample2">
+                <div class="card-body">
+                        <input type="hidden" id="superusuario" value="FALSE">
+                        <form id="CreateForm" method="POST">
+                            <div class="card text-center">
+                                {% csrf_token %}
+                                {{ formset.management_form }}
+                                <div class="table-responsive">
+                                    <table class="table table-sm">
+                                        {% for form in formset.forms %}
+                                        {% if forloop.first %}
+                                        <thead class="thead-dark">
+                                            <tr>
+                                                <th>Codigo Fabrica</th>
+                                                <th>Acciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% endif %}
+                                            <tr>
+                                                <td>
+                                                    {% render_field form.id class="form-control form-control-sm" %}
+                                                    {% render_field form.codfabrica class="form-control form-control-sm" %}
+                                                    <div class="{% if form.codfabrica.errors %} invalid{% endif %}">
+                                                        {% for error in form.codfabrica.errors %}
+                                                            <p class="help-block" style="color:red;">{{ error }}</p>
+                                                        {% endfor %}
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="custom-control custom-switch" style="margin-bottom: 0.5em;">
+                                                        {% render_field form.DELETE class="custom-control-input" %}
+                                                        <label class="custom-control-label" for="{{form.DELETE.id_for_label }}">Borrar</label>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </form>
+                </div>
+                <div class="card-footer text-muted">
+                    <button class="btn btn-danger btn-sm" type="submit" form="CreateForm">
+                        <i class="fas fa-ellipsis-v"></i>&nbsp;Aplicar
+                    </button>
+                    <a role="button" class="btn btn-secondary btn-sm"  href="{% url 'N3Producto_Listar' %}">
+                        <i class="fas fa-reply"></i>&nbsp;Volver a la lista
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock contenido %}

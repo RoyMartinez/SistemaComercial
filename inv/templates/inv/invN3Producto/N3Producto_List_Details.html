@@ -1,0 +1,28 @@
+{% for f in n3producto %}
+<tr>
+    {% if f.descontinuado == 'N' %}
+        <td style="color: green;"><strong>{{ f.familia.pk }}.{{ f.pk }}</strong></td>
+        <td style="color: green;"><strong>{{ f.familia }}</strong></td>
+    {% else %}
+        <td style="color: red;"><strong>{{ f.familia.pk }}.{{ f.pk }}</strong></td>
+        <td style="color: red;"><strong>{{ f.familia }}</strong></td>
+    {% endif %}
+    <td>{{ f.descripcion }}</td>
+    <td>{{ f.medida }}</td>
+    {% if suc.user.is_staff %}
+    <td>
+        <button type="button" class="btn btn-info btn-sm show-form-update" data-url="{% url 'N3Producto_Editar' f.id_n3 %}">
+            <i class="fas fa-pencil-alt"></i>&nbsp; Editar
+        </button>
+        <a role="button" class="btn btn-info btn-sm"  href="{% url 'N3ProductoCodigoFabrica' f.id_n3 %}">
+            <i class="fas fa-trash-alt" ></i>&nbsp; Codigos
+        </a>
+        <a role="button" class="btn btn-danger btn-sm"  href="{% url 'N3Producto_Eliminar' f.id_n3 %}">
+            <i class="fas fa-trash-alt" ></i>&nbsp; Eliminar
+        </a>
+    </td>
+    {% endif %}
+</tr>
+{% empty %}
+    <tr><td><h1>No hay registros</h1></td></tr>
+{% endfor %}

@@ -1,0 +1,50 @@
+{% extends 'inv/invBase.html' %}
+{% load static %}
+{% block contenido %}
+<br>
+<div class="card">
+    <div class="card-header text-center">Producto Imagen</div>
+    <div class="card-body">
+        <h1 class="card-title">Galeria de Producto</h1>
+        <form method="POST">
+            {% csrf_token %}
+            {{ formset.management_form }}
+            <div class="table-responsive">
+                <table class="table table-sm">
+                    {% for form in formset.forms %}
+                    {% if forloop.first %}
+                    <thead>
+                        {% for field in form.visible_fields %}
+                        <th>{{ field.label_tag }}</th>
+                        {% endfor %}
+                    </thead>
+                    <tbody>
+                        {% endif %}
+                        <tr>
+                            {% for field in form.visible_fields %}
+                            <td>
+                                {% if forloop.first %}
+                                {% for hidden in form.hidden_fields %}
+                                {{ hidden }}
+                                {% endfor %}
+                                {% endif %}
+                                {{ field.errors.as_ul }}
+                                {{ field }}
+                            </td>
+                            {% endfor %}
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <button type="submit">Ejecutar</button>
+            <a href="{% url 'N3Producto_Listar' %}">Volver a la lista</a>
+        </form>
+    </div>
+    <div class="card-footer text-muted">
+        SISCARCOOP: Sistema Integral de Control de Recursos Corporativos
+    </div>
+</div>
+{% endblock contenido %}
+{% block extrascripts %}
+{% endblock extrascripts %}

@@ -1,0 +1,73 @@
+{% extends 'panel/base.html' %}
+{% block contenido %}
+<main role="main" class="container">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="content-section">
+                <div class="row"><h4 style="color:gray;">Vendedores</h4></div>    
+                <div class="border-top pt-3"></div>
+                <br>
+                <div class="table-responsive">
+                    <table class="table table-sm table-bordered">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th scope="col">No.</th>
+                                <th scope="col">Usuario</th>
+                                <th scope="col">Nombre completo</th>
+                                <th scope="col">G&eacute;nero</th>
+                                <th scope="col">Empleado</th>
+                                <th scope="col">Activo</th>
+                                <th scope="col">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for i in vendedores %}
+                                <tr>
+                                    <td>{{ forloop.counter }}</td>
+                                    <td>{{ i.identificacion.username }}</td>
+                                    <td>{{ i.identificacion.first_name }}&nbsp;{{ i.identificacion.last_name }}</td>
+                                    <td>{{ i.genero }}</td>
+                                    <td>{{ i.codigo_empleado }}</td>
+                                    <td>{{ i.activo|yesno }}</td>
+                                    <td>
+                                        {% if i.activo %}
+                                            <a href="{% url 'vta_vendedor_check' i.pk %}"class="btn btn-outline-danger btn-sm" role="button">Disable</a>
+                                        {% else %}
+                                            <a href="{% url 'vta_vendedor_check' i.pk %}" class="btn btn-outline-success btn-sm" role="button">Enable</a>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% empty %}
+                                <tr><td colspan="7"><h4>No existen registros</h4></td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="border-top pt-3" style="text-align: center;"> 
+                    <small>SISCARCOOP&reg;</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="content-section">
+                <h3>Men&uacute; Contextual</h3>
+                <p class='text-muted'>Acciones
+                    <ul class="list-group">
+                        <li class="list-group-item list-group-item-light">
+                            <button type="button" class="btn btn-outline-primary" >
+                                <i class="fas fa-plus"></i> Nuevo
+                            </button>
+                        </li>
+                        <li class="list-group-item list-group-item-light">
+                            <button type="button" class="btn btn-outline-success" >
+                                <i class="fas fa-pencil-alt"></i> Editar
+                            </button>
+                        </li>
+                    </ul>
+                </p>
+                {% include 'panel/venta/vtalinks.html' %}
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock contenido %}

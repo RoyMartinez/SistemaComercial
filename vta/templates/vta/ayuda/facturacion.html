@@ -1,0 +1,42 @@
+{% load static %}
+<div class="modal-header">
+    <h3 class="modal-title" id="exampleModalScrollableTitle">C&oacute;mo Facturar?</h3>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+    <ol>
+        <li>
+            <strong>Seleccionar cliente.</strong>
+            <ul>
+                <li>
+                    Si el cliente dispone de una membres&iacute;a, pulse el bot&oacute;n cliente <img src="{% static 'vta/imgs/cliente.png' %}"> 
+                    y con la ayuda de un lector de c&oacute;digo de barra escanee el carnet de membres&iacute;a
+                    correspondiente. <strong>Nota:</strong> Tenga en cuenta que solamente dispondr&aacute; de 2.5 segundos para hacerlo y 
+                    tampoco podr&aacute; realizar operaciones propias del portapapeles del OS.
+                </li>
+                <br>
+                <li>En caso de que el cliente no tenga membres&iacute;a, puede escribir su razon social en el cuadro
+                    de texto y est&eacute; ser&aacute; considerado autom&aacute;ticamente como cliente <strong>PARTICULAR / INDIVIDUAL</strong>
+                </li>
+            </ul>
+        </li>
+        <br>
+        <li><strong>Eliga el producto</strong>
+        <p>Si conoce el c&oacute;digo del producto, escribalo directamente en el cuadro de texto y luego presione ENTER, de lo contrario
+            haga clic en el bot&oacute;n producto <img src="{% static 'vta/imgs/producto.png' %}"> para abrir un cuadro donde podr&aacute; filtrar y seleccionar
+            de entre un cat&aacute;logo de items.
+        </p>
+        <img class="img-fluid img-thumbnail rounded mx-auto d-block" src="{% static 'vta/imgs/catalogo.png' %}">
+        <p>En este cuadro puede realizar b&uacute;squedas por codido, descripcion o incluso precio. Una vez que haya encontrado lo que buscaba
+            proceda a marcar los cuadros contiguo a los precios ubicados en la cuarta columna y finalmente haga clic en el boton Agregar.
+        </p>
+    </li>
+
+     
+    </ol>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+</div>

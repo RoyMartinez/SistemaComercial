@@ -1,0 +1,152 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto+Slab:700&display=swap');
+body{
+    margin:0;
+    background: black;
+    /*background: rgb(47, 4, 104);*/
+    /*background: url(feni.jpeg);
+    background-repeat: no-repeat;
+    background-size:cover; */
+	overflow:auto;
+}
+
+#btn1{
+	background:rgba(0,66,255,0.5);
+	height:200px;
+	width:200px;
+	position:relative;
+	margin-left:10px;
+	left:900px;
+	cursor:pointer;
+	color:#FFF;
+	font-size:25px;
+    /*font-family:"Lucida Sans Unicode", "Lucida Grande", sans-serif;*/
+    font-family: 'Roboto Slab', serif;
+	line-height:200px;
+	padding-left:10px;
+	text-align:center;
+	
+	
+}
+#btn2{
+	background:rgba(204,51,0,0.5);
+	height:200px;
+	width:200px;
+	position:relative;
+	margin-left:10px;
+	left:900px;
+	cursor:pointer;
+	
+	color:#FFF;
+	font-size:25px;
+	font-family: 'Roboto Slab', serif;
+	line-height:200px;
+	padding-left:10px;
+	text-align:center;
+}
+
+#btn3{
+	background:rgba(255,102,0,0.5);
+	/*border-color:#F60;*/
+	height:200px;
+	width:200px;
+	position:relative;
+	margin-left:10px;
+	left:900px;
+	cursor:pointer;
+	
+	color:#FFF;
+	font-size:25px;
+	font-family: 'Roboto Slab', serif;
+	line-height:200px;
+	padding-left:10px;
+	text-align:center;
+}
+
+#btn4{
+	background:rgba(204,51,204,0.5);
+	/*border-color:#F60;*/
+	height:200px;
+	width:200px;
+	position:relative;
+	margin-left:10px;
+	margin-top:30px;
+	left:900px;
+	cursor:pointer;
+	
+	color:#FFF;
+	font-size:25px;
+	font-family: 'Roboto Slab', serif;
+	line-height:200px;
+	padding-left:10px;
+	text-align:center;
+}
+#btn5{
+	background:rgba(255,51,102,0.5);
+	/*border-color:#F60;*/
+	height:200px;
+	width:200px;
+	position:relative;
+	margin-left:10px;
+	margin-top:30px;
+	left:900px;
+	cursor:pointer;
+	
+	color:#FFF;
+	font-size:25px;
+	font-family: 'Roboto Slab', serif;
+	line-height:200px;
+	padding-left:10px;
+	text-align:center;
+}
+
+#btn6{
+	background:rgba(102,204,0,0.5);
+	height:200px;
+	width:200px;
+	position:relative;
+	margin-left:10px;
+	margin-top:30px;
+	left:900px;
+	cursor:pointer;
+	
+	color:#FFF;
+	font-size:25px;
+	font-family: 'Roboto Slab', serif;
+	line-height:200px;
+	padding-left:10px;
+	text-align:center;
+}
+
+#content{
+    background: url(http://www.fenicootaxi.org/images/Feni.jpg);
+    background-repeat: no-repeat;
+	height:480px;
+	width:750px;
+	position:relative;
+	top:500px;
+	z-index:0;
+}
+
+#backbutton{
+	position:relative;
+	left:760px;
+	cursor:pointer;
+}
+
+#caption{
+	position:relative;
+	top:-60px;
+	
+	color:#FFF;
+	font-size:25px;
+	font-family:"Lucida Sans Unicode", "Lucida Grande", sans-serif;
+}
+
+#pagecaption{
+	position:relative;
+	top:-60px;
+	
+	color:#FFF;
+	font-size:25px;
+	font-family:"Lucida Sans Unicode", "Lucida Grande", sans-serif;
+}

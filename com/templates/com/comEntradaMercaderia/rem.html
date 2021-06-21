@@ -1,0 +1,468 @@
+{% extends 'com/base/combase.html' %}
+{% load static %}
+{% load widget_tweaks %}
+{% load humanize %}
+{% block extracss %}
+    <style type="text/css">
+        .delete{
+            text-decoration: none; 
+            color: red;
+        }
+    </style>
+    <link href="{% static 'fenimarket/vendor/datatables/dataTables.bootstrap4.min.css' %}" rel="stylesheet">
+{% endblock extracss %}
+{% block contenido %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card border-left-danger shadow h-100 py-2">
+            <a href="#collapseCardExample" class="d-block card-header py-3" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="collapseCardExample">
+                <h6 class="m-0 font-weight-bold text-primary">Entrada de Mercaderia</h6>
+            </a>
+            <div class="collapse show" id="collapseCardExample">
+                <div class="card-body">
+                    <form id="myForm" method="POST" autocomplete="off" id="form_fact">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-md-10">
+                                <div class="form-row">
+                                    <div class="form-group col-md-3">
+                                        {{ form.condicion.label_tag }}
+                                        {% render_field form.condicion class="form-control form-control-sm" %}
+                                        <div class="{% if form.condicion.errors %} invalid{% endif %}">
+                                            {% for error in form.condicion.errors %}
+                                                <p class="help-block" style="color:red;">{{ error }}</p>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-2">
+                                        <label for="id_validez">Validez (d&iacute;as):</label>
+                                        {% render_field form.validez class="form-control form-control-sm" value="0" min="0" max="999" readonly="true" %}
+                                        <div class="{% if form.validez %} invalid{% endif %}">
+                                            {% for error in form.validez.errors %}
+                                                <p class="help-block" style="color:red;">{{ error }}</p>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label for="id_proveedor8">Cliente:</label>
+                                        <input type="text" name="cliente8" class="form-control form-control-sm" id="id_cliente8" value="{{ oc.cliente|default_if_none:'-' }}" readonly>
+                                    </div>
+                                    <div class="form-group col-md-3">
+                                        <label for="id_proveedor8">Proveedor:</label>
+                                        <input type="text" name="proveedor8" class="form-control form-control-sm" id="id_proveedor8" value="{{ oc.proveedor }}" readonly>
+                                    </div>
+                                </div>       
+                                <div class="form-row">
+                                    <div class="form-group col-md-2">
+                                        {{ form.facturas.label_tag }}
+                                        {% render_field form.facturas class="form-control form-control-sm" %}
+                                        <div class="{% if form.facturas.errors %} invalid{% endif %}">
+                                            {% for error in form.facturas.errors %}
+                                                <p class="help-block" style="color:red;">{{ error }}</p>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-2">
+                                        {{ form.poliza.label_tag }}
+                                        {% render_field form.poliza class="form-control form-control-sm" %}
+                                        <div class="{% if form.poliza.errors %} invalid{% endif %}">
+                                            {% for error in form.poliza.errors %}
+                                                <p class="help-block" style="color:red;">{{ error }}</p>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        {{ form.ordenes_compra.label_tag }}
+                                        <input type="text" name="ordenes_compra" class="form-control form-control-sm" id="id_ordenes_compra" value="{{ oc.pk }}" readonly>
+                                        <div class="{% if form.ordenes_compra.errors %} invalid{% endif %}">
+                                            {% for error in form.ordenes_compra.errors %}
+                                                <p class="help-block" style="color:red;">{{ error }}</p>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-2">
+                                        {{ form.costo_compra.label_tag }}
+                                        {% render_field form.costo_compra class="form-control form-control-sm" %}
+                                        <div class="{% if form.costo_compra.errors %} invalid{% endif %}">
+                                            {% for error in form.costo_compra.errors %}
+                                                <p class="help-block" style="color:red;">{{ error }}</p>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-2">
+                                        {{ form.costo_iva.label_tag }}
+                                        {% render_field form.costo_iva class="form-control form-control-sm" %}
+                                        <div class="{% if form.costo_iva.errors %} invalid{% endif %}">
+                                            {% for error in form.costo_iva.errors %}
+                                                <p class="help-block" style="color:red;">{{ error }}</p>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-md-4">
+                                        {{ form.bodega.label_tag }}
+                                        <select name="bodega" class="form-control form-control-sm" id="id_bodega">
+                                            {% for i in bodega %}
+                                                <option value="{{ i.pk }}" {% if i.tipo == 'T' %} selected {% endif %}>{{ i.nombre }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label for="tipo">Tipo:</label>
+                                        <input id="tipo" type="text" class="form-control form-control-sm" value="{{ tipo }}" readonly>
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label for="moneda">Moneda:</label>
+                                        <input id="moneda" type="text" class="form-control form-control-sm" value="{{ moneda }}" readonly>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-2" style="border-left: 1px solid #C0C0C0;">
+                                <a role="button" class="btn btn-outline-secondary" href="{% url 'com_emlist' %}" style="width:7em;">
+                                    <i class="fas fa-reply"></i> Atr&aacute;s</a>
+                                <p></p>
+                                <button type="submit"  formtarget="_blank" name='grabar' id='btn_facturar' class="btn btn-outline-danger" style="width:7em;">
+                                    <i class="fas fa-save"></i> Grabar</button>
+                                <p></p>
+                                <button type="button" class="btn btn-outline-info" data-toggle="modal" data-target="#modal_item" style="width:7em;">
+                                    <i class="fas fa-box-open"></i>&nbsp;Regalías
+                                </button>
+                            </div>
+                        </div>
+                        <input type="hidden" name="detalle" required="" id="id_detalle">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<br>
+{% if messages %}
+    {% for i in messages %}
+        <div class="alert alert-{{ i.tags }}">{{ i }}</div>
+    {% endfor %}
+{% endif %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card border-left-danger shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Detalle</div>
+                    </div>
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th scope="col">C&oacute;digo</th>
+                                <th scope="col">Cantidad</th>
+                                <th scope="col">Costo U</th>
+                                <th scope="col">Costo T</th>
+                                <th scope="col">Impuesto</th>
+                                <th scope="col">Exoneracion</th>
+                                <th scope="col">Vencimiento</th>
+                                <th scope="col">Supr</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbl_detalle"> <!-- Orden de Compra -->
+                            {% for i in detalle %}
+                                <tr>
+                                    <td>{{ i.item.pk }}</td>
+                                    <td>
+                                        <input id="c{{ i.pk }}" type="number" class="form-control form-control-sm det" step="any" value="{{ i.cantidad }}" onchange="cantidad(this);">
+                                    </td>
+                                    <td id="cu{{ i.pk }}">{{ i.costou|floatformat:2 }}</td>
+                                    <td>
+                                        <input id="k{{ i.pk }}" type="number" class="form-control form-control-sm det" step="any" value="{{ i.costot|floatformat:2 }}" onchange="cost(this);">
+                                    </td>
+                                    <td>
+                                        <input id="i{{ i.pk }}" type="number" class="form-control form-control-sm det" step="any" value="{{ i.impuesto }}">
+                                    </td>
+                                    <td>
+                                        <select id="e{{ i.pk }}" class="form-control form-control-sm det" onchange="exonerar(this);">
+                                            {% for k in exoneracion %}
+                                                <option value="{{ k.pk }}" {% if k.pk == 'G'  %} selected {% endif %}>{{ k }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <input id="o{{ i.pk }}" type="date" class="form-control form-control-sm det fecha" step="any" value="{{ i.fecha_venc }}">
+                                    </td>
+                                    <td>
+                                        <a class="delete" title="Eliminar" data-placement="auto">
+                                            <i class="fas fa-ban"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% empty %}
+                                <tr><td colspan="7"></td></tr>
+                            {% endfor %}
+                        </tbody>
+                        <tfoot id="tablaf"> <!-- Regalias  -->
+                            <tr>
+                                <td colspan="7" class="text-xs font-weight-bold text-primary text-uppercase mb-1">Regalias</td>
+                            </tr>
+                            {% for i in tempo %}
+                            <tr>
+                                <td>{{ i.item.pk }}</td>
+                                <td>{{ i.unidades }}</td>
+                                <td>0.0</td>
+                                <td>0.0</td>
+                                <td>0.0</td>
+                                <td>Gravado</td>
+                                <td>
+                                    <input id="r{{ i.pk }}" type="date" class="form-control form-control-sm det fecha" step="any" value="{{ i.fecha_venc }}">
+                                </td>
+                                <td>
+                                    <a href="{% url 'com_quitar_item' i.pk %}" class="delete" title="Eliminar" data-placement="auto">
+                                        <i class="fa fa-trash" aria-hidden="true"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                            
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock contenido %}
+{% block extramodal %}
+<div class="modal fade" id="modal_item" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalScrollableTitle">Cat&aacute;logo de items</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table id="dataTable" class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th scope="col">C&oacute;digo</th>
+                            <th scope="col">Descripci&oacute;n</th>
+                            <th scope="col">Cantidad</th>
+                            <th scope="col">Elegir</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for i in articulos %}
+                            <tr>
+                                <td>{{ i.pk }}</td>
+                                <td>{{ i.producto.familia.descripcion }} {{ i.producto.descripcion }} {{ i.marca.marca }} {{ i.descripcion }}</td>
+                                <td style="width:3em;">
+                                    <input class="form-control form-control-sm numero" type="number" step="any" min="1" value="1" id="{{ i.pk }}">
+                                </td>
+                                <td>
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input" id="check-{{ forloop.counter }}" value="{{ i.pk }}" onclick="alerta(this);">
+                                        <label class="custom-control-label" for="check-{{ forloop.counter }}"></label>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cerrar</button>
+                <button id='save_close' class="btn btn-outline-danger" data-dismiss="modal">Agregar</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock extramodal %}
+{% block extrascripts %}
+<script type="text/javascript" src="{% static 'fenimarket/vendor/datatables/jquery.dataTables.js' %}"></script>
+<script type="text/javascript" src="{% static 'fenimarket/vendor/datatables/dataTables.bootstrap4.min.js' %}"></script>
+<script src="{% static 'fenimarket/js/tablas.js' %}" type="text/javascript"></script>
+<script type="text/javascript">
+    $(document).ready( function () {
+        detallar();
+    });
+
+
+    
+    $(".fecha").on('change', function(){
+        console.log(this.value); /* Paso el valor - la fecha */
+        console.log(this.id); /* paso la llave primaria */
+        var request =$.ajax({type:"GET", 
+        url: "{% url 'ajax_actualiza_fecha_venc' %}", 
+        data: {"id":this.id,"fecha":this.value},});
+    });
+
+    function actualizavenc(id,value){
+        console.log(value); /* Paso el valor - la fecha */
+        console.log(id); /* paso la llave primaria */
+        var request =$.ajax({type:"GET", 
+        url: "{% url 'ajax_actualiza_fecha_venc' %}", 
+        data: {"id":id,"fecha":value},});
+    };
+
+    var diccionario = new Object();
+    {% for i in detalle %}
+        diccionario['oc'+({{ i.pk }}).toString()] = {{ i.cantidad }};
+        diccionario['okt'+({{ i.pk }}).toString()] = {{ i.costot }};
+    {% endfor %}
+ 
+    var tupla_item = []; 
+    var tupla_det = [];
+    var gendet = $('.det');
+    // para restringir el uso de negativos
+    $('.numero').on('change', function(){
+       if (this.value <= 0 || this.value =="" )  {
+            this.value=1;
+       } 
+    });
+    $('#btn_facturar').on('click',recargar);
+    $('')
+
+    $('#id_condicion').on('change',function(){
+        if (this.value == 1){
+            $('#id_validez').val(0);
+            $('#id_validez').prop('readonly',true);   
+        }else{ $('#id_validez').prop('readonly',false); }
+    });
+    $('#id_validez').on('change', function(){
+        if (this.value < 0){
+            alert('No se admiten valores negativos');
+            this.value = 0;
+        }
+    });
+    function alerta2(x){
+        var cantidad = document.getElementById(x.value).value;
+        var costo = document.getElementById('costo-'+x.value).value;
+        if (x.checked){
+            tupla_item.push(x.value);
+            tupla_item.push(cantidad);
+            tupla_item.push(costo);
+        }else{
+            for (var i=0; i < tupla_item.length; i++){
+                if (tupla_item[i] === x.value){
+                    tupla_item.splice(i,3);
+                }
+            }
+        }
+    }
+    // ************** Updates an array with checked items **************************
+    function alerta(item){
+        var cantidad = document.getElementById(item.value).value;
+        if (item.checked){ 
+            tupla_item.push(item.value);
+            tupla_item.push(cantidad); 
+        }
+        else {
+            for (var i=0; i<tupla_item.length; i++){
+                if (tupla_item[i] === item.value){ tupla_item.splice(i,2); }
+            }
+        }
+    }
+    $('#save_close').on('click', function(){
+        if (tupla_item.length > 0){
+            var request =$.ajax({type:"GET", 
+                url: "{% url 'ajax_rem' cod %}", 
+                data: {"item":tupla_item.toString(),},});  
+            request.done(function(response){
+                $('#tablaf').html(response.regalia);
+            });
+        }
+    });     
+
+    function cantidad(objeto){
+        var cantidad_o = 'oc' + objeto.id.substring(1);
+        var costo_o = 'okt' + objeto.id.substring(1);
+        var costo = '#k' + objeto.id.substring(1);
+        if (objeto.value <= 0){
+            objeto.value = diccionario[cantidad_o];
+        } else if (objeto.value <= parseFloat(diccionario[cantidad_o])){
+            var cu = parseFloat(diccionario[costo_o]) / parseFloat(diccionario[cantidad_o]);
+            $(costo).val(objeto.value * cu);
+        } else
+            $(costo).val(parseFloat(diccionario[costo_o]));   
+       detallar();
+        //tupla_det.push(this.value);
+        //tupla_det.push(this.value);
+
+        /*var request =$.ajax({type:"GET", 
+            url: "{% url 'ajax_rem_cant' %}", 
+            data: {"item":objeto.id.substring(1),"cant":objeto.value, "costo":$(costo).val()},});      */
+    }
+
+    function cost(objeto){
+        var cantidad_o = 'oc' + objeto.id.substring(1);
+        var costo_o = 'okt' + objeto.id.substring(1);
+        var cant = '#c' + objeto.id.substring(1);
+        var cu = diccionario[costo_o] / diccionario[cantidad_o];
+        if (objeto.value <= 0 || objeto.value > diccionario[costo_o]){
+            objeto.value = cu * parseFloat($(cant).val()); 
+        } else if (parseFloat($(cant).val()) <= diccionario[cantidad_o]){
+            var cr = parseFloat(objeto.value) / parseFloat($(cant).val());
+            if (cr > cu){
+                alert('Hay una diferencia en el costo unitario \n Recalculando costo');
+                objeto.value = cu * parseFloat($(cant).val()); 
+            }
+         
+        }
+        detallar();
+        /*var request =$.ajax({type:"GET", 
+            url: "{% url 'ajax_rem_cant' %}", 
+            data: {"item":objeto.id.substring(1),"costo":objeto.value,"cant":$(cant).val() },});*/
+    }
+
+    function exonerar(objeto){
+        detallar();
+        /*var request =$.ajax({type:"GET", 
+                            url: "{% url 'ajax_rem_exo' %}", 
+                            data: {"item":objeto.id.substring(1),"exo":objeto.value, },});  */
+        }
+    
+    /* Recargar la pagina al preisonar el boton grabr */
+    function recargar(){
+        var x = document.forms['myForm']['id_facturas'].value;
+        var y = document.forms['myForm']['id_poliza'].value;
+        if (x =="" || y ==""){
+            console.log('invalido');
+        }
+        else{
+            setTimeout(function(){
+                window.location.replace("{% url 'com_emlist' %}");
+                },2000
+            );
+        }
+    }
+    /*
+    function myFunction() {
+        var myWindow = window.open("{% url 'com_catalogo' %}", "_blank", "toolbar=no, menubar=no, scrollbars=yes,resizable=yes,top=100,left=1000,width=1000,height=500");
+    }*/
+    function detallar(){
+        $('#id_detalle').val('');
+        tupla_det = [];
+        for(var i =0;i<gendet.length; i++){
+            tupla_det.push(gendet[i].value);
+        }
+        $('#id_detalle').val(tupla_det);
+    }
+</script>
+    
+<script>    
+    //Script que bloquea los tipos number
+    jQuery('input[type=number]').keypress(function(tecla){
+        // console.log(tecla.charCode);
+        // console.log(this.value.length)
+        //46 = .
+        //45 = -
+        //se ponen las teclas que no se admiten solo admitir numeros y la primera son los numeros los otros son la e y el punto
+        if((tecla.charCode < 48 || tecla.charCode > 57) && tecla.charCode != 46){
+            return false;
+        }
+        var regex = /^[0-9]{0,7}$|^[0-9]{0,7}.{0,1}[0-9]{0,1}$/; // number with 2 decimal places
+        if (!regex.test(this.value)) {
+            return false;
+        }
+    });
+</script>
+{% endblock extrascripts %}

@@ -1,0 +1,76 @@
+{% extends 'vta/base_vta.html' %}
+{% load static %}
+{% block contenido %}
+<!-- Page Heading -->
+<div class="row">
+  <div class="col-lg-12 mb-12">
+    <div class="card shadow mb-4">
+      <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Reportes seg&uacute;n Forma de Pago</h6>
+      </div>
+      <div class="card-body">
+        <p class="mb-4">Rango de Fechas</p>
+        <form class="form-inline">
+          {% csrf_token %}
+          <div class="form-group mb-3">
+            <label for="fecha0" >Fecha Inicio:&nbsp;</label>
+            <input id="fecha0" type="date" class="form-control">
+          </div>
+          <div class="form-group mx-sm-4 mb-3">
+            <label for="fecha1">Fecha Fin:&nbsp;</label>
+            <input type="date" class="form-control" id="fecha1">
+          </div>
+          <button type="submit" class="btn btn-success mb-3">Buscar</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Content Row -->
+<div class="row">
+  <div class="col-lg-3 mb-3"></div>
+  <div class="col-lg-6 mb-4">
+    <div class="card shadow mb-4">
+      <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Forma de Pago</h6>
+      </div>
+      <div class="card-body">
+        <h4 class="small font-weight-bold">Efectivo <span class="float-right">{{ e }}</span></h4>
+        <div class="progress mb-4">
+          <div class="progress-bar bg-danger" role="progressbar" style="width:{{ e }}%" aria-valuenow="{{ e }}" aria-valuemin="0" aria-valuemax="100"></div>
+        </div>
+        <h4 class="small font-weight-bold">Tarjeta Bancaria <span class="float-right">{{ t }}</span></h4>
+        <div class="progress mb-4">
+          <div class="progress-bar bg-warning" role="progressbar" style="width: {{ t }}%" aria-valuenow="{{ t }}" aria-valuemin="0" aria-valuemax="100"></div>
+        </div>
+        <h4 class="small font-weight-bold">Fenibillete <span class="float-right">{{ f }}</span></h4>
+        <div class="progress mb-4">
+          <div class="progress-bar" role="progressbar" style="width: {{ f }}%" aria-valuenow="{{ f }}" aria-valuemin="0" aria-valuemax="100"></div>
+        </div>
+        <h4 class="small font-weight-bold">Credito <span class="float-right">{{ c }}</span></h4>
+        <div class="progress mb-4">
+          <div class="progress-bar bg-info" role="progressbar" style="width: {{ c }}%" aria-valuenow="{{ c }}" aria-valuemin="0" aria-valuemax="100"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-3 mb-3"></div>
+</div>
+
+
+{% endblock contenido %}
+{% block extramodal %}
+<div class="modal fade" tabindex="-1" role="dialog" id="modal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content"></div>
+    </div>
+</div>    
+{% endblock extramodal %}
+{% block extrascripts %}
+<script src="{% static 'fenimarket/vendor/chart.js/Chart.min.js' %}"></script>
+
+<!-- Page level custom scripts -->
+<script src="{% static 'fenimarket/js/demo/chart-area-demo.js' %}"></script>
+<script src="{% static 'fenimarket/js/demo/chart-pie-demo.js' %}"></script>
+<script src="{% static 'fenimarket/js/demo/chart-bar-demo.js' %}"></script>
+{% endblock extrascripts %}

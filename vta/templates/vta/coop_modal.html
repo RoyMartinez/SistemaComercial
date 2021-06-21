@@ -1,0 +1,13 @@
+{% extends 'vta/base_modal.html' %}
+{% block titulo %}
+    <h3 class="modal-title">Nueva Cooperativa</h3>
+{% endblock titulo %}
+{% block js %}
+<script type="text/javascript">
+    var clave = $('.form-control:eq(2)').val();
+    if(clave.length > 0){
+        //$('.form-control:eq(1)').attr('readonly',true);
+        $('.modal-title').html('Editar Cooperativa');
+    }
+</script>
+{% endblock js %}

@@ -1,0 +1,24 @@
+{% for i in modelovehiculo %}
+<tr>
+    <td>{{ i.pk }}</td>
+    <td>{{ i.marca }}</td>
+    <td>{{ i.modelo }}</td>
+    <td>{{ i.tipo }}</td>
+    <td>{{ i.cilindraje }}</td>
+    <td>{{ i.combustible }}</td>
+    <td>
+        {% if i.pk == 'NE.NEE000' %}
+            <label>Registro del sistema</label>
+        {% else %}
+            <button type="button" class="btn btn-sm btn-info show-form-update" data-url="{% url 'ModeloVehiculo_Editar' i.pk %}">
+                <i class="fas fa-pencil-alt"></i>&nbsp;Editar
+            </button>
+            <a class="btn btn-danger btn-sm"  href="{% url 'ModeloVehiculo_Eliminar' i.pk %}">
+                <i class="fas fa-trash-alt" ></i>&nbsp;Eliminar
+            </a>
+        {% endif%}
+    </td>
+</tr>
+{% empty %}
+    <tr><td colspan="7"><h3>No hay registros</h3></td></tr>
+{% endfor %}

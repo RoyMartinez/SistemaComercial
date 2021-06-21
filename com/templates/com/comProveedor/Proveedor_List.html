@@ -1,0 +1,107 @@
+{% extends 'com/base/combase.html' %}
+{% load static %}
+{% block extracss %}
+    <link rel="stylesheet" href="{% static 'fenimarket/vendor/datatables/dataTables.bootstrap4.min.css' %}">
+    <style type="text/css">
+        .centrado{
+            text-align: center;
+        }
+    </style>
+{% endblock extracss %}
+{% if messages %}
+    {% for i in messages %}
+        <div class="alert alert-{{ i.tags }}">{{ i }}</div>
+    {% endfor %}
+{% endif %}
+{% block contenido %}
+<div class="row">
+    <div class="col">
+        <div class="card py-3 border-left-danger">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-10">
+                        <h4 class="m-0 font-weight-bold text-primary">Proveedores</h4>
+                    </div>
+                    <div class="col-md-2">
+                        <button type="button" class="btn btn-outline-primary nuevo">
+                            <span class="fa fa-plus"> Nuevo</span>
+                        </button>
+                    </div>
+                </div>
+                <hr>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-sm" id="Pantalla-table" >
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>C&oacute;digo</th>
+                                <th>Nombre</th>
+                                <th></th>
+                                <th>Acciones</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for i in proveedor %}
+                            <tr>
+                                <td>{{ i.abreviatura }}</td>
+                                <td>{{ i.nombre }}</td>
+                                <td class="centrado">
+                                    <button type="button" class="btn btn-outline-info btn-sm editar" data-toogle="tooltip" title="Editar" data-id="{% url 'com_proveedorEdit' i.abreviatura %}">
+                                        <i class="fas fa-pencil-alt"> </i>&nbsp;Editar
+                                    </button>
+                                </td>
+                                <td class="centrado">
+                                    <a type="button" class="btn btn-outline-dark btn-sm" data-toogle="tooltip" title="Contacto" href="{% url 'com_proveedorContact' i.abreviatura %}">
+                                        <i class="fa fa-id-card"> </i>&nbsp;Contactos
+                                    </a>
+                                </td>         
+                                <td class="centrado">
+                                    <a type="button" class="btn btn-outline-warning btn-sm" data-toogle="tooltip" title="Sucursales" href="{% url 'com_proveedorAddress' i.abreviatura %}">
+                                        <i class="fa fa-map-marker"> </i>&nbsp;Sucursales
+                                    </a>
+                                </td>
+                            </tr>
+                            {% empty %}
+                                <tr><td colspan="5"><h3>No hay proveedores registrados</h3></td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock contenido %}
+{% block extramodal %}
+<div class="modal fade" tabindex="-1" role="dialog" id="modal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content"></div>
+    </div>
+</div>
+{% endblock extramodal %}
+{% block extrascripts %}
+    <script type="text/javascript" src="{% static 'fenimarket/vendor/datatables/jquery.dataTables.js' %}"></script>
+    <script type="text/javascript" src="{% static 'fenimarket/vendor/datatables/dataTables.bootstrap4.min.js' %}"></script>
+    <script src="{% static 'vta/js/jquery.bootstrap.modal.forms.min.js' %}"></script>
+    <script type="text/javascript">  
+       /* $('#Pantalla-table').DataTable({
+            "language":{
+                "lengthMenu":"Mostrar  _MENU_  filas",
+                "zeroRecords":"No se encontraron coincidencias",
+                "info": "Página _PAGE_ de _PAGES_",
+                "infoEmpty":"No hay registros",
+                "infoFiltered":"(filtrado de un total de _MAX_ registros)",
+                "search":"Buscar:",
+                "paginate":{
+                    "first":"Primero",
+                    "last":"Último",
+                    "next":"Siguiente",
+                    "previous":"Anterior",
+                }
+            },
+            "ordering": false
+        });*/
+        $(".nuevo").modalForm({ formURL: "{% url 'com_proveedorNew' %}" });
+        $(".editar").each(function(){ $(this).modalForm({formURL: $(this).data('id')}); });
+    </script>
+{% endblock extrascripts %}

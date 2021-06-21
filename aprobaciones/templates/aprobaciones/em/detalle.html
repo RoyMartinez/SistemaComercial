@@ -1,0 +1,88 @@
+{% extends 'aprobaciones/shared/base.html' %}
+{% load static %}
+{% block extracss %}
+    <link rel="stylesheet" href="{% static 'aprobaciones/vendor/datatables/dataTables.bootstrap4.min.css' %}">
+{% endblock extracss %}
+{% block contenido %}
+<div class="row">
+  <div class="col">
+      <div class="card py-3 border-left-primary">
+          <div class="card-body">
+              <div class="row">
+                  <div class="col-md-12">
+                      <h4 class="m-0 font-weight-bold text-primary">Entrada de Mercaderia: {{ Maestro.0.0 }}</h4>
+                      <br>
+                      <p class="card-text">Costo Adiccional: <span style="color:blue;">{{ Maestro.0.6 }}</span></p>
+                      <p class="card-text">Iva Adiccional: <span style="color:blue;">{{ Maestro.0.7 }}</span></p>
+                  </div>
+              </div>
+              <hr>
+              <div class="table-responsive">
+                <table class="table table-sm table-bordered" id="Pantalla-table" >
+                    <thead class="thead-dark">
+                      <th>Item</th>
+                      <th>Codigo</th>
+                      <th>Unidades</th>
+                      <th>Costo</th>
+                      <th>Impuesto</th>
+                    </thead>
+                    <tbody style="background-color: white;">
+                      {% for i in Detalles %}
+                          <tr>
+                              <td>{{ i.0 }}</td>
+                              <td>{{ i.1 }}</td>
+                              <td>{{ i.2 }}</td>
+                              <td>{{ i.3 }}</td>
+                              <td>{{ i.4 }}</td>
+                          </tr>
+                      {% empty %}
+                          <tr><td colspan="5"><h3>No se encontraron registros</h3></td></tr>
+                      {% endfor %}
+                    </tbody>
+                </table>
+                <div class="d-flex flex-row">
+                    <a class="btn btn-secondary" type="button" style="color:white" href="{% url 'aprobaciones_em_list' %}">Regresar</a>
+                    &nbsp;
+                    &nbsp;
+                    {% if Maestro.0.8 == 'Autorizado' %}
+                       <h3 style="color: green;">{{ Maestro.0.8 }}</h3>
+                    {% elif Maestro.0.8 == 'Anulado'  %}
+                       <h3 style="color: red;">{{ Maestro.0.8 }}</h3>
+                    {% else %}
+                      <a class="btn btn-success" type="button" href="{% url 'aprobaciones_em_actualiza' Maestro.0.0 '3' %}" style="color:white">Aceptar</a>
+                      &nbsp;
+                      &nbsp;
+                      <a class="btn btn-danger" type="button" href="{% url 'aprobaciones_em_actualiza' Maestro.0.0 '2' %}" style="color:white">Rechazar</a>
+                    {% endif %}
+                </div>
+              </div>
+          </div>
+      </div>
+  </div>
+</div>
+{% endblock contenido %}
+{% block extrascript %}
+<script type="text/javascript" src="{% static 'aprobaciones/vendor/datatables/jquery.dataTables.js' %}"></script>
+<script type="text/javascript" src="{% static 'aprobaciones/vendor/datatables/dataTables.bootstrap4.min.js' %}"></script>
+<script type="text/javascript">
+  $(document).ready(function() {
+              $('#Pantalla-table').DataTable({
+                  "language":{
+                      "lengthMenu":"Mostrar  _MENU_  filas",
+                      "zeroRecords":"No se encontraron coincidencias",
+                      "info": "Página _PAGE_ de _PAGES_",
+                      "infoEmpty":"No hay registros",
+                      "infoFiltered":"(filtrado de un total de _MAX_ registros)",
+                      "search":"Buscar:",
+                      "paginate":{
+                          "first":"Primero",
+                          "last":"Último",
+                          "next":"Siguiente",
+                          "previous":"Anterior",
+                      }
+                  },
+                  "ordering": false 
+              });  
+      });
+</script>
+{% endblock extrascript %}

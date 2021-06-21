@@ -1,0 +1,226 @@
+{% extends 'vta/base_vta.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block extracss %}
+    <style type="text/css">
+        #id_nombres, #id_apellidos{
+            text-transform: capitalize;
+        }
+    </style>
+    <link rel="stylesheet" href="{% static 'vta/estilos/BsMultiSelect.css' %}">
+{% endblock extracss %}
+{% block contenido %}
+<!-- -------------------------------------------------------------------- -->
+<!--         Formulario modal para agregar telefonos temporalmente  -->
+<!-- -------------------------------------------------------------------- -->
+<div class="modal fade" id="modal_tel" tabindex="-1" role="dialog" aria-labelledby="modal_telLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modal_telLabel">A&ntilde;adir tel&eacute;fono</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                {{ form_tel|crispy }}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <button id="tel_nuevo" type="button" class="btn btn-primary" data-dismiss="modal">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- -------------------------------------------------------------------- -->
+<!--         Formulario modal para agregar direcciones temporalmente  -->
+<!-- -------------------------------------------------------------------- -->
+<div class="modal fade" id="modal_dir" tabindex="-1" role="dialog" aria-labelledby="modal_dirLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modal_dirLabel">A&ntilde;adir direcci&oacute;n</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <input type="text" autocomplete="off" name="direccion" maxlength="255" class="form-control" id="id_direccion">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <button id="dir_nuevo" type="button" class="btn btn-primary" data-dismiss="modal">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- -------------------------------------------------------------------- -->
+<!--         PANTALLA PRINCIPAL  -->
+<!-- -------------------------------------------------------------------- -->
+<div class="container">
+    {% if messages %}
+        {% for i in messages %}
+            <div class="alert alert-{{ i.tags }}">{{ i }}</div>
+        {% endfor %}
+    {% endif %}
+    <div class="card">
+        <form method="POST" autocomplete="off">
+            {% csrf_token %}
+            <div class="card-header">
+                <h3>Clientes</h3>
+                <ul class="nav nav-tabs card-header-tabs" id="myTab" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="gen-tab" data-toggle="tab" href="#generales" role="tab" aria-controls="generales" aria-selected="true">
+                        Generales
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                    <a class="nav-link disabled" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Vehículos</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="card-body tab-content" id="myTabContent">
+                <div class="tab-pane fade show active" id="generales" role="tabpanel" aria-labelledby="gen-tab">
+                    <div class="form-row">
+                        <div class="form-group col-md-4">
+                            {{ form.identificacion.label_tag }}
+                            {{ form.identificacion }}
+                            <small style="color:red;">{{ form.identificacion.errors }}</small>
+                        </div>
+                        <div class="form-group col-md-4">
+                            {{ form.nombres.label_tag }}
+                            {{ form.nombres }}
+                        </div>
+                        <div class="form-group col-md-4">
+                            {{ form.apellidos.label_tag }}
+                            {{ form.apellidos }}
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-3">
+                            <label for="id_magnetico">Cod. magnetico</label>
+                            {{ form.magnetico }}
+                            {{ form.magnetico.errors }}
+                        </div>
+                        <div class="form-group col-md-3">
+                            {{ form.correo.label_tag }}
+                            {{ form.correo }}
+                        </div>
+                        <div class="from-group col-md-3">
+                            <label for="id_telefono1">Tel&eacute;fono predeterminado:</label>
+                            <select name="telefono1" class="form-control" id="id_telefono1">
+                                <option value="" selected="">---------</option>    
+                            </select>
+                            <a href="#" data-toggle="modal" data-target="#modal_tel">
+                                A&ntilde;adir 
+                                <span>
+                                    <i class="fa fa-plus" aria-hidden="true"></i>
+                                </span>
+                            </a>
+                        </div>
+                        <div class="form-group col-md-3">
+                            {{ form.membresia.label_tag }}
+                            {{ form.membresia }}
+                            {{ form.membresia.errors }}
+                        </div>
+                    </div>
+                    <br>
+                    <div class="form-row">
+                        <div class="form-group col-md-4">
+                            {{ form.estado_civil.label_tag }}
+                            {{ form.estado_civil }}
+                        </div>
+                        <div class="form-group col-md-3">
+                            {{ form.dependientes.label_tag }}
+                            {{ form.dependientes }}
+                        </div>
+                        <div class="form-group col-md-3">
+                            {{ form.limite_credito.label_tag }}
+                            <input type="number" name="limite_credito" min="0" value="0" step="0.0001" class="form-control" required="" id="id_limite_credito">
+                        </div>
+                        <div class="form-group col-md-2">
+                            {{ form.saldo.label_tag }}
+                            {{ form.saldo }}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="id_direccion1">Direcci&oacute;n predeterminada</label>
+                        <select name="direccion1" class="form-control" id="id_direccion1">
+                            <option value="" selected="">---------</option>
+                        </select>
+                        <a href="#" data-toggle="modal" data-target="#modal_dir">
+                            A&ntilde;adir 
+                            <span>
+                                <i class="fa fa-plus" aria-hidden="true"> </i>
+                            </span>
+                        </a>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-check">
+                            {{ form.cooperativa.label_tag }}
+                            {{ form.cooperativa }}
+                            {{ form.cooperativa.errors }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer text-muted">
+                <button type="submit" class="btn btn-outline-primary">
+                    <i class="fas fa-save"></i>&nbsp;Grabar
+                </button>
+                <a class="btn btn-outline-info" href="{% url 'vta_cliente_listar' %}" role="button">
+                    <i class="fas fa-clipboard-list"></i>&nbsp;Listado
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock contenido %}
+{% block extrascripts %}
+    <script src="{% static 'vta/js/BsMultiSelect.js' %}"></script>
+    <script>
+        $("#id_cooperativa").dashboardCodeBsMultiSelect();
+        $("#id_membresia").dashboardCodeBsMultiSelect();
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $("#tel_nuevo").on('click',tel_tempo);
+            $("#dir_nuevo").on('click',dir_tempo);
+            $('#id_limite_credito').on('keyup', function(){
+                $('#id_saldo').val((this.value));
+            });
+            function tel_tempo(){
+                var operador = $('#id_operador').val();
+                var telefono = $('#id_telefono').val();
+                if (!telefono){
+                    alert('No se ingreso ningun numero telefonico');
+                }
+                else{
+                    var request =$.ajax({
+                        type:"GET",
+                        url: "{% url 'vta_ajax_telefono' %}",
+                        data: {"operador":operador,"telefono":telefono},
+                    });
+                    request.done(function(response){
+                        $('#id_telefono1').html(response.opcion);
+                    });  
+                }
+            }
+            function dir_tempo(){
+                var direccion = $('#id_direccion').val();
+                if(!direccion){
+                    alert('No se ha ingresado ninguna direccion');
+                }else {
+                    var request = $.ajax({
+                        type:"GET",
+                        url: "{% url 'vta_ajax_direccion' %}",
+                        data: {"direccion":direccion,},
+                    });
+                    request.done(function(response){
+                        $('#id_direccion1').html(response.opcion);
+                    });
+                }
+            }
+        });
+    </script>
+{% endblock extrascripts %}

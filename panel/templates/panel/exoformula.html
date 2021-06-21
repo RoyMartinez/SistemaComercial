@@ -1,0 +1,95 @@
+{% extends 'panel/base.html' %}
+{% load static %}
+{% block contenido %}
+<main role="main" class="container">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="content-section">
+                <div class="row"><h4 style="color:gray;">F&oacute;rmula de exoneraciones</h4></div>    
+                <div class="border-top pt-3"></div>
+                <br>
+                <table class="table table-sm table-hover">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th scope="col">Rubro</th>
+                            <th scope="col">Unidades</th>
+                            <th scope="col">Costo</th>
+                            <th scope="col">Precio</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for i in tabla %}
+                            <tr>
+                                <td>{{ i.nombre }}</td>
+                                <td>
+                                    <div class="custom-control custom-checkbox" style="text-align:center;">
+                                        <input type="checkbox" class="custom-control-input" id="u{{ i.pk }}" value="{{ i.unidades }}" {% if i.unidades %} checked {% endif %} {% if i.pk == 1 %}disabled{% endif %}> 
+                                        <label for="u{{ i.pk }}" class="custom-control-label"></label>
+                                    </div>
+                                </td>
+                                <td style="text-align: center;">
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input" id="c{{ i.pk }}" value="{{ i.costo }}" {% if i.costo %} checked {% endif %} {% if i.pk == 1 %}disabled{% endif %}>
+                                        <label for="c{{ i.pk }}" class="custom-control-label"></label>
+                                    </div>
+                                </td>
+                                <td style="text-align: center;">
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input" id="p{{ i.pk }}" value="{{ i.precio }}" {% if i.precio %} checked {% endif %} {% if i.pk == 1 %}disabled{% endif %}>
+                                        <label for="p{{ i.pk }}" class="custom-control-label"></label>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <div class="border-top pt-3" style="text-align: center;"> 
+                    <form method="POST" autocomplete="off">
+                        {% csrf_token %}
+                        <input type="hidden" id="txtresumen" name="opciones">
+                        <button type="submit" class="btn btn-outline-primary">
+                            <i class="fas fa-check-circle"></i>&nbsp;Apply
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="content-section">
+                <h3>Men&uacute; Contextual</h3>
+                <p class='text-muted'>Acciones
+                    <ul class="list-group">
+                        <li class="list-group-item list-group-item-light">
+                            <button type="button" class="btn btn-outline-primary btn-sm nuevo">
+                                <i class="fas fa-plus"></i> New
+                            </button>
+                        </li>
+                    </ul>
+                </p>
+                {% include 'panel/venta/vtalinks.html' %}
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock contenido %}
+{% block extramodal %}
+<div class="modal fade" tabindex="-1" role="dialog" id="modal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content"></div>
+    </div>
+</div>    
+{% endblock extramodal %}{% block extrascripts %}
+<script src="{% static 'vta/js/jquery.bootstrap.modal.forms.min.js' %}"></script>
+<script type="text/javascript">
+    $(".nuevo").modalForm({ formURL: "{% url 'conf_newexof' %}" });
+    $('input[type=checkbox]').on('change',function(){
+        var arreglo=[];
+        for(var i=0;i < $('input[type=checkbox]').length; i++){
+            if ($('input[type=checkbox]')[i].checked){          
+                arreglo.push($('input[type=checkbox]')[i].id);
+            }
+        $('#txtresumen').val(arreglo);            
+        }
+    });
+</script>
+{% endblock extrascripts %}

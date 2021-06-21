@@ -1,0 +1,59 @@
+{% extends 'fenimarket/mk_base.html' %}
+{% load static %}
+{% block extracss %}
+    <link rel="stylesheet" href="{% static 'fenimarket/vendor/datatables/dataTables.bootstrap4.min.css' %}">
+{% endblock extracss %}
+{% block contenido %}
+<div class="row">
+    <div class="col">
+        <div class="card py-3 border-left-warning">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-10">
+                        <h2 class="m-0 font-weight-bold text-primary">Listas de Inventario Fenimarket&reg;</h2>
+                    </div>
+                    <div class="col-md-2">
+                        <a href="{% url 'mk_exportar' %}" class="btn btn-outline-success" data-toggle="tooltip" title="Exportar a excel">
+                            <i class="fas fa-file-excel"></i>&nbsp; Excel
+                        </a>
+                    </div>
+                </div>
+                <hr>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-sm" id="dataTable" width="100%">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th scope="col">Grupo</th>
+                                <th scope="col">Subgrupo</th>
+                                {% comment %}<th scope="col">Proveedor</th>{% endcomment %}
+                                <th scope="col">C&oacute;digo</th>
+                                <th scope="col">Descripci&oacute;n</th>
+                                <th scope="col">Existencia</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for i in inv %}
+                                <tr>
+                                    <td>{{ i.item__n3__familia__rubro__descripcion|lower }}</td>
+                                    <td>{{ i.item__n3__familia__descripcion|lower }}</td>
+                                    {% comment %}<td>-</td>{% endcomment %}
+                                    <td>{{ i.item__id_n4 }}</td>
+                                    <td>{{ i.item__descripcion|lower }}</td>
+                                    <td style="text-align: center;">{{ i.cantidad__sum }}</td>
+                                </tr>
+                            {% empty %}
+                                <tr><td colspan="6"><h3>Sin registros</h3></td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock contenido %}
+{% block extrascripts %}
+    <script src="{% static 'fenimarket/vendor/datatables/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'fenimarket/vendor/datatables/dataTables.bootstrap4.min.js' %}"></script>
+    <script src="{% static 'fenimarket/js/tablas.js' %}" type="text/javascript"></script>
+{% endblock extrascripts %}

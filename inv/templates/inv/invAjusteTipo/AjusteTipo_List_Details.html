@@ -1,0 +1,11 @@
+{% for i in ajustetipo %}
+<tr>
+    <td>{{ i.tipo_mov }}</td>
+    <td>{{ i.descripcion }}</td>
+    <td>
+        <label>Registro del sistema</label>
+    </td>
+</tr>
+{% empty %}
+    <tr><td colspan="3"><h3>No se encontraron registros</h3></td></tr>
+{% endfor %}

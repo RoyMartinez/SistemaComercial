@@ -1,0 +1,12 @@
+asgiref==3.2.10
+cymysql==0.9.15
+Django==3.1.1
+django-bootstrap-modal-forms==2.0.0
+django-crispy-forms==1.9.2
+django-cymysql==3.1.0
+django-widget-tweaks==1.4.8
+Pillow==7.2.0
+PyMySQL==0.10.1
+pytz==2020.1
+reportlab==3.5.50
+sqlparse==0.3.1

@@ -1,0 +1,115 @@
+{% extends 'fenimarket/mk_base.html' %}
+{% block contenido %}
+<div class="row">
+  <div class="col-6">
+    <div class="card shadow">
+      <a href="#collapseCardExample" class="d-block card-header py-3" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="collapseCardExample">
+        <h6 class="m-0 font-weight-bold text-primary">Nueva factura de consumo</h6>
+      </a>
+      <div class="collapse show" id="collapseCardExample">
+        <div class="card-body">
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <button class="btn btn-outline-primary" type="button" id="btn_cliente">
+                <i class="fa fa-user" aria-hidden="true"></i>Cliente
+              </button>
+            </div>
+            <input type="text" class="form-control" placeholder="PARTICULAR / INDIVIDUAL">
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label for="cmb_condicion">Condici&oacute;n:</label>
+              <select class="form-control" id="cmb_condicion">
+                <option value="">Cocina</option>
+                <option value="">Consumo</option>
+                <option value="">Incentivo</option>
+                <option value="">Reuniones</option>
+                <option value="">Rifas / Pub</option>
+              </select>
+            </div>
+            <div class="form-group col-md-6">
+              <label for="cmb_autorizado">Autorizado por:</label>
+              <select class="form-control" id="cmb_autorizado">
+                <option value="">Administraci&oacute;n</option>
+                <option value="">Gerencia</option>
+                <option value="">Presidencia</option>
+              </select>
+            </div>
+          </div>
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <button class="btn btn-outline-primary" type="button" id="button-addon2">
+                <i class="fa fa-barcode" aria-hidden="true"></i>
+                Producto
+              </button>
+            </div>
+            <input type="text" class="form-control">
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-4">
+              <label for="txtPago">Pago:</label>
+              <input type="text" class="form-control" id="txtPago">
+            </div>
+            <div class="form-group col-md-4">
+              <label for="txtDescuento">Descuento:</label>
+              <input type="text" class="form-control" id="txtDescuento" readonly>
+            </div>
+            <div class="form-group col-md-4">
+              <label for="txt_st">Subtotal:</label>
+              <input type="number" class="form-control" id="txt_st" readonly>
+              <label for="txt_iva">IVA:</label>
+              <input type="number" class="form-control" id="txt_iva" readonly>
+              <label for="txt_total">Total:</label>
+              <input type="number" class="form-control" id="txt_total" readonly>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-6">
+    <div class="card border-left-warning shadow h-100 py-2">
+      <div class="card-body">
+        <div class="row no-gutters align-items-center">
+          <div class="col mr-2">
+            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Detalle</div>
+          </div>
+          <div class="col-auto">
+            <i class="fas fa-calendar fa-2x text-gray-300"></i>
+          </div>
+          <table class="table table-sm">
+              <thead>
+                <tr>
+                  <th scope="col">Descripci&oacute;n</th>
+                  <th scope="col">Cantidad</th>
+                  <th scope="col">P/U</th>
+                  <th scope="col">Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Gaseosa</td>
+                  <td>2</td>
+                  <td>10.00</td>
+                  <td>20.00</td>
+                </tr>
+                <tr>
+                  <td>Hot dog</td>
+                  <td>1</td>
+                  <td>60.00</td>
+                  <td>60.00</td>
+                </tr>
+                <tr>
+                  <td>Chocolate</td>
+                  <td>3</td>
+                  <td>17.00</td>
+                  <td>51.00</td>
+                </tr>
+              </tbody>
+            </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock contenido %}

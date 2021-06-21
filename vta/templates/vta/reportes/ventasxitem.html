@@ -1,0 +1,101 @@
+{% extends 'vta/base_vta.html' %}
+{% load static %}
+{% load humanize %}
+{% block contenido %}
+<div class="row">
+  <div class="col-lg-12 mb-12">
+    <div class="card border-left-success shadow h-100 py-2">
+      <a href="#collapseCardExample" class="d-block card-header py-3" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="collapseCardExample">
+        <h6 class="m-0 font-weight-bold text-primary">RESUMEN DE VENTAS POR ITEMS</h6>
+      </a>
+      <div class="collapse show" id="collapseCardExample">
+        <div class="card-body">
+            <form autocomplete="off" method="POST">
+              {% csrf_token %}
+              <div class="form-row">
+                <div class="form-group col-md-9">
+                  <label for="fecha">Fecha</label>
+                  <input type="date" class="form-control form-control-sm" id="fecha" name="fecha" value="{{ fecha }}" required>
+                  <br>
+                  <label>Reporte de:&nbsp; &nbsp;</label>
+                  <div class="custom-control custom-radio custom-control-inline">
+                    <input type="radio" id="optdia" name="rango" class="custom-control-input" value="1" {% if rango == 1 %} checked {% endif %}>
+                    <label class="custom-control-label" for="optdia">Día</label>
+                  </div>
+                  <div class="custom-control custom-radio custom-control-inline">
+                    <input type="radio" id="optmes" name="rango" class="custom-control-input" value="2" {% if rango == 2 %} checked {% endif %}>
+                    <label class="custom-control-label" for="optmes">Mes</label>
+                  </div>
+                </div>
+                <div class="form-group col-md-3" style="border-left: 1px solid #C0C0C0; text-align: center;">
+                    <button type="submit" class="btn btn-outline-primary">
+                      <i class="fas fa-search"></i>&nbsp;Calcular
+                    </button>
+                    <p></p>
+                    <button type="submit" name='submit_imprimir' class="btn btn-outline-info" formtarget="_blank">
+                      <i class="fas fa-print"></i>&nbsp;Imprimir
+                    </button>  
+                    <p></p>
+                    <button type="submit" name='submit_excel' class="btn btn-outline-success">
+                      <i class="fas fa-file-excel"></i>&nbsp;Exportar
+                    </button>  
+                </div>
+              </div> 
+            </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<br>
+<!-- Content Row -->
+<div class="row">
+  <div class="col">
+    <div class="card py-3 border-left-success">
+      <div class="card-body table-responsive">
+        <table class="table table-sm table-bordered table-striped">
+          <thead class="thead-dark">
+            <tr>
+                <th scope="col">Rubro</th>
+                <th scope="col">C&oacute;digo</th>
+                <th scope="col">Cantidad</th>
+                <th scope="col">Precio</th>
+                <th scope="col">IVA</th>
+              </tr>
+          </thead>
+          <tbody>
+            {% for i in tabla %}
+            <tr>
+              <td>{{ i.item__n3__familia__rubro }}</td>
+              <td>{{ i.item }}</td>
+              <td>{{ i.unidades__sum }}</td>
+              <td>{{ i.preciofinal__sum|floatformat:2|intcomma }}</td>
+              <td>{{ i.impuesto__sum|floatformat:2|intcomma }}</td>
+            </tr>
+            {% empty %}
+              <tr><td colspan="5">Sin registros</td></tr>
+            {% endfor %}
+          </tbody>
+          <tfoot class="thead-dark">
+            <tr>
+              <th scope="col" colspan="2"></th>
+              <th scope="col">{{ precio|floatformat:2|intcomma }}</th>
+              <th scope="col">{{ iva|floatformat:2|intcomma }}</th>
+              <th scope="col" colspan="1"></th>
+            </tr>
+          </tfoot>
+        </table>
+        <table class="table table-sm table-bordered table-striped">
+          <thead class="thead-dark">
+            <tr>
+              <th scope="col">TOTAL:</th>
+              <th scope="col">{{ total|floatformat:2|intcomma }}</th>
+              <!--<th scope="col" colspan="2"></th>-->
+            </tr>
+          </thead>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock contenido %}

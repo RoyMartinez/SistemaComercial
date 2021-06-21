@@ -1,0 +1,80 @@
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+<form method="POST" data-url="{% url 'TrasladoMsr_Crear' %}" class="create-form" autocomplete="off">
+    {% csrf_token %}
+    <div class="modal-header">
+        <h5 class="modal-title text-center">Crear Envio a sucursal</h5>
+    </div>
+    <div class="modal-body">
+        <div class="form-group col-md-12" id="div_referencia">
+                {{ form.referencia.label_tag }}
+                {% render_field form.referencia class="form-control form-control-sm" %}
+                <div class="{% if form.referencia.errors %} invalid{% endif %}">
+                    {% for error in form.referencia.errors %}
+                        <p class="help-block" style="color:red;">{{ error }}</p>
+                    {% endfor %}
+                </div>
+        </div>
+        <div class="form-group col-md-12" id="div_fecha">
+                {{ form.fecha.label_tag }}
+                {% render_field form.fecha class="form-control form-control-sm" %}
+                <div class="{% if form.fecha.errors %} invalid{% endif %}">
+                    {% for error in form.fecha.errors %}
+                        <p class="help-block" style="color:red;">{{ error }}</p>
+                    {% endfor %}
+                </div>
+        </div>
+        <div class="form-group col-md-12" id="div_estado">
+                {{ form.estado.label_tag }}
+                {% render_field form.estado class="form-control form-control-sm" %}
+                <div class="{% if form.estado.errors %} invalid{% endif %}">
+                    {% for error in form.estado.errors %}
+                        <p class="help-block" style="color:red;">{{ error }}</p>
+                    {% endfor %}
+                </div>
+        </div>
+        <div class="form-group col-md-12" id="div_sucursal">
+                {{ form.sucursal.label_tag }}
+                {% render_field form.sucursal class="form-control form-control-sm" %}
+                <div class="{% if form.sucursal.errors %} invalid{% endif %}">
+                    {% for error in form.sucursal.errors %}
+                        <p class="help-block" style="color:red;">{{ error }}</p>
+                    {% endfor %}
+                </div>
+        </div>
+        <div class="form-group col-md-12" id="div_sucursal">
+                <label for="id_sucursalD">Destino:</label>
+                {% render_field form.sucursalD class="form-control form-control-sm" %}
+                <div class="{% if form.sucursal.errors %} invalid{% endif %}">
+                    {% for error in form.sucursalD.errors %}
+                        <p class="help-block" style="color:red;">{{ error }}</p>
+                    {% endfor %}
+                </div>
+        </div>
+        <div class="form-group col-md-12" id="div_nota">
+                {{ form.nota.label_tag }}
+                {% render_field form.nota class="form-control form-control-sm" %}
+                <div class="{% if form.nota.errors %} invalid{% endif %}">
+                    {% for error in form.nota.errors %}
+                        <p class="help-block" style="color:red;">{{ error }}</p>
+                    {% endfor %}
+                </div>
+        </div>
+         
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="submit-btn btn btn-primary">
+            <i class="fas fa-plus"></i>&nbsp; Crear
+        </button>
+        <button type="button" class="submit-btn btn btn-danger" data-dismiss="modal" aria-label="close">
+            <i class="fa fa-times"></i>&nbsp; cancelar
+        </button>
+    </div>
+</form>
+<script>
+        $('#div_referencia').hide();    
+        $('#div_factura').hide();
+        $('#div_estado').hide();
+        $('#div_fecha').hide();
+        $('#div_sucursal').hide();
+</script>

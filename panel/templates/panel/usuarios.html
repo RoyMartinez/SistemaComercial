@@ -1,0 +1,56 @@
+{% extends 'panel/base.html' %}
+{% block contenido %}
+    <main role="main" class="container">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="content-section">
+                    <div class="row"><h4 style="color:gray;">Cuentas de usuarios</h4></div>    
+                    <div class="border-top pt-3"></div>
+                    <br>
+                    <form autocomplete="off" style="margin-left:25%; margin-right: 45%;">
+                        <input style="width:300px;" type="search" class="form-control form-control-sm" placeholder="Buscar">
+                    </form>
+                    <br><br>
+                        {% for i in usuarios %}
+                            <div>
+                                <h3 style="color: blue;">{{ i.username }}</h3>       
+                                <small class="text-muted">{{ i.first_name }} {{ i.last_name }}</small>
+                                <table class="table table-borderless">
+                                    <tr>
+                                        <td><strong>Ultima vez: </strong>{{ i.last_login|date:"d M Y P" }}</td>
+                                        <td><strong>Creado: </strong>{{ i.date_joined|date:"d M Y P" }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Activo: </strong>{{ i.is_active|yesno:"Si,No" }}</td>
+                                        <td><strong>Superusuario: </strong>{{ i.is_staff|yesno:"Si,No" }}</td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <hr>
+                        {% endfor %}
+                    <br><br>
+                    <div class="border-top pt-3" style="text-align: center;"> 
+                        <small>Sistema Integral de Control de Recursos Corporativos</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="content-section">
+                    <h3>Men&uacute; Contextual</h3>
+                    <p class='text-muted'>Acciones
+                        <ul class="list-group">
+                            <li class="list-group-item list-group-item-light">
+                                <a href="{% url 'nuevo_usuario' %}">Nuevo usuario</a>
+                            </li>
+                            <li class="list-group-item list-group-item-light">Cambiar contrase&ntilde;a</li>
+                            <li class="list-group-item list-group-item-light">Permisos</li>
+                            <li class="list-group-item list-group-item-light">
+                                <a href="{% url 'configuracion' %}">Regresar al men&uacute;</a>
+                            </li>
+                        </ul>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </main>
+{% endblock contenido %}

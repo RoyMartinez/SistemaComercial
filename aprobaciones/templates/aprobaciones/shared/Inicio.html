@@ -1,0 +1,13 @@
+{% extends 'aprobaciones/shared/base.html' %}
+{% load static %}
+{% block contenido %}
+    <center>
+        <div>   
+            <ul>
+                <li class="card-ult" ><a class="boton_personalizado" href="{% url 'aprobaciones_em_list' %}">Entrada de Mercaderia</a></li>
+                <li class="card-ult"><a class="boton_personalizado" href="{% url 'aprobaciones_oc_list' %}">Ordenes de Compra</a></li>
+                <li class="card-ult"><a class="boton_personalizado" href="{% url 'aprobaciones_rv_siscarcoop' %}">Reporte de Ventas</a></li>
+            </ul>
+        </div>
+    </center>
+{% endblock contenido %}

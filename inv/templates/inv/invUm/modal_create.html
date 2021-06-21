@@ -1,0 +1,58 @@
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+<form method="POST" data-url="{% url 'Um_Crear' %}" class="create-form" autocomplete="off">
+    {% csrf_token %}
+    <div class="modal-header">
+        <h3 class="modal-title">Nueva Unidad de Medida</h3>
+    </div>
+    <div class="modal-body">
+        <div class="form-group col-md-12" id="div_id_bodega">
+                {{ form.id_um.label_tag }}
+                {% render_field form.id_um class="form-control form-control-sm"  onpaste="return false" onkeypress="return alpha(event)"   %}
+                <div class="{% if form.id_um.errors %} invalid{% endif %}">
+                    {% for error in form.id_um.errors %}
+                        <p class="help-block" style="color:red;">{{ error }}</p>
+                    {% endfor %}
+                </div>
+        </div>
+        <div class="form-group col-md-12" id="div_sucursal">
+                {{ form.nombre.label_tag }}
+                {% render_field form.nombre class="form-control form-control-sm" %}
+                <div class="{% if form.nombre.errors %} invalid{% endif %}">
+                    {% for error in form.nombre.errors %}
+                        <p class="help-block" style="color:red;">{{ error }}</p>
+                    {% endfor %}
+                </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="submit-btn btn btn-primary">
+            <i class="fas fa-plus"></i>&nbsp; Crear
+        </button>
+        <button type="button" class="submit-btn btn btn-danger" data-dismiss="modal" aria-label="close">
+            <i class="fa fa-times"></i>&nbsp; cancelar
+        </button>
+    </div>
+</form>
+<script>
+    $("#id_id_um").on("keyup",mayuscula);
+    function mayuscula(){
+        $("#id_id_um").val(($("#id_id_um").val()).toUpperCase());
+    }
+    $('#id_siglas').on('keypress',function(){
+        console.log(e.keyCode);
+        if (e.keyCode == 101 || e.keyCode == 46 /*|| e.keyCode == 45*/ || e.keyCode == 43 || e.keyCode == 44 || e.keyCode == 47) {
+            return false;
+        }
+        soloNormales(e.keyCode);
+    });
+    function soloNormales(e) {
+        var key = window.Event ? e.which : e.keyCode
+            return (key >= 48 && key <= 57)
+    }
+    function alpha(e) {
+        var k;
+        document.all ? k = e.keyCode : k = e.which;
+        return ((k > 64 && k < 91) || (k > 96 && k < 123) || k == 8|| (k >= 48 && k <= 57)); 
+    } 
+</script>

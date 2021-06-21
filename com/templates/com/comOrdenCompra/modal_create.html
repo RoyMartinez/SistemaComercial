@@ -1,0 +1,114 @@
+{% load widget_tweaks %}
+<form method="post" action="" autocomplete="off">
+    {% csrf_token %}
+    <div class="modal-header">
+        <h3 class="modal-title">Nueva Orden de Compra</h3>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="{% if form.non_field_errors %}invalid{% endif %} mb-2">
+            {% for error in form.non_field_errors %}
+                {{ error }}
+            {% endfor %}
+        </div>
+        <div class="form-group">
+            {{ form.proforma.label_tag }}
+            {% render_field form.proforma class="form-control form-control-sm" %}
+            <div class="{% if form.proforma.errors %} invalid{% endif %}">
+                {% for error in form.proforma.errors %}
+                    <p class="help-block" style="color:red;">{{ error }}</p>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                {{ form.proveedor.label_tag }}
+                {% render_field form.proveedor class="form-control form-control-sm" %}
+                <div class="{% if form.proveedor.errors %} invalid{% endif %}">
+                    {% for error in form.proveedor.errors %}
+                        <p class="help-block" style="color:red;">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="form-group col-md-6">
+                {{ form.tipo.label_tag }}
+                {% render_field form.tipo class="form-control form-control-sm" %}
+                <div class="{% if form.tipo.errors %} invalid{% endif %}">
+                    {% for error in form.tipo.errors %}
+                        <p class="help-block" style="color:red;">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            {{ form.cliente.label_tag }}
+            {% render_field form.cliente class="form-control form-control-sm" %}
+            <div class="{% if form.cliente.errors %} invalid{% endif %}">
+                {% for error in form.cliente.errors %}
+                    <p class="help-block" style="color:red;">{{ error }}</p>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-4">
+                {{ form.condicion.label_tag }}
+                {% render_field form.condicion class="form-control form-control-sm" %}
+                <div class="{% if form.condicion.errors %} invalid{% endif %}">
+                    {% for error in form.condicion.errors %}
+                        <p class="help-block" style="color:red;">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="form-group col-md-4">
+                {{ form.vencimiento.label_tag }}
+                <input type="date" name="vencimiento" class="form-control form-control-sm" required id="id_vencimiento" value="{{ vencimiento }}">
+                <div class="{% if form.vencimiento.errors %} invalid{% endif %}">
+                    {% for error in form.vencimiento.errors %}
+                        <p class="help-block" style="color:red;">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="form-group col-md-4">
+                {{ form.moneda.label_tag }}
+                {% render_field form.moneda class="form-control form-control-sm" %}
+                <div class="{% if form.moneda.errors %} invalid{% endif %}">
+                    {% for error in form.moneda.errors %}
+                        <p class="help-block" style="color:red;">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="submit-btn btn btn-outline-danger">
+            <i class="fas fa-save"></i>&nbsp;Guardar
+        </button>
+    </div>
+</form>
+<input type="hidden" value="{{ vencimiento }}" id="predeterminado">
+<script type="text/javascript">
+    var hoy=new Date();
+    $('#id_proforma').on('change', function(){
+        referencia = this.value;
+        var request = $.ajax({
+        type:"GET",
+        url: "{% url 'com_ajax_proveedor' %}",
+        data: {"ref":referencia,},
+    });
+    request.done(function(response){
+        $('#id_proveedor').val(response.proveedor);
+        })
+    })
+    $('#id_vencimiento').on('change', function(){
+        var luego= new Date($('#id_vencimiento').val());
+        var diferencia = luego - hoy;
+        diferencia = diferencia/(1000*60*60*24);
+        if (diferencia < 0){
+            alert('Fecha de vencimiento inferior a la fecha actual \n Estableciendo valor por defecto ...');
+            $('#id_vencimiento').val($('#predeterminado').val());
+        }
+        
+    })
+</script>

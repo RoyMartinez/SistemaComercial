@@ -1,0 +1,31 @@
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+<form method="POST"  data-url="{% url 'MarcaItem_Editar' form.instance.pk %}" class="update-form" autocomplete="off">
+    {% csrf_token %}
+    <div class="modal-header">
+        <h5 class="modal-title text-center">Editar Marca</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        {{form|crispy}}
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="submit-btn btn btn-primary">
+            <i class="fas fa-plus"></i>&nbsp; Actualizar
+        </button>
+        <button type="button" class="submit-btn btn btn-danger" data-dismiss="modal" aria-label="close">
+            <i class="fa fa-times"></i>&nbsp; cancelar
+        </button>
+    </div>
+</form>
+
+
+<script>
+    var codigo = $('#id_siglas').val();
+    var errores = $('.help-block');
+    if(codigo){
+        $('#id_siglas').prop('readonly',true);
+    }
+</script>

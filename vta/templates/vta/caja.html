@@ -1,0 +1,183 @@
+{% extends 'vta/base_vta.html' %}
+{% load static %}
+{% load humanize %}
+{% block extracss %}
+<style type="text/css">
+    .form-control-lg{
+        text-align: right;
+    }
+</style>
+{% endblock extracss %}
+{% block contenido %}
+{% if messages %}
+    {% for i in messages %}
+        <div class="alert alert-danger">{{ i }}</div>
+    {% endfor %}
+{% endif %}
+<div class="row">
+    <div class="col">
+        <div class="card py-3 border-left-success">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-7"><h4 class="m-0 font-weight-bold text-primary">Caja</h4></div>
+                    <div class="col-md-5">
+                        <h3 class="m-0 font-weight-bold text-danger">
+                            Monto C$: <span id="monto">{{ monto|floatformat:2 }}</span>
+                        </h3>
+                    </div>
+                </div>
+                <hr>
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-md-10">
+                            <div class="form-row">
+                                <div class="form-group col-md-4">
+                                    <label for="tp">Tipo de pago:</label>
+                                    <select id="fpago" class="form-control">
+                                        {% if instancia.formapago.nombre == 'Efectivo' %}
+                                            <option value="1" selected>Efectivo</option>
+                                            <option value="2">Tarjeta</option>
+                                        {% else %}
+                                            <option value="1">Efectivo</option>
+                                            <option value="2" selected>Tarjeta</option>
+                                        {% endif %}
+                                    </select>
+                                    <p id="mensaje" style="color:red"></p>
+                                </div>
+                                <div class="form-group col-md-4 ocultar">
+                                    <label for="voucher">Monto:</label>
+                                    <input type="number" class="form-control" value="0" min="0" step="any" name="tarjeta" required>
+                                </div>
+                                <div class="form-group col-md-4 ocultar">
+                                    <label for="voucher">Voucher:</label>
+                                    <input type="text" id="txtVoucher" class="form-control" name="voucher" required>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="form-row">
+                                <div class="form-group col-md-2"></div>
+                                <div class="form-group col-md-2">
+                                    <label for="a"></label>
+                                    <p>Entrada</p>
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <img src="{% static 'vta/imgs/nic.png' %}" height="32px" width="32px" class="img-fluid">
+                                    <label for="enio">Cordobas:</label>
+                                    <input type="number" class="form-control form-control-lg" value="0" min="0" step="any" name="nio_in">
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <img src="{% static 'vta/imgs/usa.png' %}" height="32px" width="32px" class="img-fluid">
+                                    <label for="eusd">Dolares:</label>
+                                    <input type="number" class="form-control form-control-lg" min="0" value="0" step="any" name="usd_in">
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="form-row">
+                                <div class="form-group col-md-2"></div>
+                                <div class="form-group col-md-2">
+                                    <p>Cambio</p>
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <input type="number" class="form-control form-control-lg" step="any" min="0" value="0" name="nio_out">
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <input type="number" class="form-control form-control-lg" step="any" min="0" value="0" name="usd_out">
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="form-row">
+                                <div class="form-group col-md-2"></div>
+                                <div class="form-group col-md-2">
+                                    <p>Diferencia</p>
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <input type="number" class="form-control" value="-{{ instancia.preciofinaltotal|floatformat:2 }}" readonly style="color: red;">
+                                </div>
+                                <div class="form-group col-md-2">
+                                    <input type="number" class="form-control" value="0" readonly style="color:red;">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-2" style="border-left: 1px solid #c0c0c0">
+                            <button type="submit" name='grabar' class="btn btn-danger">
+                                <i class="fas fa-print"></i> &nbsp;Grabar
+                            </button>
+                            <p></p>
+                            <button type="submit" name='regresar' class="btn btn-secondary">
+                                <i class="fas fa-reply"></i>&nbsp;Volver
+                            </button>
+                            <br>
+                            <p></p>
+                            <table>
+                                <tr><td colspan="2">Tipo de cambio:</td></tr>
+                                <tr>
+                                    <td>Compra:</td>
+                                    <td id="compra">{{ tc.compra }}</td>
+                                </tr>
+                            </table>
+                            <br><br><br><br><br>
+                            <img src="{% static 'vta/imgs/ico-pagos-tarjetas.png' %}" class="img-fluid" alt="tarjetas">
+                        </div>   
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock contenido %}
+{% block extrascripts %}
+    <script src="{% static 'vta/js/jquery.bootstrap.modal.forms.min.js' %}"></script>
+    <script type="text/javascript">
+        var monto = parseFloat($('#monto').html());
+        var cuadro = $('input[type=number]')
+        var visualizar = $('.ocultar');
+        var pago = {{ instancia.formapago.pk }};
+        $('input[type=number]').on('keyup',calculo);
+        $('input[type=number]').on('change',function(){
+            if (this.value == ""){
+                this.value = 0;
+                calculo();
+            }
+        });
+        if (pago == 1){
+            visualizar.css('display','none');
+            $('#txtVoucher').val(0);
+        }else{
+            cuadro[0].min="1";
+        }
+
+        $('#fpago').on('change', function(){
+            if (this.value != pago)
+                $('#mensaje').html('ADVERTENCIA: Ha cambiado el metodo de pago en relacion a lo facturado'); 
+            else
+                $('#mensaje').html('');
+            if (this.value == 1){
+                visualizar.css('display', 'None');
+                cuadro[0].min="0";
+                cuadro[0].value = 0;
+                $('#txtVoucher').val(0);
+                calculo();
+            }else{
+                visualizar.css('display', 'Block');
+                cuadro[0].min="1";
+            }
+        });
+        function calculo(){
+            if (this.value < 0){
+                alert('No se admiten numeros negativos');
+                this.value = 0;
+            }
+            var tarjeta = parseFloat(cuadro[0].value);
+            var cashnio = parseFloat(cuadro[1].value);
+            var cashusd = parseFloat(cuadro[2].value) * parseFloat($('#compra').html());
+            var vueltonio = parseFloat(cuadro[3].value);
+            var vueltousd = parseFloat(cuadro[4].value) * parseFloat($('#compra').html());
+            cuadro[5].value =  (tarjeta + cashnio + cashusd - monto - vueltonio - vueltousd).toFixed(2);
+            if(parseFloat(cuadro[5].value) > 0)
+                cuadro[5].style.color = "green";
+            else
+                cuadro[5].style.color = "red";    
+        }
+    </script>
+{% endblock extrascripts %}

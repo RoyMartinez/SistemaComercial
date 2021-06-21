@@ -1,0 +1,127 @@
+{% extends 'cartera/base_cart.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block extracss %}
+    <style type="text/css">
+        #id_nombres, #id_apellidos{
+            text-transform: capitalize;
+        }
+    </style>
+    <link rel="stylesheet" href="{% static 'vta/estilos/BsMultiSelect.css' %}">
+{% endblock extracss %}
+{% block contenido %}
+<!-- -------------------------------------------------------------------- -->
+<!--         PANTALLA PRINCIPAL  -->
+<!-- -------------------------------------------------------------------- -->
+<div class="container">
+    {% if messages %}
+        {% for i in messages %}
+            <div class="alert alert-{{ i.tags }}">{{ i }}</div>
+        {% endfor %}
+    {% endif %}
+    <div class="card">
+        <form method="POST" autocomplete="off">
+            {% csrf_token %}
+            <div class="card-header">
+                <h3>Clientes</h3>
+                <ul class="nav nav-tabs card-header-tabs" id="myTab" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="gen-tab" data-toggle="tab" href="#generales" role="tab" aria-controls="generales" aria-selected="true">
+                        Generales
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                    <a class="nav-link disabled" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Vehículos</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="card-body tab-content" id="myTabContent">
+                <div class="tab-pane fade show active" id="generales" role="tabpanel" aria-labelledby="gen-tab">
+                    <div class="form-row">
+                        <div class="form-group col-md-4">
+                            {{ form.identificacion.label_tag }}
+                            {{ form.identificacion }}
+                            <small style="color:red;">{{ form.identificacion.errors }}</small>
+                        </div>
+                        <div class="form-group col-md-4">
+                            {{ form.nombres.label_tag }}
+                            {{ form.nombres }}
+                        </div>
+                        <div class="form-group col-md-4">
+                            {{ form.apellidos.label_tag }}
+                            {{ form.apellidos }}
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-4">
+                            <label for="id_magnetico">Cod. magnetico</label>
+                            {{ form.magnetico }}
+                            {{ form.magnetico.errors }}
+                        </div>
+                        <div class="form-group col-md-4">
+                            {{ form.correo.label_tag }}
+                            {{ form.correo }}
+                        </div>
+                        <div class="form-group col-md-4">
+                            {{ form.membresia.label_tag }}
+                            {{ form.membresia }}
+                            {{ form.membresia.errors }}
+                        </div>
+                    </div>
+                    <br>
+                    <div class="form-row">
+                        <div class="form-group col-md-4">
+                            {{ form.estado_civil.label_tag }}
+                            {{ form.estado_civil }}
+                        </div>
+                        <div class="form-group col-md-2">
+                            {{ form.dependientes.label_tag }}
+                            {{ form.dependientes }}
+                        </div>
+                        <div class="form-group col-md-2">
+                            {{ form.limite_credito.label_tag }}
+                            <input type="number" name="limite_credito" min="0" value="0" step="0.0001" class="form-control" required="" id="id_limite_credito">
+                        </div>
+                        <div class="form-group col-md-2">
+                            {{ form.saldo.label_tag }}
+                            {{ form.saldo }}
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label for="id_descuento">Descuento(%):</label>
+                            {{ form.descuento }}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-check">
+                            {{ form.cooperativa.label_tag }}
+                            {{ form.cooperativa }}
+                            {{ form.cooperativa.errors }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer text-muted">
+                <button type="submit" class="btn btn-outline-primary">
+                    <i class="fas fa-save"></i>&nbsp;Grabar
+                </button>
+                <a class="btn btn-outline-info" href="{% url 'vta_cliente_listar' 1 %}" role="button">
+                    <i class="fas fa-clipboard-list"></i>&nbsp;Listado
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock contenido %}
+{% block extrascripts %}
+    <script src="{% static 'vta/js/BsMultiSelect.js' %}"></script>
+    <script>
+        $("#id_cooperativa").dashboardCodeBsMultiSelect();
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $('#id_limite_credito').on('keyup', function(){
+                $('#id_saldo').val((this.value));
+            });
+        });
+    </script>
+{% endblock extrascripts %}

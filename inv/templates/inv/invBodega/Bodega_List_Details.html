@@ -1,0 +1,24 @@
+{% for i in bodega %}
+<tr>
+    <td>{{ i.id_bodega }}</td>
+    <td>{{ i.sucursal }}</td>
+    <td>{{ i.nombre }}</td>
+    <td>
+    {% if i.siglas == 'TR' or i.siglas == 'CT' or i.siglas == 'TD' or i.siglas == 'DE' %}
+        <label>Registro del sistema</label> 
+    {% else %}
+        <a role="button" class="btn btn-sm btn-danger" href="{% url 'Bodega_Eliminar' i.id_bodega %}">
+            <i class="fas fa-trash-alt"></i>&nbsp; Eliminar
+        </a>
+    {% endif %}
+        <button type="button" class="btn btn-primary btn-sm show-form" data-url="{% url 'Bodega_Saldo' i.id_bodega %}">
+            <span class="fas fa-dollar-sign">&nbsp;Saldo</span>
+        </button>
+        <button type="button" class="btn btn-info btn-sm show-form-update" data-url="{% url 'Bodega_Editar' i.id_bodega %}">
+            <i class="fas fa-pencil-alt"></i>&nbsp; Editar
+        </button>
+    </td>
+</tr>
+{% empty %}
+    <tr><td colspan="4"><h3>No se encontraron registros</h3></td></tr>
+{% endfor %}

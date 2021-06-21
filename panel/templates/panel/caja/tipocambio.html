@@ -1,0 +1,89 @@
+{% extends 'panel/base.html' %}
+{% load static %}
+{% block contenido %}
+<main role="main" class="container">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="content-section">
+                <div class="row"><h4 style="color:gray;">Tipos de Cambio</h4></div>    
+                <div class="border-top pt-3"></div>
+                <br>
+                <div class="table-responsive">
+                    <table class="table table-sm table-bordered">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th scope="col">Fecha</th>
+                                <th scope="col">Compra</th>
+                                <th scope="col">Oficial</th>
+                                <th scope="col">Venta</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for i in tabla %}
+                            <tr>
+                                <td>{{ i.fecha|date:"SHORT_DATE_FORMAT" }}</td>
+                                <td>{{ i.compra }}</td>
+                                <td>{{ i.oficial }}</td>
+                                <td>{{ i.venta }}</td>
+                            </tr>
+                            {% empty %}
+                                <tr><td colspan="4"><h4>No hay registros</h4></td><tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="border-top pt-3" style="text-align: center;"> 
+                    <small>At least one TC must exists</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="content-section">
+                <h3>Men&uacute; Contextual</h3>
+                <p class='text-muted'>Acciones
+                    <ul class="list-group">
+                        <li class="list-group-item list-group-item-light">
+                            <button type="button" class="btn btn-outline-primary nuevo" >
+                                <i class="fas fa-plus"></i> Nuevo
+                            </button>
+                        </li>
+                        <li class="list-group-item list-group-item-light">
+                            <button type="button" class="btn btn-outline-success" >
+                                <i class="fas fa-pencil-alt"></i> Editar
+                            </button>
+                        </li>
+                    </ul>
+                </p>
+                <p class='text-muted'>Quick links
+                    <ul class="list-group">
+                        <li class="list-group-item list-group-item-light">
+                            <a href="{% url 'conf_naturaleza' %}">Naturaleza</a>
+                        </li>
+                        </li>
+                        <li class="list-group-item list-group-item-light">
+                            <a href="{% url 'conf_movimiento' %}">Movimientos</a>
+                        </li>
+                        <li class="list-group-item list-group-item-light">
+                            <a href="{% url 'configuracion' %}">Regresar al men&uacute;</a>
+                        </li>
+                    </ul>
+                </p>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock contenido %}
+{% block extramodal %}
+<div class="modal fade" tabindex="-1" role="dialog" id="modal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content"></div>
+    </div>
+</div>    
+{% endblock extramodal %}
+{% block extrascripts %}
+    <script src="{% static 'vta/js/jquery.bootstrap.modal.forms.min.js' %}"></script>
+    <script>
+        $(".nuevo").modalForm({ formURL: "{% url 'caja_tcnuevo' %}" });
+        //$(".editar").each(function(){ $(this).modalForm({formURL: $(this).data('id')}); });
+    </script>
+{% endblock extrascripts %}

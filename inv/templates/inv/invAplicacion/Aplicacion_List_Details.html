@@ -1,0 +1,15 @@
+{% for f in aplicacion %}
+<tr>
+    <td>{{ f.modelo }}</td>
+    <td>{{ f.nombre }}</td>
+    <td>{{ f.abreviatura }}</td>
+    <td>{{ f.anyo }}</td>
+    <td>
+        <button type="button" class="btn show-form-update" data-url="{% url 'Aplicacion_Editar' f.pk %}">
+            <span class="fa fa-edit fa-2x" style="color:green"></span>
+        </button>
+    </td>
+</tr>
+{% empty %}
+    <tr><td><h1>No hay Registro en Aplicacion</h1></td></tr>
+{% endfor %}

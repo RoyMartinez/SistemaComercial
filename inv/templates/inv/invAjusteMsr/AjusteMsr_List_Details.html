@@ -1,0 +1,72 @@
+{% load static %} 
+<!-- por si no hay registros -->
+{% for i in ajustemsr %}
+{% empty %}
+    <tr><td colspan="8"><h3>No se encontraron registros</h3></td></tr>
+{% endfor %}
+
+<!-- Ajustes de Entrada -->
+{% for i in ajustemsr %}
+    {% if i.ajuste.id == 2 %}
+    <tr>
+        <td>{{ i.referencia }}</td>
+        <td>{{ i.fecha|date:'SHORT_DATE_FORMAT' }}</td>
+        <td>{{ i.nota }}</td>
+        <!-- para pintar el color del estado -->
+        {% if i.estado.id == 1 %}
+            <td><strong style="color:green;">{{ i.estado }}</strong></td>
+        {% else %}
+            <td>{{ i.estado }}</td>
+        {% endif %}
+        <td><span style="color: green;" class="far fa-arrow-alt-circle-right">&nbsp;{{ i.ajuste }} </span> </td>
+        <td>
+            {% if i.estado.id == 1 %}
+                <a role="button" class="btn btn-info btn-sm" target="_blank"   href="{% url 'AjusteMsr_Imprimir' i.referencia %}">
+                    <i class="fas fa-print"></i>&nbsp; Imprimir
+                </a>
+                <a role="button" class="btn btn-sm btn-dark" href="{% url 'AjusteMaestroDetalle' i.referencia %}">
+                    <i class="fas fa-info"></i>&nbsp; Ver detalles
+                </a>
+            {% elif i.estado.id == 4 %}
+                <a role="button" class="btn btn-sm btn-dark" href="{% url 'AjusteMaestroDetalle' i.referencia %}">
+                    <i class="fas fa-info"></i>&nbsp; Editar detalles
+                </a>
+            {% endif %}
+        </td>
+    </tr>
+    {% endif %}
+{% endfor %}
+
+
+<!-- Ajustes de Salida -->
+{% for i in ajustemsr %}
+    {% if i.ajuste.id == 1 %}
+    <tr>
+        <td>{{ i.referencia }}</td>
+        <td>{{ i.fecha|date:'SHORT_DATE_FORMAT' }}</td>
+        <td>{{ i.nota }}</td>
+        <!-- para pintar el color del estado -->
+        {% if i.estado.id == 1 %}
+            <td><strong style="color:green;">{{ i.estado }}</strong></td>
+        {% else %}
+            <td>{{ i.estado }}</td>
+        {% endif %}
+        <td><span style="color: red;" class="far fa-arrow-alt-circle-left">&nbsp;{{ i.ajuste }}</span></td>
+        <td>
+            {% if i.estado.id == 1 %}
+                <a role="button" class="btn btn-info btn-sm" target="_blank"   href="{% url 'AjusteMsr_Imprimir' i.referencia %}">
+                    <i class="fas fa-print"></i>&nbsp; Imprimir
+                </a>
+                <a role="button" class="btn btn-sm btn-dark" href="{% url 'AjusteMaestroDetalle' i.referencia %}">
+                    <i class="fas fa-info"></i>&nbsp; Ver detalles
+                </a>
+            {% elif i.estado.id == 4 %}
+                <a role="button" class="btn btn-sm btn-dark" href="{% url 'AjusteMaestroDetalle' i.referencia %}">
+                    <i class="fas fa-info"></i>&nbsp; Editar detalles
+                </a>
+            {% endif %}
+        </td>
+    </tr>
+    {% endif %}
+{% endfor %}
+

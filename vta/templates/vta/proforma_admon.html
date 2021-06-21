@@ -1,0 +1,76 @@
+{% extends 'vta/base_vta.html' %}
+{% load static %}
+{% load humanize %}
+{% block contenido %}
+{% if messages %}
+    {% for i in messages %}
+        <div class="alert alert-danger">{{ i }}</div>
+    {% endfor %}
+{% endif %}
+<div class="row">
+    <div class="col">
+        <div class="card py-3 border-left-success">
+            <div class="card-header">
+                <h4 class="m-0 font-weight-bold text-primary">Administraci&oacute;n de Proformas</h4>
+                <br>
+                <form method="POST" class="form-inline">
+                    {% csrf_token %}
+                    <div class="form-group mx-sm-3 mb-2">
+                        <label for="prof" class="sr-only">Proforma: </label>
+                        <input type="text" name="referencia" class="form-control" id="prof" readonly>
+                    </div>
+                    <button type="submit" class="btn btn-primary mb-2">
+                        <i class="fas fa-yin-yang"></i>&nbsp; Convertir a factura</button>
+                </form>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-sm">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th scope="col">Referencia</th>
+                                <th scope="col">Vendedor</th>
+                                <th scope="col">Cliente</th>
+                                <th scope="col">Fecha</th>
+                                <th scope="col">Vencimiento</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for i in pro %}
+                                <tr>
+                                    <td>
+                                        <div class="custom-control custom-radio">
+                                            <input type="radio" id="{{ i.referencia }}" name="proforma" class="custom-control-input">
+                                            <label class="custom-control-label" for="{{ i.referencia}}">{{ i.referencia }}</label>
+                                        </div>    
+                                    </td>
+                                    <td>{{ i.vendedor.identificacion }}</td>
+                                    <td>{{ i.nombre|default_if_none:"" }} - {{ i.cliente }}</td>
+                                    <td>{{ i.fechaemision|date:"SHORT_DATE_FORMAT" }}</td>
+                                    <td>{{ i.fechavencimiento|date:"SHORT_DATE_FORMAT" }}</td>
+                                </tr>
+                            {% empty %}
+                                <tr><td colspan="5"><h2>Sin registros</h2></td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock contenido %}
+{% block extramodal %}
+<div class="modal fade" tabindex="-1" role="dialog" id="modal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content"></div>
+    </div>
+</div>
+{% endblock extramodal %}
+{% block extrascripts %}
+    <script type="text/javascript">
+        $('input[type=radio]').on('click',function(){
+           $('#prof').val(this.id); 
+        });
+    </script>
+{% endblock extrascripts %}

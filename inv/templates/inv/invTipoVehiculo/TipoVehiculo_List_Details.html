@@ -1,0 +1,19 @@
+{% for i in tipovehiculo %}
+<tr>
+    <td>{{ i.descripcion }}</td>
+    <td>
+        {% if i.descripcion == 'N/E' %}
+            <label>Registro del sistema</label>
+        {% else %}
+            <button type="button" class="btn btn-sm btn-info show-form-update" data-url="{% url 'TipoVehiculo_Editar' i.pk %}">
+                <i class="fas fa-pencil-alt"></i>&nbsp; Editar
+            </button>
+            <a class="btn btn-danger btn-sm" href="{% url 'TipoVehiculo_Eliminar' i.pk %}">
+                <i class="fas fa-trash-alt"></i>&nbsp; Eliminar
+            </a>
+        {% endif %}
+    </td>
+</tr>
+{% empty %}
+    <tr><td colspan="2"><h3>No hay registros</h3></td></tr>
+{% endfor %}

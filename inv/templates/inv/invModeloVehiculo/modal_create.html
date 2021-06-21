@@ -1,0 +1,135 @@
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+<form method="POST" data-url="{% url 'ModeloVehiculo_Crear' %}" class="create-form" autocomplete="off">
+    {% csrf_token %}
+    <div class="modal-header">
+        <h5 class="modal-title text-center">Crear Modelo Vehiculo</h5>
+    </div>
+    <div class="modal-body">
+        <div class="form-row">
+            <div class="form-group col-md-4">
+                {{ form.marca.label_tag }}
+                {% render_field form.marca class="form-control form-control-sm" %}
+                <div class="{% if form.marca.errors %} invalid{% endif %}">
+                    {% for error in form.marca.errors %}
+                        <p class="help-block" style="color:red;">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="form-group col-md-4">
+                <label for="id_id_modelo">Modelo:</label>
+                {% render_field form.id_modelo class="form-control form-control-sm"  onpaste="return false" onkeypress="return alpha(event)"  %}
+                <div class="{% if form.id_modelo.errors %} invalid{% endif %}">
+                    {% for error in form.id_modelo.errors %}
+                        <p class="help-block" style="color:red;">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="form-group col-md-4">
+                <label for="id_anyo">Años:</label>
+                {% render_field form.anyo class="form-control form-control-sm" %}
+                <div class="{% if form.anyo.errors %} invalid{% endif %}">
+                    {% for error in form.anyo.errors %}
+                        <p class="help-block" style="color:red;">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-4">
+                {{ form.tipo.label_tag }}
+                {% render_field form.tipo class="form-control form-control-sm" %}
+                <div class="{% if form.tipo.errors %} invalid{% endif %}">
+                    {% for error in form.tipo.errors %}
+                        <p class="help-block" style="color:red;">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="form-group col-md-4">
+                {{ form.cilindraje.label_tag }}
+                {% render_field form.cilindraje class="form-control form-control-sm" %}
+                <div class="{% if form.cilindraje.errors %} invalid{% endif %}">
+                    {% for error in form.cilindraje.errors %}
+                        <p class="help-block" style="color:red;">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="form-group col-md-4">
+                {{ form.combustible.label_tag }}
+                {% render_field form.combustible class="form-control form-control-sm" %}
+                <div class="{% if form.combustible.errors %} invalid{% endif %}">
+                    {% for error in form.combustible.errors %}
+                        <p class="help-block" style="color:red;">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-12">
+                {{ form.modelo.label_tag }}
+                {% render_field form.modelo class="form-control form-control-sm" %}
+                <div class="{% if form.modelo.errors %} invalid{% endif %}">
+                    {% for error in form.modelo.errors %}
+                        <p class="help-block" style="color:red;">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="submit-btn btn btn-primary">
+            <i class="fas fa-plus"></i>&nbsp; Crear
+        </button>
+        <button type="button" class="submit-btn btn btn-danger" data-dismiss="modal" aria-label="close">
+            <i class="fa fa-times"></i>&nbsp; cancelar
+        </button>
+    </div>
+</form>
+<script>
+    
+    // $('#id_id_modelo').prop('readonly',true);
+    $('#id_marca').on('change',completarcampo);
+    $('#id_modelo').on('keyup',completarcampo);
+    $('#id_anyo').on('keyup',completarcampo);
+    function completarcampo(){
+        var modelo = String($('#id_modelo').val());
+        var marca = $('#id_marca').val();
+        var anyo = String($('#id_anyo').val());
+        modelo = (modelo.substr(0,3)).toUpperCase();        
+        anyo = anyo.substr(2,2);
+        var codigo = marca+'.'+modelo+anyo;
+        $('#id_id_modelo').val(codigo);
+        // $('#id_descripcion').val($('#id_familia').children('option:selected').html());
+    }
+
+    $('#id_modelo').bind('keypress',bloquear_especiales);
+    function bloquear_especiales (event) { 
+        var regex = new RegExp("^[a-z A-Z0-9]+$"); 
+        var key = String.fromCharCode(!event.charCode ? event.which : event.charCode); 
+        if (!regex.test(key)) { 
+            event.preventDefault();
+            return false; 
+        } 
+    }
+    
+    $('#id_modelo').on('keypress',function(){
+        console.log(e.keyCode);
+        if (e.keyCode == 101 || e.keyCode == 46 /*|| e.keyCode == 45*/ || e.keyCode == 43 || e.keyCode == 44 || e.keyCode == 47) {
+            return false;
+        }
+        soloNormales(e.keyCode);
+    });
+    
+    function soloNormales(e) {
+        var key = window.Event ? e.which : e.keyCode
+            return (key >= 48 && key <= 57)
+    }
+
+    function alpha(e) {
+        var k;
+        document.all ? k = e.keyCode : k = e.which;
+        return ((k > 64 && k < 91) || (k > 96 && k < 123) || k == 8|| (k >= 48 && k <= 57)); 
+    } 
+
+    
+</script>

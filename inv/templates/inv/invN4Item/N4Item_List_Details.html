@@ -1,0 +1,69 @@
+{% load humanize %}
+{% for i in n4item %}
+<tr>
+    {% if i.descontinuado == 'N' %}
+        <td style="color: green;"><strong>{{ i.producto.familia.pk }}.{{ i.producto.pk }}.{{ i.marca.pk }}</strong></td>
+        <td style="color: green;"><strong>{{ i }}</strong></td>
+    {% else %}
+        <td style="color: red;"><strong>{{ i.producto.familia.pk }}.{{ i.producto.pk }}.{{ i.marca.pk }}</strong></td>
+        <td style="color: red;"><strong>{{ i }}</strong></td>
+    {% endif %}
+    <td>{{ i.codanterior }}</td>
+    <td>{{ i.preciomax|floatformat:2|intcomma }}</td>
+    <td>
+        <a role="button" href="{% url 'ExistenciaBodega_Listar' i.id_n4 %}">
+            {{ i.existencias_sucursal }}
+        </a>
+    </td>
+    <td>
+        <!-- Editar si tiene Permiso -->
+        {% if suc.user.is_staff %}
+            <button type="button" class="btn btn-sm btn-info show-form-update" data-url="{% url 'N4Item_Editar' i.id_n4 %}">
+                <i class="fas fa-pencil-alt"></i>&nbsp; Editar
+            </button>
+        {% endif %}
+        <!-- combo -->
+        {% if i.producto.naturaleza == 'C' %}
+            <a role="button" class="btn btn-sm btn-success" href="{% url 'N4Item_Combo' i.id_n4 %}">
+                <i class="fas fa-object-group"></i>&nbsp; combo
+            </a>
+        <!-- Procesado, Receta -->
+        {% elif i.producto.naturaleza == 'P' %}
+            <a role="button" class="btn btn-sm btn-success" href="{% url 'N4Item_Receta' i.id_n4 %}">
+                <i class="fas fa-object-group"></i>&nbsp; Receta
+            </a>
+            <a role="button" class="btn btn-sm btn-success" href="{% url 'N4Item_Kardex' i.id_n4 %}">
+                <i class="fas fa-sitemap"></i>&nbsp; Kardex
+            </a>
+        <!-- Producto Elemento(Ingrediente) -->
+        {% elif i.producto.naturaleza == 'E' %}
+            {% if suc.user.is_staff %}      
+                <a role="button" class="btn btn-sm btn-success" href="{% url 'N4Item_Costo' i.id_n4 %}">
+                    <i class="fas fa-donate"></i>&nbsp; Costo
+                </a>
+            {% endif %}
+            <a role="button" class="btn btn-sm btn-success" href="{% url 'N4Item_Kardex' i.id_n4 %}">
+                <i class="fas fa-sitemap"></i>&nbsp; Kardex
+            </a>
+        <!-- Producto Unico  -->
+        {% elif i.producto.naturaleza == 'U' %}
+            {% if suc.user.is_staff %}
+                <a role="button" class="btn btn-sm btn-success" href="{% url 'N4Item_Costo' i.id_n4 %}">
+                    <i class="fas fa-donate"></i>&nbsp; Costo
+                </a>
+            {% endif %}
+            <a role="button" class="btn btn-sm btn-success" href="{% url 'N4Item_Kardex' i.id_n4 %}">
+                <i class="fas fa-sitemap"></i>&nbsp; Kardex
+            </a>
+        {% endif %}
+        <!-- eliminar si tiene permiso -->
+        {% if suc.user.is_staff %}
+            <a role="button" class="btn btn-sm btn-danger" href="{% url 'N4Item_Eliminar' i.id_n4 %}">
+                <i class="fas fa-trash-alt"></i>&nbsp; Eliminar
+            </a>
+        {% endif %}
+    </td>
+</tr>
+{% empty %}
+<tr><td colspan="6"><h3>No hay Registros</h3></td></tr>
+{% endfor %}

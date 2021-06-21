@@ -1,0 +1,6 @@
+{% for i in item %}
+    <option value="{{ i.id_n4 }}"> {{ i.n3.familia.descripcion }} {{ i.n3.descripcion }} {{ i.marca.marca}} </option>
+{% end for %}
+{% empty %}
+    <option value="0">Nada Seleccionado</option>
+{% endfor %}

@@ -1,0 +1,97 @@
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+<form method="POST" data-url="{% url 'vta_familiaNew2' %}" class="create-form" autocomplete="off">
+    {% csrf_token %}
+    <div class="modal-header">
+        <h5 class="modal-title text-center">Crear Familia</h5>
+    </div>
+    <div class="modal-body">
+        <div class="{% if form.non_field_errors %}invalid{% endif %} mb-2">
+            {% for error in form.non_field_errors %}
+                {{ error }}
+            {% endfor %}
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-4">
+                {{ form.id_n2.label_tag }}
+                {% render_field form.id_n2 class="form-control form-control-sm" %}
+                <div class="{% if form.id_n2.errors %} invalid{% endif %}">
+                    {% for error in form.id_n2.errors %}
+                        <p class="help-block" style="color:red;">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="form-group col-md-4">
+                {{ form.rubro.label_tag }}
+                {% render_field form.rubro class="form-control form-control-sm" %}
+                <div class="{% if form.rubro.errors %} invalid{% endif %}">
+                    {% for error in form.rubro.errors %}
+                        <p class="help-block" style="color:red;">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="form-group col-md-4">
+                {{ form.codigo.label_tag }}
+                {% render_field form.codigo class="form-control form-control-sm" onpaste="return false" onkeypress="return alpha(event)"  %}
+                <div class="{% if form.codigo.errors %} invalid{% endif %}">
+                    {% for error in form.codigo.errors %}
+                        <p class="help-block" style="color:red;">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-12">
+                {{ form.descripcion.label_tag }}
+                {% render_field form.descripcion class="form-control form-control-sm" %}
+                <div class="{% if form.descripcion.errors %} invalid{% endif %}">
+                    {% for error in form.descripcion.errors %}
+                        <p class="help-block" style="color:red;">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="submit-btn btn btn-primary">
+            <i class="fas fa-plus"></i>&nbsp; Crear
+        </button>
+        <button type="button" class="submit-btn btn btn-danger" data-dismiss="modal" aria-label="close">
+            <i class="fa fa-times"></i>&nbsp; cancelar
+        </button>
+    </div>
+</form>
+<script>
+    $('#id_id_n2').prop('readonly',true);
+    $('#id_rubro').on('change',llave);
+    $('#id_codigo').on('keyup',llave);
+    function llave(){
+        var co = ($('#id_rubro').val()+'.'+$('#id_codigo').val()).toUpperCase();
+        $("#id_id_n2").val(co);
+        $("#id_codigo").val(($("#id_codigo").val()).toUpperCase());
+    }
+
+    
+    $('#id_codigo').on('keypress',function(){
+        console.log(e.keyCode);
+        if (e.keyCode == 101 || e.keyCode == 46 /*|| e.keyCode == 45*/ || e.keyCode == 43 || e.keyCode == 44 || e.keyCode == 47) {
+            return false;
+        }
+        soloNormales(e.keyCode);
+    });
+    
+    function soloNormales(e) {
+        var key = window.Event ? e.which : e.keyCode
+            return (key >= 48 && key <= 57)
+    }
+
+    function alpha(e) {
+        var k;
+        document.all ? k = e.keyCode : k = e.which;
+        return ((k > 64 && k < 91) || (k > 96 && k < 123) || k == 8|| (k >= 48 && k <= 57)); 
+    } 
+
+
+
+
+</script>

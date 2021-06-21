@@ -1,0 +1,173 @@
+{% extends 'inv/invBase.html' %}
+{% load widget_tweaks %}
+{% load humanize %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block extracss %}
+    <link rel="stylesheet" href="{% static 'fenimarket/vendor/datatables/dataTables.bootstrap4.min.css' %}">
+{% endblock extracss %}
+{% block contenido %}
+
+{% if messages %}
+    {% for i in messages %}
+        <div class="alert alert-{{ i.tags }}">{{ i }}</div>
+    {% endfor %}
+{% endif %}
+<div class="row">
+    <div class="col">
+        <div class="card py-3 border-left-primary">
+            <div class="card-header">
+                <div class="row">
+                    <div class="col-md-5">
+                        <h4 class="m-0 font-weight-bold text-primary">Movimientos de: {{ item }}</h4>
+                        <h5 class="m-0 font-weight-bold text-secondary">Nivel: {{ filtro }} </h2>
+                        {% if bod %}
+                            <h6 class="m-0 font-weight-bold text-secondary">Bodega: {{ bod }} </h2>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <form  method="POST" class="inline-form" >
+                            <div class="form-row">
+                                {% csrf_token %}
+                                
+                                <div class="col-md-2" id="div_global">
+                                    <label for="id_esglobal">Buscar en:</label>
+                                    {% render_field form.esglobal class="form-control form-control-sm rubro" %}
+                                    <div class="{% if form.esglobal.errors %} invalid{% endif %}">
+                                        {% for error in form.esglobal.errors %}
+                                            <p class="help-block" style="color:red;">{{ error }}</p>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <div class="col-md-2" id="div_bodega">
+                                    {{ form.bodega.label_tag }}
+                                    {% render_field form.bodega class="form-control form-control-sm rubro" %}
+                                    <div class="{% if form.bodega.errors %} invalid{% endif %}">
+                                        {% for error in form.bodega.errors %}
+                                            <p class="help-block" style="color:red;">{{ error }}</p>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <div class="col-md-2" id="div_fecha_inicio">
+                                    {{ form.inicio.label_tag }}
+                                    {% render_field form.inicio type="date" class="form-control form-control-sm rubro" %}
+                                    <div class="{% if form.inicio.errors %} invalid{% endif %}">
+                                        {% for error in form.inicio.errors %}
+                                            <p class="help-block" style="color:red;">{{ error }}</p>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <div class="col-md-2" id="div_fecha_fin">
+                                    {{ form.fin.label_tag }}
+                                    {% render_field form.fin type="date" class="form-control form-control-sm rubro" %}
+                                    <div class="{% if form.fin.errors %} invalid{% endif %}">
+                                        {% for error in form.fin.errors %}
+                                            <p class="help-block" style="color:red;">{{ error }}</p>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <div class="col-md-2" >
+                                    <br>
+                                    <button class="btn btn-primary btn-sm"  type="submit">
+                                        <span class="fa fa-search"> kardex</span>
+                                    </button>
+                                    <a role="button" class="btn btn-success btn-sm" href="{% url 'Kardex_Excel' item.id_n4  inicio  fin  filtro %}">
+                                        <i class="fa fa-file-excel" aria-hidden="true"></i> &nbsp; Excel
+                                    </a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <hr>
+                <div class="table-responsive">
+                    <table class="table table-sm table-bordered" id="Pantalla-table" >
+                        <thead class="thead-dark">
+                            <tr>
+                                <th scope="col">Fecha</th>
+                                <th scope="col">Suc.</th>
+                                <th scope="col">Bod.</th>
+                                <th scope="col">Referencia</th>
+                                <th scope="col">Tipo</th>
+                                <th scope="col">Entrada</th>
+                                <th scope="col">Salida</th>
+                                <th scope="col">Existencia</th>
+                                <th scope="col">Debe</th>
+                                <th scope="col">Haber</th>
+                                <th scope="col">Saldo</th>
+                                <th scope="col">CU.</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% include 'inv/invN4Item/Kardex_List_Details.html' %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card-footer" >
+                <div>
+                    <a role="button" class="btn btn-primary" href="{% url 'N4Item_Listar' %}">
+                        <span class="fas fa-long-arrow-alt-left"> volver</span>
+                    </a>
+                    <label style="color: green;">Entradas(EE)</label>,
+                    <label style="color: olive;">Ajuste Entrada Costo(EC)</label>,
+                    <label style="color: fuchsia;">Ajuste Entrada (EA)</label>,
+                    <label style="color: blue;">Traslado Salida(ST)</label>,
+                    <label style="color: blueviolet;">Traslado Entrada(ET)</label>,
+                    <label style="color: teal;">Ajuste Salida Costo(SC)</label>,
+                    <label style="color: brown;">Ajuste Salida(SA)</label>,
+                    <label style="color: red;">Ventas(SS)</label>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock contenido %}
+{% block extramodal %}
+<div class="modal fade" id="modal-Pantalla">
+    <div class="modal-dialog">
+        <div class="modal-content"></div>
+    </div>
+</div>
+{% endblock extramodal %}
+{% block extrascripts %}
+<script src="{% static 'inv/js/modal.js' %}">  </script>  
+<script type="text/javascript" src="{% static 'fenimarket/vendor/datatables/jquery.dataTables.js' %}"></script>
+<script type="text/javascript" src="{% static 'fenimarket/vendor/datatables/dataTables.bootstrap4.min.js' %}"></script>
+<script type="text/javascript">
+
+$("#id_esglobal").on("change",evaluar);
+function evaluar(){
+    if ($("#id_esglobal").val() == 'g'){
+        $("#id_bodega").val("");
+    }
+}
+
+$(document).ready(function() {
+     $('#Pantalla-table').DataTable({
+              "lengthMenu": [[-1,1,15,25,50,100], ["Todos",1,15,25,50,100]],
+              "language":{
+                  "lengthMenu":"Mostrar  _MENU_  filas",
+                  "zeroRecords":"No se encontraron coincidencias",
+                  "info": "Página _PAGE_ de _PAGES_",
+                  "infoEmpty":"No hay registros",
+                  "infoFiltered":"(filtrado de un total de _MAX_ registros)",
+                  "search":"Buscar:",
+                  "paginate":{
+                      "first":"Primero",
+                      "last":"Último",
+                      "next":"Siguiente",
+                      "previous":"Anterior",
+                  }
+              },
+              "ordering": false,
+              "orderCellsTop": true,
+              "fixedHeader": true
+          });  
+  });
+</script>
+{% endblock extrascripts %}

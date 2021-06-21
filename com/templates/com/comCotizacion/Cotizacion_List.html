@@ -1,0 +1,83 @@
+{% extends 'com/base/combase.html' %}
+{% load static %}
+{% block contenido %}
+{% if messages %}
+    {% for i in messages %}
+        <div class="alert alert-{{ i.tags }}">{{ i }}</div>
+    {% endfor %}
+{% endif %}
+<div class="row">
+    <div class="col">
+        <div class="card py-3 border-left-danger">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-10">
+                        <h4 class="m-0 font-weight-bold text-primary">Cotizaciones</h4>
+                    </div>
+                    <div class="col-md-2">
+                        <button type="button" class="btn btn-outline-primary nuevo">
+                            <span class="fa fa-plus">&nbsp;Nuevo</span>
+                        </button>
+                    </div>
+                </div>
+                <hr>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-sm" id="Pantalla-table" >
+                        <thead class="thead-dark">
+                            <tr>
+                                <th scope="col">Referencia</th>
+                                <th scope="col">Proveedor</th>
+                                <th scope="col">Fecha</th>
+                                <th scope="col">Notas</th>
+                                <th scope="col">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for i in cotizacion %}
+                            <tr>
+                                <td>{{ i.referencia }}</td>
+                                <td>{{ i.proveedor }}</td>
+                                <td>{{ i.fecha|date:"d M Y P" }}</td>
+                                <td>{{ i.notas }}</td>
+                                {% if i.finalizado %}
+                                    <td>
+                                        <a role="button" target="_blank" class="btn btn-outline-success btn-sm" href="{% url 'com_imprimir' i.pk %}">
+                                            <i class="fas fa-print"></i>&nbsp; Print
+                                        </a>&nbsp; 
+                                        <strong style="color:green;">Cotizaci&oacute;n cerrada</strong>
+                                    </td>
+                                {% else %}
+                                    <td>    
+                                        <a role="button" class="btn btn-outline-dark btn-sm" href="{% url 'com_cotizacionDetail' i.referencia %}">
+                                            <i class="fas fa-info"></i>&nbsp;Editar
+                                        </a>&nbsp;
+                                        <a role="button" class="btn btn-outline-danger btn-sm" href="{% url 'com_finalizar' i.referencia %}">
+                                            <i class="fas fa-flag-checkered"></i>&nbsp;Cerrar
+                                        </a>
+                                    </td>
+                                {% endif %}
+                            </tr>
+                            {% empty %}
+                                <tr><td colspan="5"><h3>Sin registros</h3></td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock contenido %}
+{% block extramodal %}
+<div class="modal fade" tabindex="-1" role="dialog" id="modal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content"></div>
+    </div>
+</div>
+{% endblock extramodal %}
+{% block extrascripts %}
+    <script src="{% static 'vta/js/jquery.bootstrap.modal.forms.min.js' %}"></script>
+    <script type="text/javascript">
+        $(".nuevo").modalForm({ formURL: "{% url 'com_cotizacionNew' %}" });
+    </script>
+{% endblock extrascripts %}

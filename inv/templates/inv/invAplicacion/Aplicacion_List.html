@@ -1,0 +1,45 @@
+{% extends 'inv/invBase.html' %}
+{% load static %}
+{% block contenido %}
+{% if messages %}
+    {% for i in messages %}
+        <div class="alert alert-{{ i.tags }}">{{ i }}</div>
+    {% endfor %}
+{% endif %}
+<br>
+<div class="card">
+    <div class="card-header text-center">Aplicacion</div>
+    <div class="card-body">
+        <h1 class="card-title">Listado de Aplicaciones</h1>
+        <button type="button" class="btn show-form" data-url="{% url 'Aplicacion_Crear' %}">
+            <span class="fa fa-plus fa-2x" style="color:royalblue"> Agregar</span>
+        </button>
+        <br>
+        <table class="table table-bordered" id="Pantalla-table" >
+            <thead>
+                <tr>
+                    <td>Modelo</td>
+                    <td>Nombre</td>
+                    <td>Abreviatura</td>
+                    <td>Anyo</td>
+                    <td class="text-center">Acciones</td>
+                </tr>
+            </thead>
+            <tbody>
+                {% include 'inv/invAplicacion/Aplicacion_List_Details.html' %}
+            </tbody>
+        </table>
+    </div>
+    <div class="card-footer text-muted">
+        SISCARCOOP: Sistema Integral de Control de Recursos Corporativos
+    </div>
+</div>
+<div class="modal fade" id="modal-Pantalla">
+    <div class="modal-dialog">
+        <div class="modal-content"></div>
+    </div>
+</div>
+{% endblock contenido %}
+{% block extrascripts %}
+    <script src="{% static 'inv/js/modal.js' %}">  </script>  
+{% endblock extrascripts %}

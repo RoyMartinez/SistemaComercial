@@ -1,0 +1,79 @@
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+<form method="POST" data-url="{% url 'Bodega_Editar' form.instance.id_bodega %}" class="update-form" autocomplete="off">
+    {% csrf_token %}
+    <div class="modal-header">
+        <h5 class="modal-title text-center">Editar Bodega</h5>
+    </div>
+    <div class="modal-body">
+        <div class="form-group col-md-12" id="div_id_bodega">
+                {{ form.id_bodega.label_tag }}
+                {% render_field form.id_bodega class="form-control form-control-sm" %}
+                <div class="{% if form.id_bodega.errors %} invalid{% endif %}">
+                    {% for error in form.id_bodega.errors %}
+                        <p class="help-block" style="color:red;">{{ error }}</p>
+                    {% endfor %}
+                </div>
+        </div>
+        <div class="form-group col-md-12" id="div_sucursal">
+                {{ form.sucursal.label_tag }}
+                <input type="text" name="sucursal" id="id_sucursal" class="form-control form-control-sm" value="{{ form.sucursal.value }}" readonly >
+                <div class="{% if form.sucursal.errors %} invalid{% endif %}">
+                    {% for error in form.sucursal.errors %}
+                        <p class="help-block" style="color:red;">{{ error }}</p>
+                    {% endfor %}
+                </div>
+        </div>
+        <div class="form-group col-md-12" id="div_siglas">
+                {{ form.siglas.label_tag }}
+                {% render_field form.siglas class="form-control form-control-sm" %}
+                <div class="{% if form.siglas.errors %} invalid{% endif %}">
+                    {% for error in form.siglas.errors %}
+                        <p class="help-block" style="color:red;">{{ error }}</p>
+                    {% endfor %}
+                </div>
+        </div>
+        <div class="form-group col-md-12" id="div_nombre">
+                {{ form.nombre.label_tag }}
+                {% render_field form.nombre class="form-control form-control-sm" %}
+                <div class="{% if form.nombre.errors %} invalid{% endif %}">
+                    {% for error in form.nombre.errors %}
+                        <p class="help-block" style="color:red;">{{ error }}</p>
+                    {% endfor %}
+                </div>
+        </div>
+        <div class="form-group col-md-12" id="div_tipo">
+                {{ form.tipo.label_tag }}
+                {% if form.tipo.value == 'T' %}
+                    <input type="text" name="tipo" id ="id_tipo" class="form-control form-control-sm" value="{{ form.tipo.value }}" readonly>
+                {% else %}
+                    <select name="tipo" id="id_tipo"  class="form-control form-control-sm">
+                        <option value="F">Facturable</option>
+                        <option value="N">No Facturable</option>
+                    </select>
+                {% endif%}
+                <div class="{% if form.tipo.errors %} invalid{% endif %}">
+                    {% for error in form.tipo.errors %}
+                        <p class="help-block" style="color:red;">{{ error }}</p>
+                    {% endfor %}
+                </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="submit-btn btn btn-primary" id ="btnActualiza">
+            <i class="fas fa-plus"></i>&nbsp; Actualizar
+        </button>
+        <button type="button" class="submit-btn btn btn-danger" data-dismiss="modal" aria-label="close">
+            <i class="fa fa-times"></i>&nbsp; cancelar
+        </button>
+    </div>
+</form>
+<script>
+        $('#id_id_bodega').prop('readonly',true);
+        $('#id_sucursal').prop('disabled',true);
+        $('#id_siglas').prop('readonly',true);
+        $('#btnActualiza').on('click',desactiva);
+        function desactiva(){
+            $('#id_sucursal').prop('disabled',false);
+        }
+</script>

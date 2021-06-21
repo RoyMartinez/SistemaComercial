@@ -1,0 +1,101 @@
+{% extends 'vta/base_vta.html' %}
+{% load static %}
+{% block contenido %}
+{% if messages %}
+    {% for i in messages %}
+        <div class="alert alert-{{ i.tags }}">{{ i }}</div>
+    {% endfor %}
+{% endif %}
+<div class="row">
+    <div class="col">
+        <div class="card py-3 border-left-success">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h4 class="m-0 font-weight-bold text-primary">Exorubro Nuevo Ajuste</h4>
+                    </div>
+                </div>
+                <hr>
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="id_cooperativa">Cooperativa:</label>
+                            <select id="id_cooperativa" name="cooperativa" class="form-control" required>
+                                <option value="" selected>------------</option>
+                                {% for i in cooperativa %}
+                                    <option value="{{ i.pk }}">{{ i.nombre }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="id_rubro">Rubro:</label>
+                            <select id="id_rubro" name="rubro" class="form-control" required>
+                                <option value="" selected>------------</option>
+                            </select>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label for="origen">Origen:</label>
+                            <select id="origen" name="origen" class="form-control" required>
+                                <option value="">Primero elija un rubro</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="destino">Destino:</label>
+                            <select id="destino" name="destino" class="form-control" required>
+                                <option value="">Primero elija un origen</option>
+                            </select>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="form-row">
+                        <div class="form-group col-md-4">
+                            <label for="cantidad">Cantidad:</label>
+                            <input type="number" name="cantidad" class="form-control" step="any" min="0" value="0" required>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="precio">Precio:</label>
+                            <input type="number" name="precio" class="form-control" step="any" min="0" value="0" required>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="costo">Costo:</label>
+                            <input type="number" name="costo" class="form-control" step="any" min="0" value="0" required>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="form-group">
+                        <button type="submit" name='btn_aplicar' class="btn btn-outline-primary">
+                            <i class="fas fa-check-circle"></i>&nbsp;Aplicar 
+                        </button>
+                        <a role="button" class="btn btn-outline-danger" href="{% url 'vta_exorubro' %}">
+                            <i class="fas fa-reply"></i>&nbsp;Regresar 
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock contenido %}
+{% block extrascripts %}
+    <script type="text/javascript" src="{% static 'vta/js/validar.js' %}"></script>
+    <script type="text/javascript">
+        $('#id_cooperativa').on('change', function(){
+            if(this.value){
+                var request = $.ajax({
+                    type:"GET",
+                    url: "{% url 'vta_ajax_exocliente' %}",
+                    data: {"cooperativa":this.value,},
+                });
+                request.done(function(response){
+                    $('#id_rubro').html(response.rubro);
+                    $('#origen').html(response.cliente);
+                    $('#destino').html(response.cliente);
+                });
+            }
+        })
+    </script>
+{% endblock extrascripts %}

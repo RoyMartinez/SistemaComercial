@@ -1,0 +1,226 @@
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+<form method="POST" id = "produccionForm" class="update-form" autocomplete="off">
+    {% csrf_token %}
+    <div class="modal-header">
+        <h5 class="modal-title text-center">Producir Plato</h5>
+    </div>
+    <div class="modal-body">
+        <div class="{% if form.non_field_errors %}invalid{% endif %} mb-2">
+            {% for error in form.non_field_errors %}
+                {{ error }}
+            {% endfor %}
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-12">
+                {{ form.rubro.label_tag }}
+                {% render_field form.rubro class="form-control form-control-sm" %}
+                <div class="{% if form.rubro.errors %} invalid{% endif %}">
+                    {% for error in form.rubro.errors %}
+                        <p class="help-block" style="color:red;">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-12">
+                {{ form.familia.label_tag }}
+                {% render_field form.familia class="form-control form-control-sm" %}
+                <div class="{% if form.familia.errors %} invalid{% endif %}">
+                    {% for error in form.familia.errors %}
+                        <p class="help-block" style="color:red;">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-12">
+                {{ form.producto.label_tag }}
+                {% render_field form.producto class="form-control form-control-sm" %}
+                <div class="{% if form.producto.errors %} invalid{% endif %}">
+                    {% for error in form.producto.errors %}
+                        <p class="help-block" style="color:red;">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-12">
+                {{ form.item.label_tag }}
+                {% render_field form.item class="form-control form-control-sm" %}
+                <div class="{% if form.item.errors %} invalid{% endif %}">
+                    {% for error in form.item.errors %}
+                        <p class="help-block" style="color:red;">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-12">
+                {{ form.bodegaO.label_tag }}
+                {% render_field form.bodegaO class="form-control form-control-sm" %}
+                <div class="{% if form.bodegaO.errors %} invalid{% endif %}">
+                    {% for error in form.bodegaO.errors %}
+                        <p class="help-block" style="color:red;">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-12">
+                {{ form.bodegaD.label_tag }}
+                {% render_field form.bodegaD class="form-control form-control-sm" %}
+                <div class="{% if form.bodegaD.errors %} invalid{% endif %}">
+                    {% for error in form.bodegaD.errors %}
+                        <p class="help-block" style="color:red;">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-12">
+                {{ form.cantidad.label_tag }}
+                {% render_field form.cantidad class="form-control form-control-sm" %}
+                <div class="{% if form.cantidad.errors %} invalid{% endif %}">
+                    {% for error in form.cantidad.errors %}
+                        <p class="help-block" style="color:red;">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-12" id = "div_fecha_venc">
+                {{ form.fecha_venc.label_tag }}
+                <input type="date" class="form-control form-control-sm" name ="fecha_venc">
+                <div class="{% if form.fecha_venc.errors %} invalid{% endif %}">
+                    {% for error in form.fecha_venc.errors %}
+                        <p class="help-block" style="color:red;">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-12">
+                {{ form.nota.label_tag }}
+                {% render_field form.nota class="form-control form-control-sm" %}
+                <div class="{% if form.nota.errors %} invalid{% endif %}">
+                    {% for error in form.nota.errors %}
+                        <p class="help-block" style="color:red;">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="submit-btn btn btn-primary" id ="btnActualiza">
+            <i class="fas fa-plus"></i>&nbsp; Producir
+        </button>
+        <button type="button" class="submit-btn btn btn-danger" data-dismiss="modal" aria-label="close">
+            <i class="fa fa-times"></i>&nbsp; cancelar
+        </button>
+    </div>
+</form>
+
+<script>    
+    //Script que bloquea los tipos number
+    jQuery('input[type=number]').keypress(function(tecla){
+        // console.log(tecla.charCode);
+        // console.log(this.value.length)
+        //46 = .
+        //45 = -
+        //se ponen las teclas que no se admiten solo admitir numeros y la primera son los numeros los otros son la e y el punto
+        if((tecla.charCode < 48 || tecla.charCode > 57) && tecla.charCode != 46){
+            return false;
+        }
+        var regex = /^[0-9]{0,7}$|^[0-9]{0,7}[.{0,1}[0-9]{0,2}]{0,1}$/; // number with 2 decimal places
+        if (!regex.test(this.value)) {
+            return false;
+        }
+    });
+</script>
+<script type="text/javascript">
+    $('#div_busqueda_oculto').hide();
+    $('#id_familia').html("");
+    $('#id_producto').html("");
+    $('#id_item').html("");
+    $('#id_rubro').on("change",getFamilias);
+    $('#id_familia').on("change",getProductos);
+    $('#id_producto').on("change",getItems);
+    
+        
+    //Script que bloquea los tipos number
+    jQuery('input[type=number]').keypress(function(tecla){
+        // console.log(tecla.charCode);
+        // console.log(this.value.length)
+        //46 = .
+        //45 = -
+        //se ponen las teclas que no se admiten solo admitir numeros y la primera son los numeros los otros son la e y el punto
+        if((tecla.charCode < 48 || tecla.charCode > 57) && tecla.charCode != 46){
+            return false;
+        }
+        var regex = /^[0-9]{0,7}$|^[0-9]{0,7}[.{0,1}[0-9]{0,2}]{0,1}$/; // number with 2 decimal places
+        if (!regex.test(this.value)) {
+            return false;
+        }
+    });
+    function getFamilias() {
+        var rubroId = $('#id_rubro').val();
+        if(rubroId){
+            $('#id_familia').html("");
+            var request = $.ajax({
+                type : "GET",
+                url : "{% url 'get_familiasT' %}",
+                data:{
+                    "rubro_id" : rubroId,
+                },
+            });
+            request.done(asignar);
+            function asignar(response) {
+                $("#id_familia").html(response.familias);
+            }
+        }
+        else{
+            $("#id_familia").html("<option value='' selected='selected'>---------</option>");
+        }
+    }
+    function getProductos() {
+        var familiaId = $('#id_familia').val();
+        if(familiaId){
+            $('#id_producto').html("");
+            var request = $.ajax({
+                type : "GET",
+                url : "{% url 'get_productosT' %}",
+                data:{
+                    "familia_id" : familiaId,
+                },
+            });
+            request.done(asignar);
+            function asignar(response) {
+                $("#id_producto").html(response.productos);
+            }
+        }
+        else{
+            $("#id_producto").html("<option value='' selected='selected'>---------</option>");
+        }
+    }
+    function getItems() {
+        var productoId = $('#id_producto').val();
+        if(productoId){
+            $('#id_item').html("");
+            var request = $.ajax({
+                type : "GET",
+                url : "{% url 'get_items' %}",
+                data:{
+                    "producto_id" : productoId,
+                },
+            });
+            request.done(asignar);
+            function asignar(response) {
+                $("#id_item").html(response.items);
+            }
+        }
+        else{
+            $("#id_item").html("<option value='' selected='selected'>---------</option>");
+        }
+    }
+</script>

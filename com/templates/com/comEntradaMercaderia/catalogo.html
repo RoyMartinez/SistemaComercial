@@ -1,0 +1,140 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link href="{% static 'fenimarket/vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css">
+</head>
+<body>
+    <div class="container">
+        <nav class="navbar navbar-dark bg-danger fixed-top">
+            <a class="navbar-brand" href="#"><h3>Cat&aacute;logo de Repuestos</h3></a>
+            <form class="form-inline my-2 my-lg-0" method="POST" autocomplete="off">
+                {% csrf_token %}
+                <input class="form-control mr-sm-2" name="buscar" type="search" placeholder="B&uacute;squeda" aria-label="Search" required>
+                <button class="btn btn-warning my-2 my-sm-0" type="submit">Buscar</button>
+            </form>
+            <button type="button" class="btn btn-warning" id="save_close">
+                <i class="fas fa-shopping-cart"></i>&nbsp; A&ntilde;adir
+            </button>
+        </nav>
+        <br><br><br><br>
+        <div class="row">
+            <div class="col-md-2" style="border: red 1px solid;">
+                <hr>
+                <h5 style="color:red;">Vehiculo</h5>
+                {% for i in vehiculo %}
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" class="custom-control-input" id="{{ forloop.counter }}" name="marca" value="{{ i.pk }}">
+                        <label class="custom-control-label" for="{{ forloop.counter }}">{{ i.marca|title }}</label>
+                    </div>
+                {% endfor %}
+                <hr>
+                <h5 style="color:red;">Modelo</h5>
+                <select class="form-control form-control-sm" id="modelos">
+                    <option value="" selected="">---------</option>
+                </select>
+                <hr>
+                <h5 style="color:red;">Familia</h5>
+                <select class="form-control form-control-sm">
+                    <option value="" selected="">Todos</option>
+                    {% for i in familia %}
+                        <option value="{{ i.pk }}">{{ i.descripcion|lower }}</option>
+                    {% endfor %}
+                </select>
+                <hr>
+                <h5 style="color:red;">Marca</h5>
+                <select class="form-control form-control-sm">
+                    <option value="" selected="">Todos</option>
+                    {% for i in marcaitem %}
+                        <option value="{{ i.pk }}">{{ i.marca }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-10">
+    <table id="tabla-item" class="table table-sm">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">C&oacute;digo</th>
+                <th scope="col">Descripci&oacute;n</th>
+                <th scope="col">Cantidad</th>
+                <th scope="col">Elegir</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for i in articulos %}
+                <tr>
+                    <td>{{ i.pk }}</td>
+                    <td>{{ i.n3.familia.descripcion }} {{ i.n3.descripcion }} {{ i.marca.marca }} {{ i.descripcion }}</td>
+                    <td style="width:3em;">
+                        <input class="form-control form-control-sm" type="number" step="any" min="1" value="1" id="{{ i.pk }}">
+                    </td>
+                    <td>
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" id="check-{{ forloop.counter }}" value="{{ i.pk }}" onclick="alerta(this);">
+                            <label class="custom-control-label" for="check-{{ forloop.counter }}"></label>
+                        </div>
+                    </td>
+                </tr>
+            {% empty %}
+                <tr><td colspan="4"><h4>Nada que mostrar</h4></td></tr>
+            {% endfor %}
+        </tbody>
+    </table>    
+</div>
+</div>
+    </div>
+    <script src="{% static 'demostracion/js/jquery-3.4.1.js' %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script type="text/javascript">
+        var tupla_item = [];
+        $('[type="number"]').on('change', function(){
+            if (this.value <= 0 || this.value =="" )  {
+                this.value=1;
+            } 
+        }); 
+        $(window).blur(function(){ self.close(); });
+// ************** Updates an array with checked items **************************
+        function alerta(item){
+            var cantidad = document.getElementById(item.value).value;
+            if (item.checked){ 
+                tupla_item.push(item.value);
+                tupla_item.push(cantidad); 
+            }
+            else {
+                for (var i=0; i<tupla_item.length; i++){
+                    if (tupla_item[i] === item.value){ tupla_item.splice(i,2); }
+                }
+            }
+        }
+
+// ************** when pressed it saves the array into a Temp-Details Table **************************
+        $('#save_close').on('click', function(){
+            if (tupla_item.length > 0){
+                var request =$.ajax({type:"GET", 
+                                    url: "{% url 'ajax_rem' %}", 
+                                    data: {"item":tupla_item.toString(),}
+                                    ,});  
+                request.done(function(response){
+                self.close();
+                });
+            }
+        });        
+//************** when checked, it asks for the related model **************************
+        $('input[type=radio]').on('click',function(){
+            //console.log(this.value);
+            var request =$.ajax({type:"GET", 
+                url: "{% url 'vta_ajax_modelos' %}", 
+                data: {"marca":this.value,}
+                ,});  
+            request.done(function(response){
+                $('#modelos').html(response.opcion);
+            });
+        });
+
+    </script>
+</body>
+</html>

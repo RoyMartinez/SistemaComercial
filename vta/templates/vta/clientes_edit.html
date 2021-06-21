@@ -1,0 +1,286 @@
+{% extends 'vta/base_vta.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% load humanize %}
+{% block extracss %}
+    <style type="text/css">
+        #id_nombres, #id_apellidos{
+            text-transform: capitalize;
+        }
+    </style>
+{% endblock extracss %}
+{% block contenido %}
+<!-- -------------------------------------------------------------------- -->
+<!--         PANTALLA PRINCIPAL  -->
+<!-- -------------------------------------------------------------------- -->
+<div class="container">
+    {% if messages %}
+        {% for i in messages %}
+            <div class="alert alert-danger">{{ i }}</div>
+        {% endfor %}
+    {% endif %}
+    <div class="card">
+        <div class="card-header">
+            <ul class="nav nav-tabs card-header-tabs" id="myTab" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" id="gen-tab" data-toggle="tab" href="#generales" role="tab" aria-controls="generales" aria-selected="true">
+                        <i class="far fa-user"></i> Generales
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="address-tab" data-toggle="tab" href="#direccion" role="tab" aria-controls="direccion" aria-selected="false">
+                        <i class="fas fa-map-signs"></i> Direcci&oacute;n
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="phone-tab" data-toggle="tab" href="#tel" role="tab" aria-controls="telefono" aria-selected="false">
+                        <i class="fas fa-phone-alt"></i> Tel&eacute;fono
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">
+                        <i class="fas fa-car-alt"></i> Vehículos
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="exo-tab" data-toggle="tab" href="#exo" role="tab" aria-controls="exo" aria-selected="false">
+                        <i class="fas fa-percentage"></i> Exoneraciones
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div class="card-body tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="generales" role="tabpanel" aria-labelledby="gen-tab">
+                <form method="POST" autocomplete="off">
+                    {% csrf_token %}
+                    <div class="form-row">
+                        <div class="form-group col-md-4">
+                            {{ form.identificacion.label_tag }} {{ form.identificacion }}
+                            <small style="color:red;">{{ form.identificacion.errors }}</small>
+                        </div>
+                        <div class="form-group col-md-4">
+                            {{ form.nombres.label_tag }} {{ form.nombres }}
+                        </div>
+                        <div class="form-group col-md-4">
+                            {{ form.apellidos.label_tag }} {{ form.apellidos }}
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-4">
+                            {{ form.correo.label_tag }} {{ form.correo }}
+                        </div>
+                        <div class="from-group col-md-4">
+                            {{ form.magnetico.label_tag }}
+                            {{ form.magnetico }}
+                            {{ form.magnetico.errors }}
+                        </div>
+                        <div class="form-group col-md-4">
+                            {{ form.membresia.label_tag }} {{ form.membresia }}
+                        </div>
+                    </div>
+                    <br>
+                    <div class="form-row">
+                        <div class="form-group col-md-4">
+                            {{ form.estado_civil.label_tag }} {{ form.estado_civil }}
+                        </div>
+                        <div class="form-group col-md-2">
+                            {{ form.dependientes.label_tag }} {{ form.dependientes }}
+                        </div>
+                        <div class="form-group col-md-2">
+                            {{ form.limite_credito.label_tag }} {{ form.limite_credito }}
+                        </div>
+                        <div class="form-group col-md-2">
+                            {{ form.saldo.label_tag }} {{ form.saldo }}
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label for="id_descuento">Descuento(%):</label>
+                            {{ form.descuento }}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-check">
+                            {{ form.cooperativa.label_tag }} {{ form.cooperativa }}
+                        </div>
+                    </div><br>
+                    <input type="submit" class="btn btn-outline-primary" value="Actualizar">
+                </form>
+            </div>
+            <div class="tab-pane fade" id="direccion" role="tabpanel" aria-labelledby="address-tab">
+                <h4>
+                    Direcciones  &nbsp;
+                    <a class="btn btn-outline-success btn-sm nuevo-dir" href="#" role="button">
+                        <i class="fas fa-plus"></i>&nbsp;A&ntilde;adir</a>
+                </h4>
+                <table class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th scope="col">Dirección</th>  
+                            <th scope="col">Válido</th>  
+                            <th scope="col">Predeterminado</th>
+                            <th scope="col">Supr</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for i in direccion %}
+                            <tr>
+                                <td>{{ i.direccion }}</td>
+                                <td>{{ i.valido|yesno:"Si,No" }}</td>
+                                <td>{{ i.predeterminado }}</td>
+                                <td>
+                                    <button class="btn btn-danger btn-sm delete" data-id="{% url 'vta_clientedireccion_delete' i.pk cedula 0 %}" data-toggle="tooltip" title="Eliminar" data-placement="auto">
+                                        <i class="far fa-trash-alt"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        {% empty %}
+                            <tr><td colspan="4"><h5>No addresses found</h5></td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="tab-pane fade" id="tel" role="tabpanel" aria-labelledby="phone-tab">
+                <h4>
+                    Teléfonos  &nbsp;
+                    <a class="btn btn-outline-success btn-sm nuevo-tel" href="#" role="button">
+                        <i class="fas fa-plus"></i>&nbsp;A&ntilde;adir</a>
+                </h4>
+                <table class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th scope="col">Operador</th>  
+                            <th scope="col">Número</th>  
+                            <th scope="col">Válido</th>  
+                            <th scope="col">Predeterminado</th>
+                            <th scope="col">Supr</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for i in telefono %}
+                            <tr>
+                                <td>{{ i.operador }}</td>
+                                <td>{{ i.telefono }}</td>
+                                <td>{{ i.valido|yesno:"Si,No" }}</td>
+                                <td>{{ i.predeterminado|yesno:"Si,No" }}</td>
+                                <td>
+                                    <button class="btn btn-danger btn-sm delete" data-id="{% url 'vta_clientetelefono_delete' i.pk cedula 0 %}" data-toggle="tooltip" title="Eliminar" data-placement="auto">
+                                        <i class="far fa-trash-alt"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        {% empty %}
+                            <tr><td colspan="4"><h5>No hay n&uacute;meros registrados</h5></td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                <h4>
+                    Listado de Veh&iacute;culos  &nbsp;
+                    <a class="btn btn-outline-success btn-sm nuevo" href="#" role="button">
+                        <i class="fas fa-plus"></i>&nbsp;A&ntilde;adir</a>
+                </h4>
+                <table class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th scope="col">Placa</th>  
+                            <th scope="col">Marca</th>  
+                            <th scope="col">Modelo</th>
+                            <th scope="col">A&ntilde;o</th>
+                            <th scope="col">Supr</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for i in vehiculos %}
+                            <tr>
+                                <td>{{ i.placa }}</td>
+                                <td>{{ i.modelo.marca }}</td>
+                                <td>{{ i.modelo.modelo }}</td>
+                                <td>{{ i.modelo.anyo }}</td>
+                                <td>
+                                    <button class="btn btn-danger btn-sm delete" data-id="{% url 'vta_clientevehiculo_delete' i.pk cedula 0 %}" data-toggle="tooltip" title="Eliminar" data-placement="auto">
+                                        <i class="far fa-trash-alt"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        {% empty %}
+                            <tr><td colspan="5"><h5>No hay veh&iacute;culos registrados</h5></td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="tab-pane fade" id="exo" role="tabpanel" aria-labelledby="exo-tab">
+                <h4>
+                    Exo-Rubro
+                </h4>
+                <table class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th scope="col">Fecha</th> 
+                            <th scope="col">Ref</th> 
+                            <th scope="col">Rubro</th>  
+                            <th scope="col">Cantidad</th>
+                            <th scope="col">Costo</th>  
+                            <th scope="col">Precio</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for i in exor %}
+                            <tr>
+                                <td>{{ i.fecha|date:"SHORT_DATE_FORMAT" }}</td>
+                                <td>{{ i.referencia }}</td>
+                                <td>{{ i.rubro }}</td>
+                                <td>{{ i.unidades }}</td>
+                                <td>{{ i.costo|intcomma }}</td>
+                                <td>{{ i.precio|intcomma }}</td>
+                            </tr>
+                        {% empty %}
+                            <tr><td colspan="5"><h5>No hay registros</h5></td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="card-footer text-muted">
+            <a class="btn btn-outline-info" href="{% url 'vta_cliente_listar' 0 %}" role="button">
+                <i class="fas fa-clipboard-list"></i> Listado
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock contenido %}
+{% block extramodal %}
+<div class="modal fade" tabindex="-1" role="dialog" id="modal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content"></div>
+    </div>
+</div>
+{% endblock extramodal %}
+{% block extrascripts %}
+    <script src="{% static 'vta/js/jquery.bootstrap.modal.forms.min.js' %}"></script>
+    <script src="{% static 'vta/js/BsMultiSelect.js' %}"></script>
+    <script>
+        $("#id_cooperativa").dashboardCodeBsMultiSelect();
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            var a = document.querySelector('#id_identificacion');
+            a.setAttribute('readonly','true');
+            $(".nuevo").modalForm( {formURL: "{% url 'vta_cliente_vehiculo' cedula 0 %}"} );
+            $(".nuevo-dir").modalForm( {formURL: "{% url 'vta_cliente_direccion' cedula 0  %}"} );
+            $(".nuevo-tel").modalForm( {formURL: "{% url 'vta_cliente_telefono' cedula 0  %}"} );
+            $('.delete').each(function(){ $(this).modalForm({ formURL: $(this).data('id') }); });
+            var limite = parseFloat($('#id_limite_credito').val());
+            var saldo = parseFloat($('#id_saldo').val());
+            $('#id_limite_credito').on('change', function(){
+                var x = this.value-limite
+                if(this.value < saldo ){
+                    alert('El saldo no puede quedar en negativo');
+                    $('#id_limite_credito').val(limite);
+                    $('#id_saldo').val(saldo);
+                }else{ 
+                    $('#id_saldo').val((saldo+x).toFixed(2));
+                }
+            });
+        });
+    </script>
+{% endblock extrascripts %}

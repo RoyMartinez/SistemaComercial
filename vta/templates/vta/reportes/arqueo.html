@@ -1,0 +1,107 @@
+{% extends 'vta/base_vta.html' %}
+{% load static %}
+{% load humanize %}
+{% block contenido %}
+<div class="row">
+  <div class="col-lg-12 mb-12">
+    <div class="card border-left-success shadow h-100 py-2">
+      <a href="#collapseCardExample" class="d-block card-header py-3" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="collapseCardExample">
+        <h6 class="m-0 font-weight-bold text-primary">ARQUEO GENERAL DE CAJA</h6>
+      </a>
+      <div class="collapse show" id="collapseCardExample">
+        <div class="card-body">
+            <form autocomplete="off" method="POST">
+              {% csrf_token %}
+              <div class="form-row">
+                <div class="form-group col-md-3">
+                  <label for="fecha">Fecha</label>
+                  <input type="date" class="form-control form-control-sm" id="fecha" name="fecha" value="{{ hoy }}">
+                </div>
+                <div class="form-group col-md-3" style="border-left: 1px solid #C0C0C0;">
+                  <label for="fact0">Factura Inicial:</label>
+                  <input type="text" class="form-control form-control-sm" id="fact0">
+                  <label for="fact1">Factura Final:</label>
+                  <input type="text" class="form-control form-control-sm" id="fact1">
+                </div>
+                <div class="form-group col-md-3" style="border-left: 1px solid #C0C0C0;">
+                  <label for="vendedor">Vendedor</label>
+                  <select id="vendedor" name="vendedor" class="form-control form-control-sm">
+                    <option value="0" selected>Todos</option>
+                    {% for i in vendedor %}
+                      <option value="{{ i.pk }}">{{ i.identificacion.first_name }} {{ i.identificacion.last_name }}</option> 
+                    {% endfor %}
+                  </select>
+                </div>
+                <div class="form-group col-md-3" style="border-left: 1px solid #C0C0C0; text-align: center;">
+                    <button type="submit" class="btn btn-outline-primary">
+                      <i class="fas fa-search"></i>&nbsp;Calcular
+                    </button>
+                    <p></p>
+                    <button type="submit" class="btn btn-outline-info">
+                      <i class="fas fa-print"></i>&nbsp;Imprimir
+                    </button>  
+                </div>
+              </div> 
+            </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<br>
+<!-- Content Row -->
+<div class="row">
+  <div class="col">
+    <div class="card py-3 border-left-success">
+      <div class="card-body table-responsive">
+        <table class="table table-sm table-bordered table-striped">
+          <thead>
+            <tr>
+              <th scope="col"></th>
+              <th scope="col" colspan="2" style="text-align: center;">Venta de Contado</th>
+              <th scope="col" colspan="2" style="text-align: center;">Venta de Credito</th>
+              <th scope="col"></th>
+              <th scope="col"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="col">Referencia</th>
+              <th scope="col">Precio</th>
+              <th scope="col">IVA</th>
+              <th scope="col">Precio</th>
+              <th scope="col">IVA</th>
+              <th scope="col">Tipo de Venta</th>
+              <th scope="col">Vendedor</th>
+            </tr>
+            {% for i in arqueo %}
+            <tr>
+              <td>{{ i.serie }}</td>
+              {% if i.formapago.condicion.nombre == 'Contado' %}
+                <td>{{ i.subtotal|floatformat:2|intcomma }}</td>
+                <td>{{ i.impuestototal|floatformat:2|intcomma }}</td>
+                <td>0</td>
+                <td>0</td>
+              {% else %}
+                <td>0</td>
+                <td>0</td>
+                <td>{{ i.subtotal|floatformat:2|intcomma }}</td>
+                <td>{{ i.impuestototal|floatformat:2|intcomma }}
+              {% endif %}
+              <td>{{ i.formapago.condicion }}</td>
+              <td>{{ i.vendedor.identificacion.first_name }} {{ i.vendedor.identificacion.last_name }}</td>
+            </tr>
+            {% empty %}
+              <tr><td colspan="7">Sin registros</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock contenido %}
+{% block extramodal %}  
+{% endblock extramodal %}
+{% block extrascripts %}
+{% endblock extrascripts %}

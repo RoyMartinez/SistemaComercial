@@ -1,0 +1,13 @@
+{% for i in n4itemxprecio %}
+<tr>
+    <td>{{ i.precio }}</td>
+    <td>{{ i.valor }}</td>
+    <td>
+        <button type="button" class="btn btn-sm btn-info show-form-update" data-url="{% url 'N4ItemXPrecio_Editar' i.pk %}">
+            <i class="fas fa-pencil-alt"></i>&nbsp; Editar
+        </button>
+    </td>
+</tr>
+{% empty %}
+    <tr><td colspan="4"><h3>No se encontraron registros</h3></td></tr>
+{% endfor %}

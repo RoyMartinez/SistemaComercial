@@ -1,0 +1,70 @@
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+<form method="POST" data-url="{% url 'N4ItemXPrecio_Editar' form.instance.pk %}" class="update-form" autocomplete="off">
+    {% csrf_token %}
+    <div class="modal-header">
+        <h5 class="modal-title text-center">Editar </h5>
+    </div>
+    <div class="modal-body">
+        <div class="{% if form.non_field_errors %}invalid{% endif %} mb-2">
+            {% for error in form.non_field_errors %}
+                {{ error }}
+            {% endfor %}
+        </div>
+        <div class="form-row">
+                <div class="form-group col-md-12" id="div_item">
+                    {{ form.item.label_tag }}
+                    {% render_field form.item class="form-control form-control-sm" %}
+                    <div class="{% if form.item.errors %} invalid{% endif %}">
+                        {% for error in form.item.errors %}
+                            <p class="help-block" style="color:red;">{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="form-group col-md-12" id="div_precio">
+                    {{ form.precio.label_tag }}
+                    {% render_field form.precio class="form-control form-control-sm" %}
+                    <div class="{% if form.precio.errors %} invalid{% endif %}">
+                        {% for error in form.precio.errors %}
+                            <p class="help-block" style="color:red;">{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="form-group col-md-12" id="div_valor">
+                    {{ form.valor.label_tag }}
+                    {% render_field form.valor class="form-control form-control-sm" %}
+                    <div class="{% if form.valor.errors %} invalid{% endif %}">
+                        {% for error in form.valor.errors %}
+                            <p class="help-block" style="color:red;">{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="submit-btn btn btn-primary" id ="btnActualiza">
+            <i class="fas fa-plus"></i>&nbsp; Actualizar
+        </button>
+        <button type="button" class="submit-btn btn btn-danger" data-dismiss="modal" aria-label="close">
+            <i class="fa fa-times"></i>&nbsp; cancelar
+        </button>
+    </div>
+</form>
+
+
+
+<script>
+        $('#div_item').hide();
+        $('#div_precio').hide();
+        sessionStorage['codigo'] = $('#id_item').val();
+        var errores = $('.help-block');
+        if(sessionStorage['codigo']){
+            // $('#id_item').prop('disabled',true);
+            // $('#id_precio').prop('disabled',true);
+        }
+        // Control para bloquear 
+        $('#id_valor').prop('min','1');
+        $('#id_valor').on('keypress',function(){
+            return event.charCode >= 48 && event.charCode <= 57;
+        });
+</script>

@@ -1,0 +1,19 @@
+{% for f in exorubros %}
+<tr>
+    <td>{{ f.nombre }}</td>
+    <td>{{ f.unidades }}</td>
+    <td>{{ f.costo }}</td>
+    <td>{{ f.precio }}</td>
+    <td>
+        {% if f.nombre == 'SIN EXONERAR'%}
+            <label>Registro del sistema</label>
+        {% else %}
+            <button type="button" class="btn btn-info btn-sm show-form-update" data-url="{% url 'ExoRubro_Editar' f.pk %}">
+                <i class="fas fa-pencil-alt"></i>&nbsp;Editar
+            </button>
+        {% endif %}
+    </td>
+</tr>
+{% empty %}
+<tr><td colspan="4"><h1>No hay Registro en ExoRubro</h1></td></tr>
+{% endfor %}

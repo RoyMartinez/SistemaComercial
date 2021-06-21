@@ -1,0 +1,102 @@
+{% extends 'inv/invBase.html' %}
+{% load static %}
+{% block extracss %}
+    <link rel="stylesheet" href="{% static 'fenimarket/vendor/datatables/dataTables.bootstrap4.min.css' %}">
+{% endblock extracss %}
+{% block contenido %}
+{% if messages %}
+    {% for i in messages %}
+        <div class="alert alert-{{ i.tags }}">{{ i }}</div>
+    {% endfor %}
+{% endif %}
+<div class="row">
+    <div class="col">
+        <div class="card py-3 border-left-primary">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-10">
+                        <h4 class="m-0 font-weight-bold text-primary">Produccion</h4>
+                    </div>
+                </div>
+                <hr>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-sm" id="Pantalla-table" >
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>C&oacute;digo</th>
+                                <th>Item</th>
+                                <th>Nota</th>
+                                <th>Precio base</th>
+                                <th>Cod. Anterior</th>
+                                <th>Descontinuado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>{% load humanize %}
+                            {% for i in n4item %}
+                            <tr>
+                                <td>{{ i.pk }}</td>
+                                <td>{{ i }}</td>
+                                <td>{{ i.descripcion|lower }}</td>
+                                <td>{{ i.precio|floatformat:2|intcomma }}</td>
+                                <td>{{ i.cod_anterior }}</td>
+                                <td>{{ i.descontinuado }}</td>
+                                <td>
+                                    <a class="btn btn-sm btn-success"  href="{% url 'N4Item_Historial' i.id_n4 %}">
+                                        <i class="far fa-clock"></i>&nbsp; Historial
+                                    </a>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr><td colspan="6"><h3>No hay Registros</h3></td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock contenido %}
+
+{% block extramodal %}
+    <div class="modal fade" id="modal-Pantalla">
+        <div class="modal-dialog">
+            <div class="modal-content"></div>
+        </div>
+    </div>
+{% endblock extramodal %}
+
+{% block extrascripts %}
+<script src="{% static 'inv/js/modal.js' %}">  </script>  
+<script type="text/javascript" src="{% static 'fenimarket/vendor/datatables/jquery.dataTables.js' %}"></script>
+<script type="text/javascript" src="{% static 'fenimarket/vendor/datatables/dataTables.bootstrap4.min.js' %}"></script>
+<script type="text/javascript">
+
+$(document).ready(function() {
+          $('#Pantalla-table').DataTable({
+              "language":{
+                  "lengthMenu":"Mostrar  _MENU_  filas",
+                  "zeroRecords":"No se encontraron coincidencias",
+                  "info": "Página _PAGE_ de _PAGES_",
+                  "infoEmpty":"No hay registros",
+                  "infoFiltered":"(filtrado de un total de _MAX_ registros)",
+                  "search":"Buscar:",
+                  "paginate":{
+                      "first":"Primero",
+                      "last":"Último",
+                      "next":"Siguiente",
+                      "previous":"Anterior",
+                  }
+              },
+              "ordering": false 
+          });  
+  });
+</script>
+<script type="text/javascript">
+    function completarcampo(){
+        var co = $('#id_N3').val()+'.'+$('#id_Marca').val();
+        document.getElementById("id_Id").value=co;
+    }
+</script>
+{% endblock extrascripts %}

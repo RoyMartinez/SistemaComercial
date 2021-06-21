@@ -1,0 +1,268 @@
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+<form method="POST" data-url="{% url 'N4Item_Crear' %}" class="create-form" autocomplete="off">
+    {% csrf_token %}
+    <div class="modal-header">
+        <h5 class="modal-title text-center">Crear Item</h5>
+    </div>
+    <div class="modal-body"> 
+        <div  class="form-group col-md-12" >
+            {% if messages %}
+                {% for i in messages %}
+                    <div class="alert alert-{{ i.tags }}">{{ i }}</div>
+                {% endfor %}
+            {% endif %} 
+        </div>
+        <div class="{% if form.non_field_errors %}invalid{% endif %} mb-2">
+            {% for error in form.non_field_errors %}
+                {{ error }}
+            {% endfor %}
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-12" >
+                {{ form.id_n4.label_tag }}
+                {% render_field form.id_n4 minlength="5" class="form-control form-control-sm" %}
+                <div class="{% if form.id_n4.errors %} invalid{% endif %}">
+                    {% for error in form.id_n4.errors %}
+                        <p class="help-block" style="color:red;">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                {{ form.rubro.label_tag }}
+                {% render_field form.rubro class="form-control form-control-sm rubroC" %}
+                <div class="{% if form.rubro.errors %} invalid{% endif %}">
+                    {% for error in form.rubro.errors %}
+                        <p class="help-block" style="color:red;">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="form-group col-md-6">
+                {{ form.familia.label_tag }}
+                {% render_field form.familia class="form-control form-control-sm familiaC" %}
+                <div class="{% if form.familia.errors %} invalid{% endif %}">
+                    {% for error in form.familia.errors %}
+                        <p class="help-block" style="color:red;">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                {{ form.producto.label_tag }}
+                {% render_field form.producto class="form-control form-control-sm productoC" %}
+                <div class="{% if form.producto.errors %} invalid{% endif %}">
+                    {% for error in form.producto.errors %}
+                        <p class="help-block" style="color:red;">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="form-group col-md-6">
+                {{ form.marca.label_tag }}
+                {% render_field form.marca class="form-control form-control-sm marcaC" %}
+                <div class="{% if form.marca.errors %} invalid{% endif %}">
+                    {% for error in form.marca.errors %}
+                        <p class="help-block" style="color:red;">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-12">
+                {{ form.descripcion.label_tag }}
+                {% render_field form.descripcion class="form-control form-control-sm" %}
+                <div class="{% if form.descripcion.errors %} invalid{% endif %}">
+                    {% for error in form.descripcion.errors %}
+                        <p class="help-block" style="color:red;">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-4">
+                {{ form.codanterior.label_tag }}
+                {% render_field form.codanterior class="form-control form-control-sm" %}
+                <div class="{% if form.codanterior.errors %} invalid{% endif %}">
+                    {% for error in form.codanterior.errors %}
+                        <p class="help-block" style="color:red;">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="form-group col-md-4">
+                {{ form.exotipo.label_tag }}
+                {% render_field form.exotipo class="form-control form-control-sm" %}
+                <div class="{% if form.exotipo.errors %} invalid{% endif %}">
+                    {% for error in form.exotipo.errors %}
+                        <p class="help-block" style="color:red;">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="form-group col-md-4">
+                {{ form.descontinuado.label_tag }}
+                {% render_field form.descontinuado class="form-control form-control-sm" %}
+                <div class="{% if form.descontinuado.errors %} invalid{% endif %}">
+                    {% for error in form.descontinuado.errors %}
+                        <p class="help-block" style="color:red;">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-4">
+                {{ form.preciomin.label_tag }}
+                {% render_field form.preciomin class="form-control form-control-sm" %}
+                <div class="{% if form.preciomin.errors %} invalid{% endif %}">
+                    {% for error in form.preciomin.errors %}
+                        <p class="help-block" style="color:red;">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="form-group col-md-4">
+                {{ form.preciomax.label_tag }}
+                {% render_field form.preciomax class="form-control form-control-sm" %}
+                <div class="{% if form.preciomax.errors %} invalid{% endif %}">
+                    {% for error in form.preciomax.errors %}
+                        <p class="help-block" style="color:red;">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="form-group col-md-4">
+                {{ form.cantidad_impuesto.label_tag }}
+                {% render_field form.cantidad_impuesto class="form-control form-control-sm" %}
+                <div class="{% if form.cantidad_impuesto.errors %} invalid{% endif %}">
+                    {% for error in form.cantidad_impuesto.errors %}
+                        <p class="help-block" style="color:red;">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                {{ form.minimo.label_tag }}
+                {% render_field form.minimo class="form-control form-control-sm" %}
+                <div class="{% if form.minimo.errors %} invalid{% endif %}">
+                    {% for error in form.minimo.errors %}
+                        <p class="help-block" style="color:red;">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="form-group col-md-6">
+                {{ form.maximo.label_tag }}
+                {% render_field form.maximo class="form-control form-control-sm" %}
+                <div class="{% if form.maximo.errors %} invalid{% endif %}">
+                    {% for error in form.maximo.errors %}
+                        <p class="help-block" style="color:red;">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                {{ form.codbarra.label_tag }}
+                {% render_field form.codbarra class="form-control form-control-sm" %}
+                <div class="{% if form.codbarra.errors %} invalid{% endif %}">
+                    {% for error in form.codbarra.errors %}
+                        <p class="help-block" style="color:red;">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="form-group col-md-6">
+                {{ form.sac.label_tag }}
+                {% render_field form.sac class="form-control form-control-sm" %}
+                <div class="{% if form.sac.errors %} invalid{% endif %}">
+                    {% for error in form.sac.errors %}
+                        <p class="help-block" style="color:red;">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="submit-btn btn btn-primary">
+            <i class="fas fa-plus"></i>&nbsp; Crear
+        </button>
+        <button type="button" class="submit-btn btn btn-danger" data-dismiss="modal" aria-label="close">
+            <i class="fa fa-times"></i>&nbsp; cancelar
+        </button>
+    </div>
+</form>
+
+<script>    
+    //Script que bloquea los tipos number
+    jQuery('input[type=number]').keypress(function(tecla){
+        // console.log(tecla.charCode);
+        // console.log(this.value.length)
+        //46 = .
+        //45 = -
+        //se ponen las teclas que no se admiten solo admitir numeros y la primera son los numeros los otros son la e y el punto
+        if((tecla.charCode < 48 || tecla.charCode > 57) && tecla.charCode != 46){
+            return false;
+        }
+        var regex = /^[0-9]{0,7}$|^[0-9]{0,7}.{0,1}[0-9]{0,1}$/; // number with 2 decimal places
+        if (!regex.test(this.value)) {
+            return false;
+        }
+    });
+</script>
+<script>
+    $(".familiaC").html("<option value='' selected='selected'>---------</option>");
+    $(".productoC").html("<option value='' selected='selected'>---------</option>");
+    $('.rubroC').on("change",getFamilias);
+    $('.familiaC').on("change",getProductos);
+    $('#id_id_n4').prop('readonly',true);
+    $('.productoC').on('change',llave);
+    $('.marcaC').on('change',llave);
+    /*para convertir el codigo a mayuscula*/
+    function llave(){
+        var co = ($('.productoC').val()+'.'+$('.marcaC').val()).toUpperCase();
+        $("#id_id_n4").val(co);
+    }
+    function getFamilias() {
+        var rubroId = $('.rubroC').val();
+        if(rubroId){
+            $('.familiaC').html("");
+            var request = $.ajax({
+                type : "GET",
+                url : "{% url 'get_familias' %}",
+                data:{
+                    "rubro_id" : rubroId,
+                },
+            });
+            request.done(asignar);
+            function asignar(response) {
+                $(".familiaC").html(response.familias);
+                $(".productoC").html("<option value='' selected='selected'>---------</option>");
+                llave();
+            }
+        }
+        else{
+            $(".familiaC").html("<option value='' selected='selected'>---------</option>");
+            $(".productoC").html("<option value='' selected='selected'>---------</option>");
+            llave();
+        }
+    }
+    function getProductos() {
+        var familiaId = $('.familiaC').val();
+        if(familiaId){
+            $('.productoC').html("");
+            var request = $.ajax({
+                type : "GET",
+                url : "{% url 'get_productos' %}",
+                data:{
+                    "familia_id" : familiaId,
+                },
+            });
+            request.done(asignar);
+            function asignar(response) {
+                $(".productoC").html(response.productos);
+                llave();
+            }
+        }
+        else{
+            $(".productoC").html("<option value='' selected='selected'>---------</option>");
+            llave();
+        }
+    }
+</script>

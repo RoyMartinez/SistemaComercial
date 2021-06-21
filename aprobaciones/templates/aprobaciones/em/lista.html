@@ -1,0 +1,40 @@
+{% extends 'aprobaciones/shared/base.html' %}
+{% load static %}
+{% block contenido %}
+{% for i in entradas %}
+<div class="card py-3 border-left-primary">
+  <div class="card-header">{{ i.0 }}</div>
+  <div class="card-body">
+      <h5 class="card-title">Fecha: <span style="color:blue;">{{ i.1}}</h5>
+      <h5 class="card-title">Orden Compra: <span style="color:blue;">{{ i.2}}</h5>
+      
+      <p class="card-text">Cantidad: <span style="color:blue;">{{ i.3 }}</span></p>
+      <p class="card-text">Costo: <span style="color:blue;">{{ i.4 }}</span></p>
+      <p class="card-text">Iva: <span style="color:blue;">{{ i.5 }}</span></p>
+      <p class="card-text">Costo Adiccional: <span style="color:blue;">{{ i.6 }}</span></p>
+      <p class="card-text">Iva Adiccional: <span style="color:blue;">{{ i.7 }}</span></p>
+  </div>
+  {% if i.8 == 'Autorizado' %}
+      <div class="card-footer border-success" >
+          <p class="card-text"><span style="color:green;">{{ i.8 }}</span></p>
+          <a href="{% url 'aprobaciones_em_detalle' i.0 %}" class="btn btn-secondary card-link">Detalle</a>
+      </div>
+  {% elif i.8 == 'Anulado' %}
+      <div class="card-footer border-danger" >
+          <p class="card-text"><span style="color:red;">{{ i.8 }}</span></p>
+          <a href="{% url 'aprobaciones_em_detalle' i.0 %}" class="btn btn-secondary card-link">Detalle</a>
+      </div>
+  {% else %}
+      <div class="card-footer" >
+          <p class="card-text"><span style="color:orange;">{{ i.8 }}</span></p>
+          <div class="d-inline-flex">
+              <a href="{% url 'aprobaciones_em_detalle' i.0 %}" class="btn btn-secondary card-link">Detalle</a>
+              <a href="{% url 'aprobaciones_em_actualiza' i.0 '3' %}" class="btn btn-success card-link">Aceptar</a>
+              <a href="{% url 'aprobaciones_em_actualiza' i.0 '2' %}" class="btn btn-danger card-link">Anular</a>
+          </div>
+      </div>
+  {% endif %}
+</div>
+<br>
+{% endfor %}
+{% endblock contenido %}

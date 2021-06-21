@@ -1,0 +1,116 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Factura {{ factura.referencia }}</title>
+    <link
+      rel="stylesheet"
+      href="{% static 'vta/estilos/voucher.css' %}"
+      type="text/css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css?family=Ubuntu+Mono&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="{% static 'vta/estilos/reimpreso.css' %}"
+      type="text/css"
+    />
+  </head>
+  <body>
+    <h1>Multicomercial, S.P</h1>
+    <br /><br />
+    <hr />
+    <p>SUCURSAL {{ suc.sucursal|upper }}</p>
+    <p>{{ suc.sucursal.direccion|lower }}</p>
+    <p>RUC J0810000002960 - Tel {{ suc.sucursal.telefonos }}</p>
+    <p>AUT-DGI: ASFC-04-0126-09-2013-2</p>
+    <p>{{ factura.fechaemision }}</p>
+    <p>Fact {{ factura.serie }} - Venta de {{ factura.formapago.condicion }}</p>
+    <p>
+      Cliente: {{ factura.cliente.nombres|upper }} {{
+      factura.cliente.apellidos|upper }}
+    </p>
+    <p>{{ factura.nombre|default_if_none:"" }}</p>
+    <br /><br />
+    <table>
+      <thead>
+        <tr>
+          <td colspan="4">---------------------------------</td>
+        </tr>
+        <tr>
+          <th>Bod</th>
+          <th>Cant</th>
+          <th>Codigo</th>
+          <th>Precio</th>
+        </tr>
+        <tr>
+          <td colspan="4">---------------------------------</td>
+        </tr>
+      </thead>
+      <tbody>
+        {% for i in detalle %}
+        <tr>
+          <td>{{ i.bodega.pk }}</td>
+          <td>&nbsp;{{ i.unidades }}</td>
+          <td>{{ i.item.pk }}</td>
+          <td class="detalle">{{ i.factor|floatformat:2 }}</td>
+        </tr>
+        {% endfor %}
+        <tr>
+          <td colspan="4">---------------------------------</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+      </tbody>
+      <tfooter>
+        <tr>
+          <td></td>
+          <td></td>
+          <td class="resumen">Subtotal:</td>
+          <td class="detalle">{{ subtotal }}</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td class="resumen">Descuento:</td>
+          <td class="detalle">{{ factura.descuentotal|floatformat:2 }}</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td class="resumen">Impuesto:</td>
+          <td class="detalle">{{ factura.impuestototal|floatformat:2 }}</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+          <td class="resumen">Total C$:</td>
+          <td class="detalle">{{ factura.preciofinaltotal|floatformat:2 }}</td>
+        </tr>
+      </tfooter>
+    </table>
+    <br /><br /><br />
+    <!-- <p>
+      Le atendio {{ factura.vendedor.identificacion.first_name }} {{
+      factura.vendedor.identificacion.last_name }}
+    </p> -->
+  </body>
+</html>

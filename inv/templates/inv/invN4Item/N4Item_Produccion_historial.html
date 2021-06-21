@@ -1,0 +1,258 @@
+{% extends 'inv/invBase.html' %}
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block extracss %}
+    <link rel="stylesheet" href="{% static 'fenimarket/vendor/datatables/dataTables.bootstrap4.min.css' %}">
+{% endblock extracss %}
+{% block contenido %}
+{% if messages %}
+    {% for i in messages %}
+        <div class="alert alert-{{ i.tags }}">{{ i }}</div>
+    {% endfor %}
+{% endif %}
+<div class="row">
+    <div class="col">
+        <div class="card py-3 border-left-primary">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-2">
+                        <h4 class="m-0 font-weight-bold text-primary">Produccion</h4>
+                    </div>
+                    <div class="col-md-8">
+                        <form  method="POST" id = "busquedaForm" >
+                            <div class="form-row">
+                                {% csrf_token %}
+                                <div class="col-md-3">
+                                    {% render_field busqueda.busqueda class="form-control-sm" value="FALSE" %}
+                                    <div class="custom-control custom-switch" style="margin-bottom: 0.5em;">
+                                        <input type="checkbox" class="custom-control-input" name="especificar_rango" id="id_especificar_rango">
+                                        <label class="custom-control-label" for="id_especificar_rango">Especificar rango </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6" id="div_rangos_definidos">
+                                    {% render_field busqueda.rangos_especificos class="form-control form-control-sm" %}
+                                    <div class="{% if busqueda.rangos_especificos.errors %} invalid{% endif %}">
+                                        {% for error in busqueda.rangos_especificos.errors %}
+                                            <p class="help-block" style="color:red;">{{ error }}</p>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <div class="col-md-6" id="div_rangos_especificos">
+                                    <div class="row">
+                                        <div class="col-md-6 form-group">
+                                            <label for="id_fecha_inicio">Inicio:</label>
+                                            <div class="col-md-10">
+                                                {% render_field busqueda.fecha_inicio class="form-control" name="fecha" type="date" value=fecha_inicio%}
+                                                <div class="{% if busqueda.fecha_inicio.errors %} invalid{% endif %}">
+                                                    {% for error in busqueda.fecha_inicio.errors %}
+                                                        <p class="help-block" style="color:red;">{{ error }}</p>
+                                                    {% endfor %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 form-group">
+                                            <label for="id_fecha_fin">Fin:</label>
+                                            <div class="col-md-10">
+                                                {% render_field busqueda.fecha_fin class="form-control" name="fecha" type="date" value=fecha_fin %}
+                                                <div class="{% if busqueda.fecha_fin.errors %} invalid{% endif %}">
+                                                    {% for error in busqueda.fecha_fin.errors %}
+                                                        <p class="help-block" style="color:red;">{{ error }}</p>
+                                                    {% endfor %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3" >
+                                    <button  type="submit" class="btn btn-primary">
+                                        <span class="fa fa-search"> Buscar Produccion</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-md-2" >
+                        <button type="button" class="btn btn-sm btn-success" data-toggle = "modal" data-target="#postModal">
+                            <i class="fas fa-balance-scale"></i>&nbsp; Produccion
+                        </button>
+                    </div>
+                </div>
+                <hr>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-sm" id="Pantalla-table" >
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>Item</th>
+                                <th>Fecha</th>
+                                <th>Referencia</th>
+                                <th>Cantidad</th>
+                                <th>Nota</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% include 'inv/invN4Item/N4Item_List_Details_produccion.html' %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock contenido %}
+
+{% block extramodal %}
+    <div class="modal fade" id="modal-Pantalla">
+        <div class="modal-dialog">
+            <div class="modal-content"></div>
+        </div>
+    </div>
+    <div class="modal fade" id="postModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                {% include 'inv/invN4Item/modal_produccion.html' %}
+            </div>
+        </div>
+    </div>
+{% endblock extramodal %}
+
+{% block extrascripts %}
+<script src="{% static 'inv/js/modal.js' %}">  </script>  
+<script type="text/javascript" src="{% static 'fenimarket/vendor/datatables/jquery.dataTables.js' %}"></script>
+<script type="text/javascript" src="{% static 'fenimarket/vendor/datatables/dataTables.bootstrap4.min.js' %}"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+            $('#Pantalla-table').DataTable({
+                "language":{
+                    "lengthMenu":"Mostrar  _MENU_  filas",
+                    "zeroRecords":"No se encontraron coincidencias",
+                    "info": "Página _PAGE_ de _PAGES_",
+                    "infoEmpty":"No hay registros",
+                    "infoFiltered":"(filtrado de un total de _MAX_ registros)",
+                    "search":"Buscar:",
+                    "paginate":{
+                        "first":"Primero",
+                        "last":"Último",
+                        "next":"Siguiente",
+                        "previous":"Anterior",
+                    }
+                },
+                "ordering": false 
+            });  
+    });
+</script>
+
+<script type="text/javascript">
+    $('#id_busqueda').val('FALSE');
+    $('#div_rangos_definidos').show();
+    $('#div_rangos_especificos').hide();
+    $('#id_busqueda').hide();
+    $('#id_especificar_rango').on('change',mostrarocultarrangos);
+    function mostrarocultarrangos(){
+        if($("#id_especificar_rango").is(':checked')){
+            $('#div_rangos_especificos').show();
+            $('#div_rangos_definidos').hide();
+            $('#id_busqueda').val('TRUE');
+        }
+        else{
+            $('#div_rangos_especificos').hide();
+            $('#div_rangos_definidos').show();
+            $('#id_busqueda').val('FALSE');
+        }
+    }
+</script>
+
+<script type="text/javascript">
+    $('#id_familia').html("");
+    $('#id_producto').html("");
+    $('#id_item').html("");
+    $('#id_rubro').on("change",getFamilias);
+    $('#id_familia').on("change",getProductos);
+    $('#id_producto').on("change",getItems);
+    
+    $('#btnActualiza').on('click',desactiva);
+    
+    function desactiva(){
+        $('#id_n3').prop('disabled',false);
+        $('#id_marca').prop('disabled',false);
+    }
+
+    // Control para bloquear 
+    $('#id_precio').prop('min','1');
+    $('#id_precio').on('keypress',function(){
+        return event.charCode >= 48 && event.charCode <= 57;
+    });
+    
+    function getFamilias() {
+        var rubroId = $('#id_rubro').val();
+        if(rubroId){
+            $('#id_familia').html("");
+            var request = $.ajax({
+                type : "GET",
+                url : "{% url 'get_familiasT' %}",
+                data:{
+                    "rubro_id" : rubroId,
+                },
+            });
+            request.done(asignar);
+            function asignar(response) {
+                $("#id_familia").html(response.familias);
+            }
+        }
+        else{
+            $("#id_familia").html("<option value='' selected='selected'>---------</option>");
+        }
+    }
+    
+    function getProductos() {
+        var familiaId = $('#id_familia').val();
+        if(familiaId){
+            $('#id_producto').html("");
+            var request = $.ajax({
+                type : "GET",
+                url : "{% url 'get_productosT' %}",
+                data:{
+                    "familia_id" : familiaId,
+                },
+            });
+            request.done(asignar);
+            function asignar(response) {
+                $("#id_producto").html(response.productos);
+            }
+        }
+        else{
+            $("#id_producto").html("<option value='' selected='selected'>---------</option>");
+        }
+    }
+
+    
+    function getItems() {
+        var productoId = $('#id_producto').val();
+        if(productoId){
+            $('#id_item').html("");
+            var request = $.ajax({
+                type : "GET",
+                url : "{% url 'get_items' %}",
+                data:{
+                    "producto_id" : productoId,
+                },
+            });
+            request.done(asignar);
+            function asignar(response) {
+                $("#id_item").html(response.items);
+            }
+        }
+        else{
+            $("#id_item").html("<option value='' selected='selected'>---------</option>");
+        }
+    }
+
+</script>
+<script type="text/javascript">
+    function completarcampo(){
+        var co = $('#id_N3').val()+'.'+$('#id_Marca').val();
+        document.getElementById("id_Id").value=co;
+    }
+</script>
+{% endblock extrascripts %}

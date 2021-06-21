@@ -1,0 +1,60 @@
+{% extends 'fenimarket/mk_base.html' %}
+{% block contenido %}
+<form>
+    <div class="row">
+        <div class="col-3"></div>
+        <div class="col-6">
+            <div class="card shadow">
+                <a href="#collapseCardExample" class="d-block card-header py-3" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="collapseCardExample">
+                    <h6 class="m-0 font-weight-bold text-primary">Buscador de facturas o REM</h6>
+                </a>
+                <div class="collapse show" id="collapseCardExample">
+                    <div class="card-body">
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" placeholder="No. de factura o REM" aria-label="Recipient's username" aria-describedby="button-addon2">
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-warning" type="button" id="button-addon2">Buscar</button>
+                            </div>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1" checked>
+                            <label class="form-check-label" for="inlineRadio1">No. Factura</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">
+                            <label class="form-check-label" for="inlineRadio2">No. REM</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-3"></div>
+    </div>
+</form>
+<br>
+<div class="row">
+    <div class="col">
+        <div class="card py-3 border-left-success">
+            <div class="card-body">
+                <table class="table">
+                    <thead class="thead-dark">
+                        <tr>
+                        <th scope="col">Fecha</th>
+                        <th scope="col">C&oacute;digo</th>
+                        <th scope="col">Descripci&oacute;n</th>
+                        <th scope="col">No. REM</th>
+                        <th scope="col">No. Factura</th>
+                        <th scope="col">Costo</th>
+                        <th scope="col">IVA</th>
+                        <th scope="col">Proveedor</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock contenido %}

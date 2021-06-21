@@ -1,0 +1,91 @@
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+<form method="POST" data-url="{% url 'TrasladoMsr_Editar' form.instance.referencia %}" class="update-form" autocomplete="off">
+    {% csrf_token %}
+    <div class="modal-header">
+        <h5 class="modal-title text-center">Editar Cabecera del Documento</h5>
+    </div>
+    <div class="modal-body">
+        <div class="form-group col-md-12" id="div_referencia">
+                {{ form.referencia.label_tag }}
+                {% render_field form.referencia class="form-control form-control-sm" %}
+                <div class="{% if form.referencia.errors %} invalid{% endif %}">
+                    {% for error in form.referencia.errors %}
+                        <p class="help-block" style="color:red;">{{ error }}</p>
+                    {% endfor %}
+                </div>
+        </div>
+        <div class="form-group col-md-12" id="div_fecha">
+                {{ form.fecha.label_tag }}
+                {% render_field form.fecha class="form-control form-control-sm" %}
+                <div class="{% if form.fecha.errors %} invalid{% endif %}">
+                    {% for error in form.fecha.errors %}
+                        <p class="help-block" style="color:red;">{{ error }}</p>
+                    {% endfor %}
+                </div>
+        </div>
+        <div class="form-group col-md-12" id="div_estado">
+                {{ form.estado.label_tag }}
+                {% render_field form.estado class="form-control form-control-sm" %}
+                <div class="{% if form.estado.errors %} invalid{% endif %}">
+                    {% for error in form.estado.errors %}
+                        <p class="help-block" style="color:red;">{{ error }}</p>
+                    {% endfor %}
+                </div>
+        </div>
+        <div class="form-group col-md-12" id="div_nota">
+                {{ form.nota.label_tag }}
+                {% render_field form.nota class="form-control form-control-sm" %}
+                <div class="{% if form.nota.errors %} invalid{% endif %}">
+                    {% for error in form.nota.errors %}
+                        <p class="help-block" style="color:red;">{{ error }}</p>
+                    {% endfor %}
+                </div>
+        </div>
+        <div class="form-group col-md-12" id="div_sucursal">
+                {{ form.sucursal.label_tag }}
+                {% render_field form.sucursal class="form-control form-control-sm" %}
+                <div class="{% if form.sucursal.errors %} invalid{% endif %}">
+                    {% for error in form.sucursal.errors %}
+                        <p class="help-block" style="color:red;">{{ error }}</p>
+                    {% endfor %}
+                </div>
+        </div>
+        <div class="form-group col-md-12" id="div_fecha_venc">
+                {{ form.fecha_venc.label_tag }}
+                {% render_field form.fecha_venc class="form-control form-control-sm" %}
+                <div class="{% if form.fecha_venc.errors %} invalid{% endif %}">
+                    {% for error in form.fecha_venc.errors %}
+                        <p class="help-block" style="color:red;">{{ error }}</p>
+                    {% endfor %}
+                </div>
+        </div>
+        <div class="form-group col-md-12" id="div_sucursalD">
+                {{ form.sucursalD.label_tag }}
+                {% render_field form.sucursalD class="form-control form-control-sm" %}
+                <div class="{% if form.sucursalD.errors %} invalid{% endif %}">
+                    {% for error in form.sucursalD.errors %}
+                        <p class="help-block" style="color:red;">{{ error }}</p>
+                    {% endfor %}
+                </div>
+        </div>
+        <!-- {{form|crispy}} -->
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="submit-btn btn btn-primary" id ="btnActualiza">
+            <i class="fas fa-plus"></i>&nbsp; Actualizar
+        </button>
+        <button type="button" class="submit-btn btn btn-danger" data-dismiss="modal" aria-label="close">
+            <i class="fa fa-times"></i>&nbsp; cancelar
+        </button>
+    </div>
+</form>
+<script>
+    $('#div_factura').hide();
+    $('#div_referencia').hide();
+    $('#div_estado').hide();
+    $('#div_sucursal').hide();
+    $('#div_fecha').hide();
+    $('#div_fecha_venc').hide();
+    $('#div_sucursalD').hide();
+</script>

@@ -1,0 +1,20 @@
+{% extends 'vta/base_vta.html' %} {% load static %} {% block contenido %}
+<div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+  <ol class="carousel-indicators">
+    <li
+      data-target="#carouselExampleIndicators"
+      data-slide-to="0"
+      class="active"
+    ></li>
+    <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+  </ol>
+  <!-- <div class="carousel-inner">
+    <div class="carousel-item active">
+      <img src="{% static  'vta/imgs/01.jpg' %}" class="d-block w-100" alt="...">
+    </div>
+    <div class="carousel-item">
+      <img src="{% static 'vta/imgs/02.jpg' %}" class="d-block w-100" alt="...">
+    </div>
+  </div> -->
+</div>
+{% endblock contenido %}

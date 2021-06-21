@@ -1,0 +1,41 @@
+{% extends 'inv/invBase.html' %}
+{% load static %}
+{% block contenido %}
+<br>
+<div class="card">
+    <div class="card-header text-center">Combo</div>
+    <div class="card-body">
+        <h1 class="card-title">Listado de Combo</h1>
+        <button type="button" class="btn show-form" data-url="{% url 'N4ItemCombo_Crear' %}">
+            <span class="fa fa-plus fa-2x" style="color:royalblue"> Agregar</span>
+        </button>
+        <br>
+        <table class="table table-bordered" id="Pantalla-table" >
+            <thead>
+                <tr>
+                    <td>Abreviatura</td>
+                    <td>Descripcion</td>
+                    <td>Precio</td>
+                    <td>Codigo Anterior</td>
+                    <td>Descontinuado</td>
+                    <td class="text-center">Acciones</td>
+                </tr>
+            </thead>
+            <tbody>
+                {% include 'inv/invN4ItemCombo/N4ItemCombo_List_Details.html' %}
+            </tbody>
+        </table>
+    </div>
+    <div class="card-footer text-muted">
+        SISCARCOOP: Sistema Integral de Control de Recursos Corporativos
+    </div>
+</div>
+<div class="modal fade" id="modal-Pantalla">
+    <div class="modal-dialog">
+        <div class="modal-content"></div>
+    </div>
+</div>
+{% endblock contenido %}
+{% block extrascripts %}
+  <script src="{% static 'inv/js/modal.js' %}">  </script>  
+{% endblock extrascripts %}

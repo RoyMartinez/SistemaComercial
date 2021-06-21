@@ -1,0 +1,99 @@
+{% extends 'vta/base_vta.html' %}
+{% load static %}
+{% block contenido %}
+{% if messages %}
+    {% for i in messages %}
+        <div class="alert alert-{{ i.tags }}">{{ i }}</div>
+    {% endfor %}
+{% endif %}
+<div class="row">
+    <div class="col">
+        <div class="card py-3 border-left-success">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md">
+                            <h4 class="m-0 font-weight-bold text-primary">Membres&iacute;as</h4>
+                        </div>
+                    </div>
+                <hr>
+                <div class="row">
+                    <form method="POST" class="form-inline" autocomplete="off">
+                        {% csrf_token %}
+                        <div class="form-group mx-sm-3 mb-2">
+                            {{ form.descripcion.label_tag }} &nbsp; &nbsp;
+                            {{ form.descripcion }}
+                            {{ form.descripcion.errors }}
+                        </div>
+                        <div class="form-group mx-sm-3 mb-2">
+                            {{ form.prioridad.label_tag }} &nbsp; &nbsp;
+                            <input type="number" name="prioridad" value="0" class="form-control form-control-sm" required="" id="id_prioridad" min="0">
+                            {{ form.prioridad.errors }}
+                        </div>
+                        <div class="form-group mx-sm-3 mb-2">
+                            {{ form.descuento.label_tag }} &nbsp; &nbsp;
+                            <input type="number" name="descuento" value="0" class="form-control form-control-sm" required="" id="id_descuento"  step="any" min="0" max="99">
+                            {{ form.descuento.errors }}
+                        </div>
+                        &nbsp; &nbsp;<button class="btn btn-outline-primary mb-2" type="submit">
+                            <i class="fas fa-plus"></i>&nbsp;Agregar
+                        </button>
+                    </form>
+                    <small id="errores" style="color: red;">{{ form.descripcion.errors }}</small>
+                </div>
+                <hr>
+                <div class="table-responsive">
+                    <table class="table table-sm table-bordered">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th scope="col">No.</th>
+                                <th scope="col">Descripci&oacute;n</th>
+                                <th scope="col">Descuento (%)</th>
+                                <th scope="col">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for i in tabla %}
+                                <tr>
+                                    <td>{{ i.prioridad }}</td>
+                                    <td>{{ i.descripcion }}</td>
+                                    <td>{{ i.descuento|floatformat:2 }}</td>
+                                    <td>
+                                        {% if i.pk == 1 %}
+                                            <span><small>System record</small></span>
+                                        {% else %}
+                                            <button type="button" class="btn btn-outline-info btn-sm editar" data-id="{% url 'vta_membresia_editar' i.pk %}">
+                                                <i class="fas fa-pencil-alt"></i>&nbsp;Editar
+                                            </button>&nbsp;
+                                            <button type="button" class="btn btn-outline-danger btn-sm supr" data-id="{% url 'vta_membresia_delete' i.pk %}">
+                                                <i class="fas fa-trash-alt"></i>&nbsp;Borrar
+                                            </button>               
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% empty %}
+                                <tr><td colspan="3"><h3>No hay registros</h3></td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock contenido %}
+{% block extramodal %}
+<div class="modal fade" tabindex="-1" role="dialog" id="modal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content"></div>
+    </div>
+</div>    
+{% endblock extramodal %}
+{% block extrascripts %}
+    <script src="{% static 'vta/js/jquery.bootstrap.modal.forms.min.js' %}"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $(".editar").each(function(){ $(this).modalForm({formURL: $(this).data('id')}); });
+            $(".supr").each(function(){ $(this).modalForm({formURL: $(this).data('id')}); });
+        });
+    </script>  
+{% endblock extrascripts %}

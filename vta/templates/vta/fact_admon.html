@@ -1,0 +1,99 @@
+{% extends 'vta/base_vta.html' %}
+{% load static %}
+{% load humanize %}
+{% block contenido %}
+<div class="row">
+    <div class="col">
+        <div class="card py-3 border-left-success">
+            <div class="card-header">
+                <h4 class="m-0 font-weight-bold text-primary">Administraci&oacute;n de facturas</h4>
+                <br>
+                <form class="form-inline" method="POST">
+                    {% csrf_token %}
+                    <div class="form-group mx-sm-3 mb-2">
+                        <label for="id_fecha" class="sr-only">Fecha</label>
+                        <input type="date" class="form-control" name="fecha" required id="id_fecha" value="{{ valor }}">
+                    </div>
+                    <button type="submit" class="btn btn-outline-primary mb-2">Refrescar</button>
+                </form>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-sm">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th scope="col">Referencia</th>
+                                <th scope="col">Vendedor</th>
+                                <th scope="col">Sub total</th>
+                                <th scope="col">IVA</th>
+                                <th scope="col">Total</th>
+                                <th scope="col">Estado</th>
+                                <th scope="col">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for i in factura %}
+                                <tr>
+                                    <td>{{ i.referencia }}</td>
+                                    <td>{{ i.vendedor.identificacion }}</td>
+                                    <td>{{ i.subtotal |floatformat:2|intcomma }}</td>
+                                    <td>{{ i.impuestototal |floatformat:2|intcomma }}</td>
+                                    <td>{{ i.preciofinaltotal |floatformat:2|intcomma }}</td>
+                                    <td>{{ i.estado }}</td>
+                                    <td style="font-size: 1.2em;">
+                                        {% if i.estado.pk == 2 %}
+                                            <a class="disabled" style="color:gray;" href="#" data-toogle="tooltip" data-placement="top" title="reimprimir"><i class="fa fa-print" aria-hidden="true"></i></a> &nbsp;
+                                            <a href="#" class="detalle_fact" data-toogle="tooltip" title="detalles" data-id="{% url 'vta_fact_detalle' i.referencia %}"><i class="fas fa-info-circle"></i></a> &nbsp;
+                                        {% else %}
+                                            <a href="{% url 'vta_facturacion' i.referencia %}" target="blank" data-toogle="tooltip" data-placement="top" title="reimprimir"><i class="fa fa-print" aria-hidden="true"></i></a> &nbsp;
+                                            <a href="#" class="detalle_fact" data-toogle="tooltip" title="detalles" data-id="{% url 'vta_fact_detalle' i.referencia %}"><i class="fas fa-info-circle"></i></a> &nbsp;
+                                            {% if user.is_staff %}
+                                                <a href="#" class="anular" data-id="{% url 'vta_fact_anular' i.referencia %}" data-toogle="tooltip" title="anular" style="text-decoration: none; color: red;">
+                                                    <i class="fa fa-ban" aria-hidden="true"></i>
+                                                </a>
+                                            {% endif %}
+                                        {% endif %}                        
+                                    </td>
+                                </tr>
+                            {% empty %}
+                                <tr><td colspan="7"><h2>Sin registros</h2></td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<input type="hidden" id="txthoy" value="{{ hoy }}">
+{% endblock contenido %}
+{% block extramodal %}
+<div class="modal fade" tabindex="-1" role="dialog" id="modal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content"></div>
+    </div>
+</div>
+{% endblock extramodal %}
+{% block extrascripts %}
+<script src="{% static 'vta/js/jquery.bootstrap.modal.forms.min.js' %}"></script>
+<script type="text/javascript">
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+      });
+    $(".detalle_fact").each(function () {
+        $(this).modalForm({formURL: $(this).data('id')});
+    });
+    //$(document).ready(function(){
+    var hoy=($('#txthoy').val()).toString();
+    var fecha = ($('#id_fecha').val()).toString();
+    if (hoy == fecha){
+        $(".anular").each(function(){ 
+            $(this).modalForm({formURL: $(this).data('id')}); 
+        });
+    } else {
+        $(".anular").prop('disabled','true');
+        $(".anular").prop('style','color:gray;');
+    }
+    //});
+</script>
+{% endblock extrascripts %}

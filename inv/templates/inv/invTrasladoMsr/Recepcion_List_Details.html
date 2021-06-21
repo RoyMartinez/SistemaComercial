@@ -1,0 +1,24 @@
+{% load static %} 
+{% for i in recepciones %}
+<tr>
+    <td>{{ i.referencia }}</td>
+    <td>{{ i.sucursal }}</td>
+    <td>
+        {% if i.estado.id == 5 %}
+            <a role="button" class="btn btn-sm btn-success" href="{% url 'TrasladoRecepcion' i.referencia %}">
+                <i class="fas fa-object-group"></i>&nbsp; Recepcionar
+            </a>
+        {% elif i.estado.id == 1 %}
+            <span style="color: green;"><strong>Revisado</strong></span>
+            <a role="button" class="btn btn-sm btn-success" href="{% url 'TrasladoRecepcion' i.referencia %}">
+                <i class="fas fa-object-group"></i>&nbsp; Detalles
+            </a>            
+            <a role="button" class="btn btn-info btn-sm" target="_blank"   href="{% url 'TrasladoMsr_Imprimir' i.referencia %}">
+                <i class="fas fa-print"></i>&nbsp; Imprimir
+            </a>
+        {% endif %}
+    </td>
+</tr>
+{% empty %}
+    <tr><td colspan="6"><h3>No se encontraron registros</h3></td></tr>
+{% endfor %}

@@ -1,0 +1,189 @@
+{% extends 'inv/invBase.html' %}
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block extracss %}
+    <link rel="stylesheet" href="{% static 'inv/css/cabecera.css' %}">
+    <link rel="stylesheet" href="{% static 'fenimarket/vendor/datatables/dataTables.bootstrap4.min.css' %}">
+{% endblock extracss %}
+{% block contenido %}
+<div class="row">
+    <div class="col">
+        <div class="card py-3 border-left-primary">
+            <a href="#collapseCardExample" class="d-block card-header py-3" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="collapseCardExample">
+                <h6 class="m-0 font-weight-bold text-primary">Traslado {{ Traslado.referencia }}</h6>
+            </a>
+            <div class="collapse show" id="collapseCardExample">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="input-group col-md-3">
+                            <div class="input-group-prepend">
+                                <button class="btn btn-outline-primary" type="button" id="btn_cliente" data-toggle="modal" data-target="#modalcliente" style="z-index:0;">
+                                    <i class="fas fa-asterisk" aria-hidden="true"></i> Referencia
+                                </button>
+                            </div>
+                            <input readonly type="text" class="form-control" value="{{ Traslado.referencia }}" > 
+                        </div>
+                        <div class="input-group col-md-3">
+                            <div class="input-group-prepend">
+                                <button class="btn btn-outline-primary" type="button" id="btn_cliente" data-toggle="modal" data-target="#modalcliente" style="z-index:0;">
+                                    <i class="fab fa-etsy" aria-hidden="true"></i> Estado
+                                </button>
+                            </div>
+                            <input readonly type="text" class="form-control" value="{{ Traslado.estado }}" > 
+                        </div>
+                        <div class="input-group col-md-3">
+                            <div class="input-group-prepend">
+                                <button class="btn btn-outline-primary" type="button" id="btn_cliente" data-toggle="modal" data-target="#modalcliente" style="z-index:0;">
+                                    <i class="far fa-calendar-plus" aria-hidden="true"></i> Creacion
+                                </button>
+                            </div>
+                            <input readonly type="text" class="form-control" value="{{ Traslado.fecha|date:'Y-m-d h:i a' }}" > 
+                        </div>
+                        <div class="input-group col-md-3">
+                            <div class="input-group-prepend">
+                                <button class="btn btn-outline-primary" type="button" id="btn_cliente" data-toggle="modal" data-target="#modalcliente" style="z-index:0;">
+                                    <i class="fas fa-truck-moving" aria-hidden="true"></i> Destino
+                                </button>
+                            </div>
+                            <input readonly type="text" class="form-control" value="{{ Traslado.sucursalD }}" > 
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="input-group col-md-12">
+                            <div class="input-group-prepend">
+                                <button class="btn btn-outline-primary" type="button" id="btn_cliente" data-toggle="modal" data-target="#modalcliente" style="z-index:0;">
+                                    <i class="fas fa-file-signature" aria-hidden="true"></i> Nota
+                                </button>
+                            </div>
+                            <input readonly type="text" class="form-control" value="{{ Traslado.nota }}" > 
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer text-muted">
+                    <a role="button" class="btn btn-info btn-sm" target="_blank"  href="{% url 'TrasladoMsr_Imprimir' Traslado.referencia %}">
+                        <i class="fas fa-print"></i>&nbsp;Imprimir
+                    </a>      
+                    {% if Traslado.estado.id != 1 %}
+                    <a role="button" class="btn btn-sm btn-danger" href="{% url 'RecepcionFinalizar' Traslado.referencia %}">
+                        <i class="far fa-check-circle"></i>&nbsp;Ingresar
+                    </a>                     
+                    {% endif%}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<br>
+{% if messages %}
+    {% for i in messages %}
+        <div class="alert alert-{{ i.tags }}">{{ i }}</div>
+    {% endfor %}
+{% endif %}
+<div class="row">
+    <div class="col">
+        <div class="card py-3 border-left-primary">
+            <a href="#collapseCardExample2" class="d-block card-header py-3" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="collapseCardExample">
+                <h6 class="m-0 font-weight-bold text-primary">Detalle</h6>
+            </a>
+            <div class="collapse show" id="collapseCardExample2">
+                <div class="card-body">
+                        <table class="table table-sm table-bordered" id="Pantalla-table">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th>Desde</th>
+                                    <th>Hacia</th>                                    
+                                    <th>Item</th>                                    
+                                    <th>Unidades</th>
+                                    <th>Recepcionado</th>
+                                    <!-- <th>Estado</th>                                         -->
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for i in lineas %}
+                                    <tr>
+                                        <td>{{ i.bodegaO }}</td>
+                                        <td>{{ i.bodegaD }}</td>
+                                        <td>{{ i.item }}</td>
+                                        <td>{{ i.cantidad }}</td>
+                                        {% if Traslado.estado.id != 1 %}                     
+                                            <td>
+                                                <input id="{{ i.pk }}" type="number" class="form-control form-control-sm devolver" step="any" value="{{ i.recepcionado }}">
+                                            </td>
+                                        {% else %}
+                                            <td>{{i.recepcionado}}</td>
+                                        {% endif%}
+                                        <!-- <td>
+                                            {% if Traslado.estado.id != 1 %}     
+                                                {% if i.estado.id == 1 %}<!-- Aprobado -->
+                                                    <span  style="color:green;"><strong>Revisado</strong></span>
+                                                {% else %}
+                                                    <a role="button" class="btn btn-sm btn-success" href="{% url 'TrasladoMsr_Aprobacion' i.referencia.referencia i.bodegaO.id_bodega i.bodegaD.id_bodega i.item.id_n4 1 %}">
+                                                        <i class="fas fa-object-group"></i>&nbsp; Revisado
+                                                    </a>
+                                                {% endif %}
+                                            {% else %}
+                                                <span  style="color:green;"><strong>Revisado</strong></span>
+                                            {% endif%}
+                                        </td> -->
+                                    </tr>
+                                {% empty %}
+                                    <tr><td colspan="6"><h3>No se encontraron registros</h3></td></tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                </div>
+                <div class="card-footer text-muted">
+                    <a role="button" class="btn btn-secondary btn-sm"  href="{% url 'TrasladoMsr_Recepcion' %}">
+                        <i class="fas fa-reply"></i>&nbsp;Volver a la lista
+                    </a>                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock contenido %}
+{% block extramodal %}
+    <div class="modal fade" id="modal-Pantalla">
+        <div class="modal-dialog">
+            <div class="modal-content"></div>
+        </div>
+    </div>
+{% endblock extramodal %}
+{% block extrascripts %}
+    <!-- <script src="{% static 'inv/js/modal.js' %}"></script> -->
+    <script>
+        $('.id_bodegaD').val('ESDE');
+        $('.id_bodegaD').hide();
+        $('.td-costo').val('0');
+        $('.td-costo').hide();
+
+        $('.devolver').on('change', function(){
+            console.log(this.id); /* Paso el id de la tabla  */
+            console.log(this.value); /* paso el valor a actualizar */
+            var request =$.ajax({type:"GET", 
+            url: "{% url 'Actualiza_Recepcion' %}", 
+            data: {"id":this.id,"value":this.value},});
+        });
+    </script>
+    
+    
+    <script>    
+        //Script que bloquea los tipos number
+        jQuery('input[type=number]').keypress(function(tecla){
+            // console.log(tecla.charCode);
+            // console.log(this.value.length)
+            //46 = .
+            //45 = -
+            //se ponen las teclas que no se admiten solo admitir numeros y la primera son los numeros los otros son la e y el punto
+            if((tecla.charCode < 48 || tecla.charCode > 57) && tecla.charCode != 46){
+                return false;
+            }
+            var regex = /^[0-9]{0,7}$|^[0-9]{0,7}.{0,1}[0-9]{0,1}$/; // number with 2 decimal places
+            if (!regex.test(this.value)) {
+                return false;
+            }
+        });
+    </script>
+{% endblock extrascripts %}

@@ -1,0 +1,226 @@
+{% extends 'vta/base_vta.html' %}
+{% load static %}
+{% load humanize %}
+{% block extracss %}
+    <style type="text/css">
+        #txt_total{ text-align: right; }
+        .delete{ text-decoration: none; color: red; }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.css" />
+{% endblock extracss %}
+{% block contenido %}
+{% if messages %}
+    {% for i in messages %}
+        <div class="alert alert-danger"><i class="fas fa-exclamation-circle"></i> {{ i }}</div>
+    {% endfor %}
+{% endif %}
+<div class="row">
+    <div class="col">
+        <form method="POST" autocomplete="off" id="form_fact">
+            {% csrf_token %}
+            <div class="card border-left-success shadow h-100 py-2">
+                <a href="#collapseCardExample" class="d-block card-header py-3" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="collapseCardExample">
+                    <h6 class="m-0 font-weight-bold text-primary">Nuevo ajuste por incentivo</h6>
+                </a>
+                <div class="collapse show" id="collapseCardExample">
+                    <div class="card-body">
+                        <div class="input-group mb-3">
+                            <div class="custom-control custom-radio custom-control-inline">
+                                <input type="radio" id="customRadioInline2" name="ajuste" value="Salida" class="custom-control-input" checked>
+                                <label class="custom-control-label" for="customRadioInline2" title="Consumo de incentivo">
+                                    Salida por ajuste
+                                </label>
+                            </div>
+                            <div class="custom-control custom-radio custom-control-inline">
+                                <input type="radio" id="customRadioInline1" name="ajuste" value="Entrada" class="custom-control-input">
+                                <label class="custom-control-label" for="customRadioInline1" title="Asignar saldo un cliente">
+                                    Entrada por ajuste
+                                </label>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <button class="btn btn-outline-primary" type="button" style="z-index:0;">
+                                    <i class="fa fa-user" aria-hidden="true"></i> Cliente
+                                </button>
+                            </div>
+                            <select class="form-control" data-live-search="true" id="id_cliente" name="cliente" style="z-index:0;" required>
+                                <option value="" selected>Seleccionar cliente</option>
+                                {% for i in cliente %}
+                                    <option value="{{ i.pk }}">{{ i.pk }} | {{ i }}</option>
+                                {% endfor %}
+                            </select>
+                            <div class="input-group-append">
+                                <span class="input-group-text">Disponible:</span>
+                                <span class="input-group-text" id="txtsaldo">0.00</span>
+                              </div>
+                        </div>
+                        <!-- Producto -->
+                        <div id="div-pdto" class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <button class="btn btn-outline-primary" type="button" style="z-index: 0;">
+                                    <i class="fa fa-barcode" aria-hidden="true"></i> Producto
+                                </button>
+                            </div>
+                            <select class="form-control" data-live-search="true" id="txt_producto" style="z-index:0;">
+                                <option value="" selected></option>
+                                {% for i in articulos %}
+                                    <option value="{{ i.item.codbarra }}">{{ i.item }}</option>
+                                {% endfor %}
+                            </select> 
+                            <div class="input-group-append">
+                                <button type="button" id="search-btn" class="btn btn-outline-primary">
+                                  <i class="fa fa-chevron-circle-right" aria-hidden="true"></i>
+                                </button>
+                            </div>                   
+                        </div>
+                        <!-- Cantidad en plata -->
+                        <div id="div-cantidad" style="visibility: hidden;" class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <button class="btn btn-outline-primary" type="button" id="btn_item" style="z-index: 0;">
+                                    <i class="fas fa-coins"></i>&nbsp;Cantidad
+                                </button>
+                            </div>
+                            <input type="number" class="form-control" step="any" min="1" max="9999" id="txt_dinero" style="z-index:0;"> 
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-4"></div>
+                            <div class="form-group col-md-4"></div>
+                            <div class="form-group col-md-4">
+                                <label for="txt_total">&nbsp;&nbsp; Total C$:</label>
+                                <input type="text" name="monto" class="form-control" id="txt_total" value="{{ subtotal.suma|floatformat:2 }}" readonly>
+                            </div>
+                        </div>
+                        <div id="insuficiente" style="color:red; display: none;">
+                            <small>** Saldo insuficiente para finalizar la facturaci&oacute;n. </small>
+                        </div>
+                    </div> <!-- Fin del cardbody-->
+                    <input id="txtcredito" type="hidden" value="{{ cliente2.saldo }}">
+                    <input id="txtlimite" type="hidden" value="{{ cliente2.limite_credito }}">
+                    <div class="card-footer text-muted">
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-outline-primary" name="submit_nuevo">Nuevo</button>
+                            <button type="submit" id='btn_facturar' class="btn btn-outline-danger">Grabar</button>
+                        </div> 
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="col">
+        <div class="card border-left-success shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Detalle</div>
+                    </div>
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th scope="col">C&oacute;digo</th>
+                                <th scope="col">Bodega</th>
+                                <th scope="col">Cant</th>
+                                <th scope="col">Total</th>
+                                <th scope="col">Supr</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbl_detalle">
+                            {% for i in detalle %}
+                                <tr>
+                                    <td>{{ i.articulo.pk }}</td>
+                                    <td>{{ i.bodega.pk }}</td>
+                                    <td>
+                                        <input id="{{ i.pk }}" class="form-control form-control-sm cant" style="width:4em;" type="number" value="{{ i.cantidad }}" min="1" step="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57 || event.charCode == 13;" onchange="multiplicar(this);">
+                                    </td>
+                                    <td>{{ i.factor|floatformat:2|intcomma }}</td>
+                                    <td>&nbsp;
+                                        <a href="{% url 'vta_quitar_item' i.pk %}" class="delete" title="Eliminar" data-placement="auto">
+                                            <i class="fa fa-trash" aria-hidden="true"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% empty %}
+                                <tr><td colspan="5"></td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock contenido %}
+{% block extramodal %} {% endblock extramodal %}
+{% block extrascripts %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
+<script type="text/javascript" src="{% static 'vta/js/incentivo.js' %}"></script>
+<script type="text/javascript">
+    var arreglo = [];
+    var auxiliar = $('#txt_total').val();
+    $('input[type=radio]').on('click',function(){
+        if (this.value ==  'Entrada'){            
+            $('#div-cantidad').css('visibility','visible');
+            $('#div-pdto').css('visibility','hidden');
+            $('#txt_total').val('0.00');
+            $('#tbl_detalle').css('visibility', 'hidden');
+            $('#txt_dinero').val('0.00');
+        } 
+        else{ //Si es una salida por ajuste
+            $('#div-cantidad').css('visibility','hidden');
+            $('#div-pdto').css('visibility','visible');
+            $('#tbl_detalle').css('visibility', 'visible');
+            $('#txt_total').val(auxiliar);
+        }
+    });
+// ************** Updates quantity at item details **************************
+    $('#id_cliente').on('change', function(){
+        var cedula = this.value;
+        var request = $.ajax({
+            type:"GET",
+            url: "{% url 'vta_ajax_cliente' 989 %}",
+            data: {"cedula":cedula,},
+        });
+        request.done(function(response){
+            $('#txtsaldo').html(response.incentivo);
+        });
+    });
+
+    $('#search-btn').on('click', function(){
+        var producto = $('#txt_producto').val();
+        var request = $.ajax({
+            type:"GET",
+            url:"{% url 'mk_producto' 989 %}",
+            data:{"producto":producto,},
+        });
+        request.done(function(respuesta){
+            console.log('Todo esta bien');
+            $('#tbl_detalle').html(respuesta.tabla);
+            $('#txt_total').val((respuesta.subtotal).toFixed(2));
+        });
+        $('#txt_producto').val('default').selectpicker('refresh');
+    });
+
+    function multiplicar(x){
+        if (x.value <= 0) {
+            alert('No se admiten numeros negativos ni valores en cero');
+            x.value = 1;
+        } else{
+            var lista = [x.id, x.value]
+            var request =$.ajax({type:"GET", 
+                url: "{% url 'vta_ajax_updateitem' 989 %}", 
+                data: {"cantidad": lista.toString()}
+                });
+            request.done(function(response){
+                if (response.excedente){
+                    alert('Cantidad excedida')
+                    x.value = 1;
+                }
+                $('#tbl_detalle').html(response.tabla);
+                $('#txt_total').val(response.subtotal);  
+                auxiliar = response.subtotal;
+            });  
+        }
+    }
+</script>
+{% endblock extrascripts %}

@@ -1,0 +1,70 @@
+/* Script CSS para darle estilos al voucher de facturacion */
+/* reset */
+*
+{
+    border: 0;
+    box-sizing: content-box;
+    color: inherit;
+    font-family: inherit;
+    font-size: inherit;
+    font-style: inherit;
+    font-weight: inherit;
+    line-height: inherit;
+    list-style: none;
+    margin: 0;
+    padding: 2px;
+    text-decoration: none;
+    vertical-align: top;
+}
+html { 
+    font-family: 'Ubuntu Mono', monospace;
+    font-size: 14px;
+    /*font: 13px 'Open Sans', sans-serif; */
+    overflow: auto; 
+    padding: 0.2in; 
+}
+
+html { 
+    background: #999; 
+    cursor: default; 
+}
+
+body { 
+    box-sizing: border-box; 
+    /*height: 11in; */
+    margin: 0 auto; 
+    overflow: hidden; 
+    padding: 0.2in; 
+    width: 3in; 
+}
+
+body { 
+    background: #FFF; 
+    border-radius: 1px; 
+    box-shadow: 0 0 1in -0.25in rgba(0, 0, 0, 0.5); 
+}
+p {
+    text-align: center;
+}
+h1 {
+    text-align: center;
+    font-size: 16px;
+    font-weight: bold;    
+}
+table {text-align:left;}
+
+.resumen{
+    text-align: right; 
+    font-weight: bold;
+}
+.detalle{
+    text-align: right;
+}
+
+@media print {
+    * { -webkit-print-color-adjust: exact; }
+    html { background: none; padding: 0; }
+    body { box-shadow: none; margin: 0; }
+}
+
+@page { margin: 0; }

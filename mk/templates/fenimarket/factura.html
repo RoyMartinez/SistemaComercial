@@ -1,0 +1,189 @@
+{% extends 'fenimarket/mk_base.html' %}
+{% load static %}
+{% block extracss %}
+<style type="text/css">
+  [type=number]{
+    text-align: right;
+  }
+</style>
+{% endblock extracss %}
+{% block contenido %}
+<div class="row">
+  <div class="col-6">
+    <form method="POST" autocomplete="off" target="_blank">
+      {% csrf_token %}
+      <div class="card shadow">
+        <a href="#collapseCardExample" class="d-block card-header py-3" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="collapseCardExample">
+          <h6 class="m-0 font-weight-bold text-primary">Nueva factura</h6>
+        </a>
+      <div class="collapse show" id="collapseCardExample">
+        <div class="card-body">
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <button class="btn btn-outline-primary" type="button" id="btn_cliente" data-toggle="modal" data-target="#modalcliente">
+                <i class="fa fa-user" aria-hidden="true"></i> Cliente
+              </button>
+            </div>
+            <input id="cliente_personalizado" type="text" class="form-control" placeholder="PARTICULAR / INDIVIDUAL" required>
+            <input type="hidden" name="cliente" id="cliente_oculto" required>
+          </div>
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <button class="btn btn-outline-primary" type="button" id="button-addon2">
+                <i class="fa fa-barcode" aria-hidden="true"></i> Producto
+              </button>
+            </div>
+            <input id="txt_producto" type="text" class="form-control" placeholder="">
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-4">
+              <label for="id_formapago">Pago:</label>
+              {{ form.formapago }}
+            </div>
+            <div class="form-group col-md-4">
+              <label for="id_descuentotal">Descuento:</label>
+              {{ form.descuentotal }}
+            </div>
+            <div class="form-group col-md-4">
+              <label for="txt_st">Subtotal:</label>
+              <input type="number" class="form-control form-control-sm" id="txt_st" value="{{ subtotal|floatformat:2 }}" readonly >
+              <label for="txt_iva">IVA:</label>
+              <input type="number" class="form-control form-control-sm" id="txt_iva" value="{{ iva|floatformat:2 }}" readonly>
+              <label for="txt_total">Total:</label>
+              <input type="number" class="form-control form-control-sm" id="txt_total" value="{{ total|floatformat:2 }}" readonly>
+            </div>
+          </div>
+        </div>
+        <div class="card-footer text-muted">
+          <div class="form-group">
+              <a href="{% url 'vta_quitar_item' 'todo' 'mk' %}" class="btn btn-outline-primary">Nuevo</a>
+              <button type="submit" id='btn_facturar' class="btn btn-outline-danger">Grabar</button>
+          </div> 
+        </div>
+      </div>
+      </div>
+    </form>
+  </div>
+  <div class="col-6">
+    <div class="card border-left-warning shadow h-100 py-2">
+      <div class="card-body">
+        <div class="row no-gutters align-items-center">
+          
+          <div class="col mr-2">
+            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Detalle</div>
+          </div>
+          <div class="col-auto">
+            <i class="fas fa-calendar fa-2x text-gray-300"></i>
+          </div>
+          <table class="table table-sm">
+              <thead>
+                <tr>
+                  <th scope="col">Descripci&oacute;n</th>
+                  <th scope="col">Cant</th>
+                  <th scope="col">Total</th>
+                  <th scope="col">Supr</th>
+                </tr>
+              </thead>
+              <tbody id="tbl_detalle">
+                {% for i in tempo %}
+                  <tr>
+                    <td>{{ i.articulo.descripcion }}</td>
+                    <td>{{ i.cantidad }}</td>
+                    <td>{{ i.factor|floatformat:2 }}</td>
+                    <td>
+                      &nbsp;
+                      <a href="#" class="delete" style="text-decoration: none; color: red;" data-toggle="tooltip" title="Eliminar" data-placement="auto" data-id="{% url 'mk_del_item' i.pk  %}">
+                        <i class="fa fa-trash" aria-hidden="true"></i>
+                      </a>
+                    </td>
+                  </tr>
+                {% empty %}
+                <tr><td colspan="4"></td></tr>
+                {% endfor %}
+              </tbody>
+            </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock contenido %}
+{% block extramodal %}
+<!-- -------------------------------------------------------------------- -->
+<!--         Formulario modal para agregar clientes  USAR UN INCLUDE  -->
+<!-- -------------------------------------------------------------------- -->
+<div class="modal fade" id="modalcliente" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Selecci&oacute;n de cliente</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <input id="txtcedula" type ="text" class="form-control form-control-sm" autofocus>
+        <p>Selecccione el cliente, digite el c&oacute;digo o usa el carnet</p>
+        {% comment %} {{ form.cliente }} {% endcomment %}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-success" data-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- -------------------------------------------------------------------- -->
+<!--         OTRO MODAL  -->
+<!-- -------------------------------------------------------------------- -->
+<div class="modal fade" tabindex="-1" role="dialog" id="modal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content"></div>
+    </div>
+</div> 
+{% endblock extramodal %}
+{% block extrascripts %}
+  <script src="{% static 'vta/js/jquery.bootstrap.modal.forms.min.js' %}"></script>
+  <script type="text/javascript" src="{% static 'fenimarket/js/codigo.js' %}"></script>
+  <script type="text/javascript">
+    $(document).ready(function(){
+      $('#txtcedula').on('change', obtenerid);
+      // Evita el pegado del portapapeles
+      $('#txtcedula').on('paste',function(e){
+        e.preventDefault();
+      });
+      $('#btn_cliente').on('click', tiempo);
+      $(".delete").each(function () {
+        $(this).modalForm({formURL: $(this).data('id')});
+      })
+    });
+    // Captura el numero de cedula del modal de seleccion de clientes
+    function eliminar(x){
+      $(x).modalForm({formURL: $(x).data('id')});
+    }
+    /*Codigo */
+
+    $('#txt_producto').keypress(function(event){
+      var keycode = (event.keyCode ? event.keyCode : event.which);
+      if (keycode == '13'){
+        event.preventDefault();
+        var producto = $('#txt_producto').val();
+        var request = $.ajax({
+          type:"GET",
+          url:"{% url 'mk_producto' %}",
+          data:{"producto":producto,},
+        });
+        request.done(function(response){
+          $('#txt_producto').val('');
+          if (response.encontrado){
+            $('#tbl_detalle').html(response.tabla);
+            $('#txt_st').val(response.subtotal.toFixed(3));
+            $('#txt_iva').val(response.iva.toFixed(3));
+            $('#txt_total').val((response.iva + response.subtotal).toFixed(3));
+          }else{
+            alert('No se encontro el codigo');
+          }
+        });
+      }
+    });
+  </script>
+{% endblock extrascripts %}

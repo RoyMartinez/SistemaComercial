@@ -1,0 +1,84 @@
+{% load widget_tweaks %}
+<form method="post" action="" autocomplete="off">
+    {% csrf_token %}
+    <div class="modal-header">
+        <h3 class="modal-title">Nueva exoneraci&oacute;n</h3>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div style="color:red;" class="{% if form.non_field_errors %}invalid{% endif %} mb-2">
+            {% for error in form.non_field_errors %}
+                {{ error }}
+            {% endfor %}
+        </div>
+        <div class="form-group">
+            <label for="id_cliente" id="etiqueta">Cliente: </label>
+            <input type="hidden" id="id_cliente" name="cliente">
+            <div class="{% if form.cliente.errors %} invalid{% endif %}">
+                {% for error in form.cliente.errors %}
+                    <p class="help-block" style="color:red;">{{ error }}</p>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="form-group">
+            {{ form.rubro.label_tag }}
+            {% render_field form.rubro class="form-control" %}
+            <div class="{% if form.rubro.errors %} invalid{% endif %}">
+                {% for error in form.rubro.errors %}
+                    <p class="help-block" style="color:red;">{{ error }}</p>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-4">
+                {{ form.costo.label_tag }}
+                {% render_field form.costo class="form-control" %}
+                <div class="{% if form.costo.errors %} invalid{% endif %}">
+                    {% for error in form.costo.errors %}
+                        <p class="help-block" style="color:red;">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="form-group col-md-4">
+                {{ form.precio.label_tag }}
+                {% render_field form.precio class="form-control" %}
+                <div class="{% if form.precio.errors %} invalid{% endif %}">
+                    {% for error in form.precio.errors %}
+                        <p class="help-block" style="color:red;">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="form-group col-md-4">
+                {{ form.unidades.label_tag }}
+                {% render_field form.unidades class="form-control" %}
+                <div class="{% if form.unidades.errors %} invalid{% endif %}">
+                    {% for error in form.unidades.errors %}
+                        <p class="help-block" style="color:red;">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="submit-btn btn btn-outline-primary">
+            <i class="fas fa-save"></i>&nbsp;Guardar
+        </button>
+    </div>
+</form>
+{% block js %}
+<script type="text/javascript">
+    var a = document.querySelector("#id_cliente");
+    var b = document.querySelector("#etiqueta");
+    var cedula = document.querySelector('#id_identificacion').value;
+    var nombre_completo = document.querySelector('#id_nombres').value + ' ' + document.querySelector('#id_apellidos').value;
+    a.value = cedula;
+    b.innerHTML = 'Cliente: ' + nombre_completo; 
+    $('[type="number"]').on('change', function(){
+        if (this.value < 0){
+            this.value = 0;
+        }
+    });
+</script>
+{% endblock js %}

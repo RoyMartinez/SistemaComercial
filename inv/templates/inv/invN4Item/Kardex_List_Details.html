@@ -1,0 +1,339 @@
+<!-- por si no hay registros -->
+{% load humanize %}
+{% for f in kardex %}
+{% empty %}
+    <tr><td colspan="5"><h3>No hay Registros</h3></td></tr>
+{% endfor %}
+
+{% for i in fechas %}
+    <!-- Entradas -->
+    {% for j in kardex %}
+        {% if i == j.fecha %}
+            {% if j.tipotransaccion == 'EE' %}
+                <tr style="color:green;">
+                    <td>{{ j.fecha|date:"SHORT_DATE_FORMAT" }}</td>
+                    <td>{{ j.sucursal.siglas }}</td>
+                    <td>{{ j.bodega }}</td>
+                    <td style="color: blue;"><strong>{{ j.referencia }}</strong></td>
+                    <td>{{ j.tipotransaccion }}</td>
+                    <td>{{ j.entrada|floatformat:2|intcomma }}</td>
+                    <td>{{ j.salida|floatformat:2|intcomma }}</td>
+                    
+                    {% if filtro == 'Global'%}
+                        <td style="color: blue;"><strong>{{ j.existencia|floatformat:2|intcomma }}</strong></td> 
+                    {% elif filtro == 'Sucursal' %}
+                        <td style="color: blue;"><strong>{{ j.existenciasuc|floatformat:2|intcomma }}</strong></td>
+                    {% elif filtro == 'Bodega' %}
+                        <td style="color: blue;"><strong>{{ j.existenciabod|floatformat:2|intcomma }}</strong></td>   
+                    {% else %}
+                        <td></td>
+                    {% endif%}
+                    
+                    <td>{{ j.debe|floatformat:2|intcomma }}</td>
+                    <td>{{ j.haber|floatformat:2|intcomma }}</td>
+
+                    {% if filtro == 'Global'%}
+                        <td style="color: blue;"><strong>{{ j.saldo|floatformat:2|intcomma }}</strong></td> 
+                    {% elif filtro == 'Sucursal' %}
+                        <td style="color: blue;"><strong>{{ j.saldosuc|floatformat:2|intcomma }}</strong></td>
+                    {% elif filtro == 'Bodega' %}
+                        <td style="color: blue;"><strong>{{ j.saldobod|floatformat:2|intcomma }}</strong></td>   
+                    {% else %}
+                        <td></td>
+                    {% endif%}
+                    
+                    <td>{{ j.costounitario|floatformat:2|intcomma }}</td> 
+                </tr>
+            {% endif %}
+        {% endif %}
+    {% endfor %}
+    <!-- Ajuste de entradas por costo -->
+    {% for j in kardex %}
+        {% if i == j.fecha %}
+            {% if j.tipotransaccion == 'EC' %}
+                <tr style="color:olive;">
+                    <td>{{ j.fecha|date:"SHORT_DATE_FORMAT" }}</td>
+                    <td>{{ j.sucursal.siglas }}</td>
+                    <td>{{ j.bodega }}</td>
+                    <td style="color: blue;"><strong>{{ j.referencia }}</strong></td>
+                    <td>{{ j.tipotransaccion }}</td>
+                    <td>{{ j.entrada|floatformat:2|intcomma }}</td>
+                    <td>{{ j.salida|floatformat:2|intcomma }}</td>
+                    
+                    {% if filtro == 'Global'%}
+                        <td style="color: blue;"><strong>{{ j.existencia|floatformat:2|intcomma }}</strong></td> 
+                    {% elif filtro == 'Sucursal' %}
+                        <td style="color: blue;"><strong>{{ j.existenciasuc|floatformat:2|intcomma }}</strong></td>
+                    {% elif filtro == 'Bodega' %}
+                        <td style="color: blue;"><strong>{{ j.existenciabod|floatformat:2|intcomma }}</strong></td>   
+                    {% else %}
+                        <td></td>
+                    {% endif%}
+                    
+                    <td>{{ j.debe|floatformat:2|intcomma }}</td>
+                    <td>{{ j.haber|floatformat:2|intcomma }}</td>
+
+                    {% if filtro == 'Global'%}
+                        <td style="color: blue;"><strong>{{ j.saldo|floatformat:2|intcomma }}</strong></td> 
+                    {% elif filtro == 'Sucursal' %}
+                        <td style="color: blue;"><strong>{{ j.saldosuc|floatformat:2|intcomma }}</strong></td>
+                    {% elif filtro == 'Bodega' %}
+                        <td style="color: blue;"><strong>{{ j.saldobod|floatformat:2|intcomma }}</strong></td>   
+                    {% else %}
+                        <td></td>
+                    {% endif%}
+                    
+                    <td>{{ j.costounitario|floatformat:2|intcomma }}</td> 
+                </tr>
+            {% endif %}
+        {% endif %}
+    {% endfor %}
+    <!-- Ajuste de entradas sin costo -->
+    {% for j in kardex %}
+        {% if i == j.fecha %}
+            {% if j.tipotransaccion == 'EA' %}
+                <tr style="color:fuchsia;">
+                    <td>{{ j.fecha|date:"SHORT_DATE_FORMAT" }}</td>
+                    <td>{{ j.sucursal.siglas }}</td>
+                    <td>{{ j.bodega }}</td>
+                    <td style="color: blue;"><strong>{{ j.referencia }}</strong></td>
+                    <td>{{ j.tipotransaccion }}</td>
+                    <td>{{ j.entrada|floatformat:2|intcomma }}</td>
+                    <td>{{ j.salida|floatformat:2|intcomma }}</td>
+                    
+                    {% if filtro == 'Global'%}
+                        <td style="color: blue;"><strong>{{ j.existencia|floatformat:2|intcomma }}</strong></td> 
+                    {% elif filtro == 'Sucursal' %}
+                        <td style="color: blue;"><strong>{{ j.existenciasuc|floatformat:2|intcomma }}</strong></td>
+                    {% elif filtro == 'Bodega' %}
+                        <td style="color: blue;"><strong>{{ j.existenciabod|floatformat:2|intcomma }}</strong></td>   
+                    {% else %}
+                        <td></td>
+                    {% endif%}
+                    
+                    <td>{{ j.debe|floatformat:2|intcomma }}</td>
+                    <td>{{ j.haber|floatformat:2|intcomma }}</td>
+
+                    {% if filtro == 'Global'%}
+                        <td style="color: blue;"><strong>{{ j.saldo|floatformat:2|intcomma }}</strong></td> 
+                    {% elif filtro == 'Sucursal' %}
+                        <td style="color: blue;"><strong>{{ j.saldosuc|floatformat:2|intcomma }}</strong></td>
+                    {% elif filtro == 'Bodega' %}
+                        <td style="color: blue;"><strong>{{ j.saldobod|floatformat:2|intcomma }}</strong></td>   
+                    {% else %}
+                        <td></td>
+                    {% endif%}
+                    
+                    <td>{{ j.costounitario|floatformat:2|intcomma }}</td> 
+                </tr>
+            {% endif %}
+        {% endif %}
+    {% endfor %}
+
+    <!-- Entradas de Traslados -->
+    {% for j in kardex %}
+        {% if i == j.fecha %}
+            {% if j.tipotransaccion == 'ET' %}
+                <tr style="color:blue;">
+                    <td>{{ j.fecha|date:"SHORT_DATE_FORMAT" }}</td>
+                    <td>{{ j.sucursal.siglas }}</td>
+                    <td>{{ j.bodega }}</td>
+                    <td style="color: blue;"><strong>{{ j.referencia }}</strong></td>
+                    <td>{{ j.tipotransaccion }}</td>
+                    <td>{{ j.entrada|floatformat:2|intcomma }}</td>
+                    <td>{{ j.salida|floatformat:2|intcomma }}</td>
+                    
+                    {% if filtro == 'Global'%}
+                        <td style="color: blue;"><strong>{{ j.existencia|floatformat:2|intcomma }}</strong></td> 
+                    {% elif filtro == 'Sucursal' %}
+                        <td style="color: blue;"><strong>{{ j.existenciasuc|floatformat:2|intcomma }}</strong></td>
+                    {% elif filtro == 'Bodega' %}
+                        <td style="color: blue;"><strong>{{ j.existenciabod|floatformat:2|intcomma }}</strong></td>   
+                    {% else %}
+                        <td></td>
+                    {% endif%}
+                    
+                    <td>{{ j.debe|floatformat:2|intcomma }}</td>
+                    <td>{{ j.haber|floatformat:2|intcomma }}</td>
+
+                    {% if filtro == 'Global'%}
+                        <td style="color: blue;"><strong>{{ j.saldo|floatformat:2|intcomma }}</strong></td> 
+                    {% elif filtro == 'Sucursal' %}
+                        <td style="color: blue;"><strong>{{ j.saldosuc|floatformat:2|intcomma }}</strong></td>
+                    {% elif filtro == 'Bodega' %}
+                        <td style="color: blue;"><strong>{{ j.saldobod|floatformat:2|intcomma }}</strong></td>   
+                    {% else %}
+                        <td></td>
+                    {% endif%}
+                    
+                    <td>{{ j.costounitario|floatformat:2|intcomma }}</td> 
+                </tr>
+            {% endif %}
+        {% endif %}
+    {% endfor %}
+
+    <!-- Salidas de Traslados -->
+    {% for j in kardex %}
+        {% if i == j.fecha %}
+            {% if j.tipotransaccion == 'SC' %}
+                <tr style="color:blueviolet;">
+                    <td>{{ j.fecha|date:"SHORT_DATE_FORMAT" }}</td>
+                    <td>{{ j.sucursal.siglas }}</td>
+                    <td>{{ j.bodega }}</td>
+                    <td style="color: blue;"><strong>{{ j.referencia }}</strong></td>
+                    <td>{{ j.tipotransaccion }}</td>
+                    <td>{{ j.entrada|floatformat:2|intcomma }}</td>
+                    <td>{{ j.salida|floatformat:2|intcomma }}</td>
+                    
+                    {% if filtro == 'Global'%}
+                        <td style="color: blue;"><strong>{{ j.existencia|floatformat:2|intcomma }}</strong></td> 
+                    {% elif filtro == 'Sucursal' %}
+                        <td style="color: blue;"><strong>{{ j.existenciasuc|floatformat:2|intcomma }}</strong></td>
+                    {% elif filtro == 'Bodega' %}
+                        <td style="color: blue;"><strong>{{ j.existenciabod|floatformat:2|intcomma }}</strong></td>   
+                    {% else %}
+                        <td></td>
+                    {% endif%}
+                    
+                    <td>{{ j.debe|floatformat:2|intcomma }}</td>
+                    <td>{{ j.haber|floatformat:2|intcomma }}</td>
+
+                    {% if filtro == 'Global'%}
+                        <td style="color: blue;"><strong>{{ j.saldo|floatformat:2|intcomma }}</strong></td> 
+                    {% elif filtro == 'Sucursal' %}
+                        <td style="color: blue;"><strong>{{ j.saldosuc|floatformat:2|intcomma }}</strong></td>
+                    {% elif filtro == 'Bodega' %}
+                        <td style="color: blue;"><strong>{{ j.saldobod|floatformat:2|intcomma }}</strong></td>   
+                    {% else %}
+                        <td></td>
+                    {% endif%}
+                    
+                    <td>{{ j.costounitario|floatformat:2|intcomma }}</td> 
+                </tr>
+            {% endif %}
+        {% endif %}
+    {% endfor %}
+    <!-- Ajustes de Salidas con costo -->
+    {% for j in kardex %}
+        {% if i == j.fecha %}
+            {% if j.tipotransaccion == 'ST' %}
+                <tr style="color:teal;">
+                    <td>{{ j.fecha|date:"SHORT_DATE_FORMAT" }}</td>
+                    <td>{{ j.sucursal.siglas }}</td>
+                    <td>{{ j.bodega }}</td>
+                    <td style="color: blue;"><strong>{{ j.referencia }}</strong></td>
+                    <td>{{ j.tipotransaccion }}</td>
+                    <td>{{ j.entrada|floatformat:2|intcomma }}</td>
+                    <td>{{ j.salida|floatformat:2|intcomma }}</td>
+                    
+                    {% if filtro == 'Global'%}
+                        <td style="color: blue;"><strong>{{ j.existencia|floatformat:2|intcomma }}</strong></td> 
+                    {% elif filtro == 'Sucursal' %}
+                        <td style="color: blue;"><strong>{{ j.existenciasuc|floatformat:2|intcomma }}</strong></td>
+                    {% elif filtro == 'Bodega' %}
+                        <td style="color: blue;"><strong>{{ j.existenciabod|floatformat:2|intcomma }}</strong></td>   
+                    {% else %}
+                        <td></td>
+                    {% endif%}
+                    
+                    <td>{{ j.debe|floatformat:2|intcomma }}</td>
+                    <td>{{ j.haber|floatformat:2|intcomma }}</td>
+
+                    {% if filtro == 'Global'%}
+                        <td style="color: blue;"><strong>{{ j.saldo|floatformat:2|intcomma }}</strong></td> 
+                    {% elif filtro == 'Sucursal' %}
+                        <td style="color: blue;"><strong>{{ j.saldosuc|floatformat:2|intcomma }}</strong></td>
+                    {% elif filtro == 'Bodega' %}
+                        <td style="color: blue;"><strong>{{ j.saldobod|floatformat:2|intcomma }}</strong></td>   
+                    {% else %}
+                        <td></td>
+                    {% endif%}
+                    
+                    <td>{{ j.costounitario|floatformat:2|intcomma }}</td> 
+                </tr>
+            {% endif %}
+        {% endif %}
+    {% endfor %}
+    <!-- Ajustes de Salidas sin costo -->
+    {% for j in kardex %}
+        {% if i == j.fecha %}
+            {% if j.tipotransaccion == 'SA' %}
+                <tr style="color:brown;">
+                    <td>{{ j.fecha|date:"SHORT_DATE_FORMAT" }}</td>
+                    <td>{{ j.sucursal.siglas }}</td>
+                    <td>{{ j.bodega }}</td>
+                    <td style="color: blue;"><strong>{{ j.referencia }}</strong></td>
+                    <td>{{ j.tipotransaccion }}</td>
+                    <td>{{ j.entrada|floatformat:2|intcomma }}</td>
+                    <td>{{ j.salida|floatformat:2|intcomma }}</td>
+                    
+                    {% if filtro == 'Global'%}
+                        <td style="color: blue;"><strong>{{ j.existencia|floatformat:2|intcomma }}</strong></td> 
+                    {% elif filtro == 'Sucursal' %}
+                        <td style="color: blue;"><strong>{{ j.existenciasuc|floatformat:2|intcomma }}</strong></td>
+                    {% elif filtro == 'Bodega' %}
+                        <td style="color: blue;"><strong>{{ j.existenciabod|floatformat:2|intcomma }}</strong></td>   
+                    {% else %}
+                        <td></td>
+                    {% endif%}
+                    
+                    <td>{{ j.debe|floatformat:2|intcomma }}</td>
+                    <td>{{ j.haber|floatformat:2|intcomma }}</td>
+
+                    {% if filtro == 'Global'%}
+                        <td style="color: blue;"><strong>{{ j.saldo|floatformat:2|intcomma }}</strong></td> 
+                    {% elif filtro == 'Sucursal' %}
+                        <td style="color: blue;"><strong>{{ j.saldosuc|floatformat:2|intcomma }}</strong></td>
+                    {% elif filtro == 'Bodega' %}
+                        <td style="color: blue;"><strong>{{ j.saldobod|floatformat:2|intcomma }}</strong></td>   
+                    {% else %}
+                        <td></td>
+                    {% endif%}
+                    
+                    <td>{{ j.costounitario|floatformat:2|intcomma }}</td> 
+                </tr>
+            {% endif %}
+        {% endif %}
+    {% endfor %}
+    <!-- Ventas -->
+    {% for j in kardex %}
+        {% if i == j.fecha %}
+            {% if j.tipotransaccion == 'SS' %}
+                <tr style="color: red;">
+                    <td>{{ j.fecha|date:"SHORT_DATE_FORMAT" }}</td>
+                    <td>{{ j.sucursal.siglas }}</td>
+                    <td>{{ j.bodega }}</td>
+                    <td style="color: blue;"><strong>{{ j.referencia }}</strong></td>
+                    <td>{{ j.tipotransaccion }}</td>
+                    <td>{{ j.entrada|floatformat:2|intcomma }}</td>
+                    <td>{{ j.salida|floatformat:2|intcomma }}</td>
+                    
+                    {% if filtro == 'Global'%}
+                        <td style="color: blue;"><strong>{{ j.existencia|floatformat:2|intcomma }}</strong></td> 
+                    {% elif filtro == 'Sucursal' %}
+                        <td style="color: blue;"><strong>{{ j.existenciasuc|floatformat:2|intcomma }}</strong></td>
+                    {% elif filtro == 'Bodega' %}
+                        <td style="color: blue;"><strong>{{ j.existenciabod|floatformat:2|intcomma }}</strong></td>   
+                    {% else %}
+                        <td></td>
+                    {% endif%}
+                    
+                    <td>{{ j.debe|floatformat:2|intcomma }}</td>
+                    <td>{{ j.haber|floatformat:2|intcomma }}</td>
+
+                    {% if filtro == 'Global'%}
+                        <td style="color: blue;"><strong>{{ j.saldo|floatformat:2|intcomma }}</strong></td> 
+                    {% elif filtro == 'Sucursal' %}
+                        <td style="color: blue;"><strong>{{ j.saldosuc|floatformat:2|intcomma }}</strong></td>
+                    {% elif filtro == 'Bodega' %}
+                        <td style="color: blue;"><strong>{{ j.saldobod|floatformat:2|intcomma }}</strong></td>   
+                    {% else %}
+                        <td></td>
+                    {% endif%}
+                    
+                    <td>{{ j.costounitario|floatformat:2|intcomma }}</td> 
+                </tr>
+            {% endif %}
+        {% endif %}
+    {% endfor %}
+{% endfor %}

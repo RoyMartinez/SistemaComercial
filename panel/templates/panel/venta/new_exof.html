@@ -1,0 +1,60 @@
+{% load widget_tweaks %}
+<form method="post" action="" autocomplete="off">
+    {% csrf_token %}
+    <div class="modal-header">
+        <h3 class="modal-title">New ExoFormula</h3>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="{% if form.non_field_errors %}invalid{% endif %} mb-2">
+            {% for error in form.non_field_errors %}
+                {{ error }}
+            {% endfor %}
+        </div>
+        <div class="form-group">
+            {{ form.nombre.label_tag }}
+            {% render_field form.nombre class="form-control" placeholder=form.label %}
+            <div class="{% if form.nombre.errors %} invalid{% endif %}">
+                {% for error in form.nombre.errors %}
+                    <p class="help-block" style="color:red;">{{ error }}</p>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-4">
+                {{ form.unidades.label_tag }}
+                {% render_field form.unidades  class="form-control" %}
+                <div class="{% if form.unidades.errors %} invalid{% endif %}">
+                    {% for error in form.unidades.errors %}
+                        <p class="help-block" style="color:red;">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="form-group col-md-4">
+                {{ form.costo.label_tag }}
+                {% render_field form.costo class="form-control" %}
+                <div class="{% if form.costo.errors %} invalid{% endif %}">
+                    {% for error in form.costo.errors %}
+                        <p class="help-block" style="color:red;">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="form-group col-md-4">
+                {{ form.precio.label_tag }}
+                {% render_field form.precio class="form-control" %}
+                <div class="{% if form.precio.errors %} invalid{% endif %}">
+                    {% for error in form.precio.errors %}
+                        <p class="help-block" style="color:red;">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="submit-btn btn btn-outline-primary">
+            <i class="fas fa-save"></i> Save
+        </button>
+    </div>
+</form>

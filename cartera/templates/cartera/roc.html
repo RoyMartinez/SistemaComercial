@@ -1,0 +1,177 @@
+{% extends 'cartera/base_cart.html' %}
+{% load static %}
+{% load humanize %}
+{% block extracss %}
+    <style type="text/css">
+        .form-control-sm{
+            text-align: right;
+        }
+    </style>
+    <link rel="stylesheet" href="{% static 'vta/estilos/BsMultiSelect.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.css" />
+{% endblock extracss %}
+{% block contenido %}
+{% if messages %}
+    {% for i in messages %}
+        <div class="alert alert-{{ i.tags }}">{{ i }}</div>
+    {% endfor %}
+{% endif %}
+<form method="POST" autocomplete="off" id="form_fact">
+    {% csrf_token %}
+<div class="row">
+    <div class="col">
+        <div class="card border-left-purple shadow h-100 py-2">
+            <a href="#collapseCardExample" class="d-block card-header py-3" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="collapseCardExample">
+                <h6 class="m-0 font-weight-bold text-primary">Nuevo Recibo de Caja</h6>
+            </a>
+            <div class="collapse show" id="collapseCardExample">
+                <div class="card-body">
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" id="customRadioInline1" name="tipo" value="RC" class="custom-control-input" checked>
+                        <label class="custom-control-label" for="customRadioInline1" title="Es un soporte de contabilidad en el cual constan los ingresos en efectivo o en cheque recaudados por la empresa">
+                            Recibo de Caja
+                        </label>
+                    </div>
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" id="customRadioInline2" name="tipo" value="ND" class="custom-control-input">
+                        <label class="custom-control-label" for="customRadioInline2" title="La nota de débito es un documento que se le envía al comprador o cliente para avisarle de que ha aumentado la cantidad de su deuda por algún motivo.">
+                            Nota de D&eacute;bito
+                        </label>
+                    </div>
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" id="customRadioInline3" name="tipo" value="NC" class="custom-control-input">
+                        <label class="custom-control-label" for="customRadioInline3" title="Una nota de crédito es un documento que puede usarse para anular una factura o para compensar algún monto incluido en ésta">
+                            Nota de Cr&eacute;dito
+                        </label>
+                    </div>
+                    <hr>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <button class="btn btn-outline-primary" type="button" style="z-index:0;">
+                                <i class="fa fa-user" aria-hidden="true"></i> Recib&iacute; de:
+                            </button>
+                        </div>
+                        <select class="form-control" data-live-search="true" id="id_cliente" name="cliente" style="z-index:0;" required>
+                            <option value="" selected>Seleccionar cliente</option>
+                            {% for i in cliente %}
+                                <option value="{{ i.pk }}" {% if i.pk == c.pk %} selected {% endif %} >
+                                    {{ i.pk }} | {{ i }} 
+                                </option>
+                            {% endfor %}
+                        </select>
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-primary" name="btn_buscar" type="submit">
+                                <i class="fas fa-binoculars"></i>&nbsp;Calcular
+                            </button>
+                        </div>
+                    </div>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <button class="btn btn-outline-primary" type="button"  style="z-index: 0;">
+                                <i class="fas fa-coins"></i> La cantidad de:
+                            </button>
+                        </div>
+                        <input id="txtcantidad" type="number" name="cantidad" step="any" min="0" value="0.0" class="form-control" required>                        
+                    </div>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <button class="btn btn-outline-primary" type="button"  style="z-index: 0;">
+                                <i class="fas fa-keyboard"></i> Por concepto:
+                            </button>
+                        </div>
+                        <textarea name="concepto" id="id_concepto" class="form-control" rows="3">Abono</textarea>                 
+                    </div>
+                </div>
+                <div class="card-footer text-muted">
+                    <div class="form-group">
+                        <a role="button" class="btn btn-outline-info" href="{% url 'cartera_recibos' %}">
+                            <i class="fas fa-plus"></i>&nbsp;Nuevo
+                        </a>
+                        <button type="submit" name='btn_grabar' class="btn btn-outline-danger">
+                            <i class="fas fa-save"></i>&nbsp;Grabar
+                        </button>
+                    </div> 
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="card border-left-purple shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Estado de cuenta</div>
+                    <div class="custom-control custom-control-inline">
+                        <label for="inicio">Inicio:&nbsp;</label>
+                        <input type="date" name="inicio" class="form-control form-control-sm" style="width:11em;" id="inicio" value="{{ fecha1 }}">
+                        &nbsp;&nbsp;&nbsp;
+                        <label for="fin">Fin:&nbsp;</label>
+                        <input type="date" name="fin" class="form-control form-control-sm" style="width:11em;" id="fin" value="{{ fecha2 }}">
+                        &nbsp;&nbsp;
+                        <button name="btn_filtrar" type="submit" class="btn btn-sm btn-warning">
+                            <i class="fas fa-filter"></i>
+                        </button>&nbsp;
+                    </div>
+                    <br><br><br>
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th scope="col">Fecha</th>
+                                <th scope="col">Ref.</th>
+                                <th scope="col">Debe</th>
+                                <th scope="col">Haber</th>
+                                <th scope="col">Disponible</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbl_detalle">
+                            {% for i in cuenta %}
+                                <tr>
+                                    <td>{{ i.fecha|date:"SHORT_DATE_FORMAT" }}</td>
+                                    <td>{{ i.referencia }}</td>
+                                    <td>{{ i.debe }}</td>
+                                    <td>{{ i.haber }}</td>
+                                    <td>{{ i.saldo }}</td>
+                                </tr>
+                            {% empty %}
+                                <tr><td colspan="5">No records</td></tr>    
+                            {% endfor %}
+                            <tr><td colspan="5"></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div> <!-- End of cardBody-->
+            <div class="card-footer text-muted">
+                <div class="custom-control custom-control-inline">
+                    <label for="limite">L&iacute;mite:&nbsp;</label>&nbsp;
+                    <input type="text" readonly class="form-control form-control" style="width:7em;" id="limite" value="{{ limite|floatformat:2|intcomma }}">
+                    <label for="saldo" style="margin-left: 1em;">Disponible:&nbsp;</label>&nbsp;
+                    <input type="text" readonly class="form-control form-control" style="width:7em;" id="saldo" value="{{ saldo|floatformat:2|intcomma }}">
+                    &nbsp;&nbsp;&nbsp;
+                    <button type="submit" name='btn_print' class="btn btn-dark">
+                        <i class="fas fa-print"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</form>
+{% endblock contenido %}
+{% block extrascripts %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
+<script type="text/javascript">
+    $("#id_cliente").selectpicker();
+    $('input[type=radio]').on('click',function(){
+        switch(this.value){
+            case 'RC':
+                $('h6').html('Nuevo Recibo de Caja');
+                break;
+            case 'ND':
+                $('h6').html('Nueva Nota de Debito');
+                break
+            case 'NC':
+                $('h6').html('Nueva Nota de Credito');
+                break
+        }
+    });
+</script>
+{% endblock extrascripts %}

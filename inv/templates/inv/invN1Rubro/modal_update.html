@@ -1,0 +1,58 @@
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+<form method="POST" data-url="{% url 'N1Rubro_Editar2' form.instance.pk %}" class="update-form" autocomplete="off">
+    {% csrf_token %}
+    <div class="modal-header">
+        <h5 class="modal-title text-center">Editar Rubro</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="{% if form.non_field_errors %}invalid{% endif %} mb-2">
+            {% for error in form.non_field_errors %}
+                {{ error }}
+            {% endfor %}
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-12">
+                {{ form.id_n1.label_tag }}
+                {% render_field form.id_n1 class="form-control form-control-sm" %}
+                <div class="{% if form.id_n1.errors %} invalid{% endif %}">
+                    {% for error in form.id_n1.errors %}
+                        <p class="help-block" style="color:red;">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="form-group col-md-12">
+                {{ form.descripcion.label_tag }}
+                {% render_field form.descripcion class="form-control form-control-sm" %}
+                <div class="{% if form.descripcion.errors %} invalid{% endif %}">
+                    {% for error in form.descripcion.errors %}
+                        <p class="help-block" style="color:red;">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="form-group col-md-12">
+                {{ form.codigo_sac.label_tag }}
+                {% render_field form.codigo_sac class="form-control form-control-sm" %}
+                <div class="{% if form.codigo_sac.errors %} invalid{% endif %}">
+                    {% for error in form.codigo_sac.errors %}
+                        <p class="help-block" style="color:red;">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="submit-btn btn btn-primary" id="btnActualiza">
+            <i class="fas fa-plus"></i>&nbsp; Actualizar
+        </button>
+        <button type="button" class="submit-btn btn btn-danger" data-dismiss="modal" aria-label="close">
+            <i class="fa fa-times"></i>&nbsp; cancelar
+        </button>
+    </div>
+</form>
+<script type="text/javascript">
+    $('#id_id_n1').prop('readonly', true);
+</script>

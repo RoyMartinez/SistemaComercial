@@ -1,0 +1,60 @@
+{% load widget_tweaks %}
+<form method="post" autocomplete="off" action="">
+    {% csrf_token %}
+    <div class="modal-header">
+        <h3 class="modal-title">Nueva Familia</h3>
+    </div>
+        <div class="modal-body">
+            <div class="{% if form.non_field_errors %}invalid{% endif %} mb-2">
+                {% for error in form.non_field_errors %}
+                    {{ error }}
+                {% endfor %}
+            </div>
+            {% for field in form %}
+                <div class="form-group">
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {% render_field field class="form-control" %}
+                    <div class="{% if field.errors %} invalid{% endif %}">
+                        {% for error in field.errors %}
+                            <p class="help-block" style="color:red;">{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="submit-btn btn btn-primary" id="btnActualiza">
+                <i class="fa fa-plus"></i>&nbsp; Guardar
+            </button>
+            <button type="button" class="btn btn-danger" data-dismiss="modal" aria-label="close">
+                <i class="fa fa-times"></i>&nbsp; cancelar
+            </button>
+        </div>
+</form>
+
+<script type="text/javascript">
+
+    if ($('#id_id_n2').val()!=''){
+        $('.modal-title').html('Editar familia');
+        $('#btnActualiza').html('<i class="fas fa-pencil-alt"></i>&nbsp; Actualizar');
+        $('#id_codigo').prop('readonly',true);
+        $('#id_rubro').prop('disabled',true);
+    }
+    else{
+        $('.modal-title').html('Nueva familia');
+        $('#btnActualiza').html('<i class="fas fa-plus"></i>&nbsp; Crear');
+        $('#id_codigo').prop('readonly',false);
+        $('#id_rubro').prop('disabled',false);
+    }
+    $('#id_rubro').on('change',llave);
+    $('#id_codigo').on('keyup',llave);
+    $('#btnActualiza').on('click',desactiva);
+    function llave(){
+        var co = ($('#id_rubro').val()+'.'+$('#id_codigo').val()).toUpperCase();
+        $("#id_id_n2").val(co);
+        // $("#id_descripcion").val($('#id_rubro').children('option:selected').html());
+    }
+    function desactiva(){
+        $('#id_rubro').prop('disabled',false);
+    }
+</script>

@@ -1,0 +1,52 @@
+{% extends 'com/base/combase.html' %}
+{% load widget_tweaks %}
+{% block contenido %}
+<div class="row">
+    <div class="col">
+        <div class="card py-3 border-left-danger">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md">
+                        <h4 class="m-0 font-weight-bold text-primary">Sucursales de {{Proveedor.nombre}}</h4>
+                    </div>
+                </div>
+                <br />
+                <form method="POST" autocomplete="off">
+                    {% csrf_token %}
+                    {{ formset.management_form }}
+                    <div class="table-responsive">  
+                        <table class="table table-sm">
+                            {% for form in formset.forms %}
+                                {% if forloop.first %}
+                                    <thead>
+                                        {% for field in form.visible_fields %}
+                                            <th>{{ field.label_tag }}</th>
+                                        {% endfor %}
+                                    </thead>
+                                    <tbody>
+                                {% endif %}
+                                <tr>
+                                    {% for field in form.visible_fields %}
+                                        <td>
+                                            {% if forloop.first %}
+                                                {% for hidden in form.hidden_fields %}
+                                                    {{ hidden }}
+                                                {% endfor %}
+                                            {% endif %}
+                                            {{ field.errors.as_ul }}
+                                            {% render_field field class="form-control form-control-sm" placeholder=field.label %}
+                                        </td>
+                                    {% endfor %}
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <button type="submit" class="btn btn-danger btn-sm">Aplicar</button>
+                    <a role="button" class="btn btn-secondary btn-sm" href="{% url 'com_proveedor' %}">Regresar</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock contenido %}

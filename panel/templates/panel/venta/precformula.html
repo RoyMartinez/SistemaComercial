@@ -1,0 +1,91 @@
+{% extends 'panel/base.html' %}
+{% load static %}
+{% block contenido %}
+<main role="main" class="container">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="content-section">
+                <div class="row"><h4 style="color:gray;">Precio Formula</h4></div>    
+                <div class="border-top pt-3"></div>
+                <br>
+                <div class="row">
+                    {% for i in membresia %}
+                        <div class="card col-md-5 margen bg-light mb-3">
+                            <div class="card-header"><h4>{{ i.descripcion }}</h4></div>
+                            {% if i.precio_formula.precio == 'A' %}
+                                <p>OAODSJ</p>
+                            {% endif %}
+                            <div class="card-body">                       
+                                <table class="table table-sm">
+                                    <tbody>
+                                        {% for j in formapago %}
+                                            <tr>
+                                                <td>{{ j.nombre }}:</td>
+                                                <td>
+                                                    <select class="form-control form-control-sm">
+                                                        {% for k in precio %}
+                                                            <option value="{{ k.pk }}-{{ j.pk }}-{{ i.pk }}">{{ k.descripcion }}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </td>
+                                            </tr>
+                                        {% endfor %}                                        
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="col-md-1 margen"></div>
+                    {% endfor %}
+                </div>
+                <div class="border-top pt-3" style="text-align: center;"> 
+                    
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="content-section">
+                <h3>Men&uacute; Contextual</h3>
+                <p class='text-muted'>Acciones
+                    <ul class="list-group">
+                        <li class="list-group-item list-group-item-light">
+                            <form method="POST" autocomplete="off">
+                                {% csrf_token %}
+                                <input type="hidden" id="txtresumen" name="opciones">
+                                <button type="submit" class="btn btn-outline-primary">
+                                    <i class="fas fa-check-circle"></i>&nbsp;Apply
+                                </button>
+                            </form>
+                        </li>
+                    </ul>
+                </p>
+                {% include 'panel/venta/vtalinks.html' %}
+            </div>
+        </div>
+    </div>
+</main>
+{% for i in lista %}
+    <input type="hidden" class="listado" value="{{ i.precio.pk }}-{{ i.tipopago.pk }}-{{ i.categoria.pk }}">
+{% endfor %}
+{% endblock contenido %}
+{% block extramodal %}
+<div class="modal fade" tabindex="-1" role="dialog" id="modal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content"></div>
+    </div>
+</div>    
+{% endblock extramodal %}{% block extrascripts %}
+<script src="{% static 'vta/js/jquery.bootstrap.modal.forms.min.js' %}"></script>
+<script type="text/javascript">
+var arreglo=[];   
+  
+$('.form-control').on('change',function(){
+    arreglo.push(this.value);
+    $('#txtresumen').val(arreglo);            
+});
+var precios = $('.form-control');
+var origen = $('.listado');
+for (var i=0; i < precios.length; i++){
+    precios[i].value = origen[i].value
+}
+</script>
+{% endblock extrascripts %}

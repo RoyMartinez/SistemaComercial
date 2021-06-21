@@ -1,0 +1,99 @@
+{% extends 'inv/invBase.html' %}
+{% load static %}
+{% block extracss %}
+    <link rel="stylesheet" href="{% static 'fenimarket/vendor/datatables/dataTables.bootstrap4.min.css' %}">
+{% endblock extracss %}
+{% block contenido %}
+{% if messages %}
+    {% for i in messages %}
+        <div class="alert alert-{{ i.tags }}">{{ i }}</div>
+    {% endfor %}
+{% endif %}
+<div class="row">
+    <div class="col">
+        <div class="card py-3 border-left-primary">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-10">
+                        <h4 class="m-0 font-weight-bold text-primary">Eliminar Modelo: {{ modelo }}</h4>
+                    </div>
+                    <div class="col-md-2">
+                        <a class="btn btn-primary btn-sm"  href="{% url 'ModeloVehiculo_Listar' %}">
+                            <i class="fa fa-reply"></i>&nbsp;Volver a la lista
+                        </a>
+                    </div>
+                </div>
+                <hr>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-sm" id="Pantalla-table">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th scope="col">C&oacute;digo</th>
+                                <th scope="col">Marca</th>
+                                <th scope="col">Modelo</th>
+                                <th scope="col">Tipo</th>
+                                <th scope="col">Cilindraje</th>
+                                <th scope="col">Combustible</th>
+                                <th scope="col">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>{{ modelo.pk }}</td>
+                                <td>{{ modelo.marca }}</td>
+                                <td>{{ modelo.modelo }}</td>
+                                <td>{{ modelo.tipo }}</td>
+                                <td>{{ modelo.cilindraje }}</td>
+                                <td>{{ modelo.combustible }}</td>
+                                <td>
+                                    <form method="POST">
+                                        {% csrf_token %}
+                                        <button class="btn btn-sm btn-danger" type="submit">
+                                            <i class="fas fa-trash-alt"></i>&nbsp;Eliminar
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock contenido %}
+{% block extramodal %}
+<div class="modal fade" id="modal-Pantalla">
+    <div class="modal-dialog">
+        <div class="modal-content"></div>
+    </div>
+</div>
+{% endblock extramodal %}
+{% block extrascripts %}
+    <script src="{% static 'inv/js/modal.js' %}"> </script>    
+    <script src="{% static 'vta/js/jquery.bootstrap.modal.forms.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'fenimarket/vendor/datatables/jquery.dataTables.js' %}"></script>
+    <script type="text/javascript" src="{% static 'fenimarket/vendor/datatables/dataTables.bootstrap4.min.js' %}"></script>
+    <script type="text/javascript">
+    
+    $(document).ready(function() {
+              $('#Pantalla-table').DataTable({
+                  "language":{
+                      "lengthMenu":"Mostrar  _MENU_  filas",
+                      "zeroRecords":"No se encontraron coincidencias",
+                      "info": "Página _PAGE_ de _PAGES_",
+                      "infoEmpty":"No hay registros",
+                      "infoFiltered":"(filtrado de un total de _MAX_ registros)",
+                      "search":"Buscar:",
+                      "paginate":{
+                          "first":"Primero",
+                          "last":"Último",
+                          "next":"Siguiente",
+                          "previous":"Anterior",
+                      }
+                  },
+                  "ordering": false 
+              });  
+      });
+    </script>
+{% endblock extrascripts %}

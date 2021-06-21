@@ -1,0 +1,205 @@
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+<form method="POST" data-url="{% url 'DevolucionMsr_Crear' %}" class="create-form" autocomplete="off">
+    {% csrf_token %}
+    <div class="modal-header">
+         <h5 class="modal-title text-center">Crear Devolucion </h5>
+    </div>
+    <div class="modal-body">
+        <div class="form-group col-md-12" >
+            {% if messages %}
+                {% for i in messages %}
+                    <div class="alert alert-{{ i.tags }}">{{ i }}</div>
+                {% endfor %}
+            {% endif %}
+            <label>Tipo de devolucion:</label>
+            <br>
+            <div class="custom-control custom-radio custom-control-inline">
+                <input type="radio" class="custom-control-input" id="customRadio" name="example" value="customEx">
+                <label class="custom-control-label" for="customRadio">Cliente</label>
+            </div>
+            <div class="custom-control custom-radio custom-control-inline">
+                <input type="radio" class="custom-control-input" id="customRadio2" name="example" value="customEx">
+                <label class="custom-control-label" for="customRadio2">Proveedor</label>
+            </div>
+        </div>
+        <div class="form-group col-md-12" id="div_referencia">
+            {{ form.referencia.label_tag }}
+            {% render_field form.referencia class="form-control form-control-sm" %}
+            <div class="{% if form.referencia.errors %} invalid{% endif %}">
+                {% for error in form.referencia.errors %}
+                    <p class="help-block" style="color:red;">{{ error }}</p>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="form-group col-md-12" id="div_rem">
+                {{ form.rem.label_tag }}
+                <select name="rem" class="form-control form-control-sm" id="id_rem">
+                    <option value="">----------------</option>
+                    <option value="DU-EM-99999999-00001">Sin Entrada de Mercaderia asociada</option>
+                    {% for i in queryr  %}
+                        <option value="{{ i.pk }}"> {{ i.pk }} | {{i.proveedor}} </option>
+                    {% endfor %}  
+                </select>
+                <!-- {% render_field form.rem class="form-control form-control-sm" %} -->
+                <div class="{% if form.rem.errors %} invalid{% endif %}">
+                    {% for error in form.rem.errors %}
+                        <p class="help-block" style="color:red;">{{ error }}</p>
+                    {% endfor %}
+                </div>
+        </div>
+        <div class="form-group col-md-12" id="div_factura">
+                {{ form.factura.label_tag }}
+                <select name="factura" class="form-control form-control-sm" id="id_factura">
+                    <option value="">----------------</option>
+                    <option value="DU-SV-001">Sin Factura asociada</option>
+                    {% for i in queryf  %}
+                        <option value="{{ i.pk }}"> {{ i.pk }} | {{ i.cliente }} </option>
+                    {% endfor %}  
+                </select>
+                <!-- {% render_field form.factura class="form-control form-control-sm" %} -->
+                <div class="{% if form.factura.errors %} invalid{% endif %}">
+                    {% for error in form.factura.errors %}
+                        <p class="help-block" style="color:red;">{{ error }}</p>
+                    {% endfor %}
+                </div>
+        </div>
+        <div class="form-group col-md-12" id = "div_nota">
+            {{ form.nota.label_tag }}
+            {% render_field form.nota class="form-control form-control-sm" %}
+            <div class="{% if form.nota.errors %} invalid{% endif %}">
+                {% for error in form.nota.errors %}
+                    <p class="help-block" style="color:red;">{{ error }}</p>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="form-group col-md-12" id = "div_notaC">
+            {{ form.notacredito.label_tag }}
+            {% render_field form.notacredito class="form-control form-control-sm" %}
+            <div class="{% if form.notacredito.errors %} invalid{% endif %}">
+                {% for error in form.notacredito.errors %}
+                    <p class="help-block" style="color:red;">{{ error }}</p>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="form-group col-md-12" id="div_estado">
+                {{ form.estado.label_tag }}
+                {% render_field form.estado class="form-control form-control-sm" %}
+                <div class="{% if form.estado.errors %} invalid{% endif %}"> 
+                    {% for error in form.estado.errors %}
+                        <p class="help-block" style="color:red;">{{ error }}</p>
+                    {% endfor %}
+                </div>
+        </div>
+        <div class="form-group col-md-12" id="div_sucursal">
+                {{ form.sucursal.label_tag }}
+                {% render_field form.sucursal class="form-control form-control-sm" %}
+                <div class="{% if form.sucursal.errors %} invalid{% endif %}">
+                    {% for error in form.sucursal.errors %}
+                        <p class="help-block" style="color:red;">{{ error }}</p>
+                    {% endfor %}
+                </div>
+        </div>
+        <div class="form-group col-md-12" id="div_fecha">
+                {{ form.fecha.label_tag }}
+                {% render_field form.fecha class="form-control form-control-sm" %}
+                <div class="{% if form.fecha.errors %} invalid{% endif %}">
+                    {% for error in form.fecha.errors %}
+                        <p class="help-block" style="color:red;">{{ error }}</p>
+                    {% endfor %}
+                </div>
+        </div>
+        <div class="form-group col-md-12" id="div_costo">
+                {{ form.costo_total.label_tag }}
+                {% render_field form.costo_total class="form-control form-control-sm" %}
+                <div class="{% if form.costo_total.errors %} invalid{% endif %}">
+                    {% for error in form.costo_total.errors %}
+                        <p class="help-block" style="color:red;">{{ error }}</p>
+                    {% endfor %}
+                </div>
+        </div>
+        <div class="form-group col-md-12" id="div_precio">
+                {{ form.precio_total.label_tag }}
+                {% render_field form.precio_total class="form-control form-control-sm" %}
+                <div class="{% if form.precio_total.errors %} invalid{% endif %}">
+                    {% for error in form.precio_total.errors %}
+                        <p class="help-block" style="color:red;">{{ error }}</p>
+                    {% endfor %}
+                </div>
+        </div>
+        <div class="form-group col-md-12" id="div_impuesto">
+                {{ form.impuesto_total.label_tag }}
+                {% render_field form.impuesto_total class="form-control form-control-sm" %}
+                <div class="{% if form.impuesto_total.errors %} invalid{% endif %}">
+                    {% for error in form.impuesto_total.errors %}
+                        <p class="help-block" style="color:red;">{{ error }}</p>
+                    {% endfor %}
+                </div>
+        </div>
+        <div class="form-group col-md-12" id="div_penalizacion">
+                {{ form.penalizacion_total.label_tag }}
+                {% render_field form.penalizacion_total class="form-control form-control-sm" %}
+                <div class="{% if form.penalizacion_total.errors %} invalid{% endif %}">
+                    {% for error in form.penalizacion_total.errors %}
+                        <p class="help-block" style="color:red;">{{ error }}</p>
+                    {% endfor %}
+                </div>
+        </div>
+        <div class="form-group col-md-12" id="div_monto">
+                {{ form.monto_total.label_tag }}
+                {% render_field form.monto_total class="form-control form-control-sm" %}
+                <div class="{% if form.monto_total.errors %} invalid{% endif %}">
+                    {% for error in form.monto_total.errors %}
+                        <p class="help-block" style="color:red;">{{ error }}</p>
+                    {% endfor %}
+                </div>
+        </div>
+        <!-- {{form|crispy}} -->
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="submit-btn btn btn-primary">
+            <i class="fas fa-plus"></i>&nbsp; Crear
+        </button>
+        <button type="button" class="submit-btn btn btn-danger" data-dismiss="modal" aria-label="close">
+            <i class="fa fa-times"></i>&nbsp; cancelar
+        </button>
+    </div>
+</form>
+<script>
+    $('#div_rem').hide();
+    $('#div_factura').hide();
+    $('#div_referencia').hide();
+    $('#div_estado').hide();
+    $('#div_fecha').hide();
+    $('#div_sucursal').hide();
+    $('#div_nota').hide();
+    $('#div_notaC').hide();
+    $('#div_costo').hide();
+    $('#div_precio').hide();
+    $('#div_impuesto').hide();
+    $('#div_penalizacion').hide();
+    $('#div_monto').hide();
+    $('#div_fecha_venc').hide();
+    
+    $('input[type=radio][name=example]').change(mostrarocultardiv);
+    $('input[type=radio][name=example2]').change(mostrarocultardiv);
+
+    function mostrarocultardiv(){
+        if($("#customRadio2").is(':checked')){
+            $("#id_factura").val('')
+            $("#id_rem").val('')
+            $('#div_factura').hide();
+            $('#div_rem').show();   
+            $('#div_nota').show();
+            $('#div_notaC').show();
+        }
+        if($("#customRadio").is(':checked')){
+            $("#id_rem").val('')
+            $("#id_factura").val('')
+            $('#div_rem').hide();   
+            $('#div_factura').show();   
+            $('#div_nota').show();   
+            $('#div_notaC').show();   
+        }
+    }
+</script>

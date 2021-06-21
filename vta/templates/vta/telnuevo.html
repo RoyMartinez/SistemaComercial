@@ -1,0 +1,82 @@
+{% load widget_tweaks %}
+<form method="post" action="" autocomplete="off">
+    {% csrf_token %}
+    <div class="modal-header">
+        <h3 class="modal-title">Nuevo tel&eacute;fono</h3>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="{% if form.non_field_errors %}invalid{% endif %} mb-2">
+            {% for error in form.non_field_errors %}
+                {{ error }}
+            {% endfor %}
+        </div>
+        <div class="form-group">
+            <label for="id_cliente" id="etiqueta">Cliente: </label>
+            <input type="hidden" id="id_cliente" name="cliente">
+            <div class="{% if form.cliente.errors %} invalid{% endif %}">
+                {% for error in form.cliente.errors %}
+                    <p class="help-block" style="color:red;">{{ error }}</p>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                {{ form.operador.label_tag }}
+                {% render_field form.operador class="form-control" %}
+                <div class="{% if form.operador.errors %} invalid{% endif %}">
+                    {% for error in form.operador.errors %}
+                        <p class="help-block" style="color:red;">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="form-group col-md-6">
+                {{ form.telefono.label_tag }}
+                {% render_field form.telefono class="form-control" %}
+                <div class="{% if form.telefono.errors %} invalid{% endif %}">
+                    {% for error in form.telefono.errors %}
+                        <p class="help-block" style="color:red;">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                {{ form.valido.label_tag }}
+                {% render_field form.valido class="form-control" %}
+                <div class="{% if form.valido.errors %} invalid{% endif %}">
+                    {% for error in form.valido.errors %}
+                        <p class="help-block" style="color:red;">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="form-group col-md-6">
+                {{ form.predeterminado.label_tag }}
+                {% render_field form.predeterminado class="form-control" %}
+                <div class="{% if form.predeterminado.errors %} invalid{% endif %}">
+                    {% for error in form.predeterminado.errors %}
+                        <p class="help-block" style="color:red;">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="submit-btn btn btn-outline-primary">
+            <i class="fas fa-save"></i>&nbsp;Guardar
+        </button>
+    </div>
+</form>
+<script type="text/javascript">
+    var a = document.querySelector("#id_cliente");
+    var b = document.querySelector("#etiqueta");
+    var cedula = document.querySelector('#id_identificacion').value;
+    var nombre_completo = document.querySelector('#id_nombres').value + ' ' + document.querySelector('#id_apellidos').value;
+    a.value = cedula;
+    b.innerHTML = 'Cliente: ' + nombre_completo; 
+</script>

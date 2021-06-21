@@ -1,0 +1,259 @@
+{% extends 'inv/invBase.html' %}
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block extracss %}
+    <link rel="stylesheet" href="{% static 'inv/css/cabecera.css' %}">
+    <link rel="stylesheet" href="{% static 'fenimarket/vendor/datatables/dataTables.bootstrap4.min.css' %}">
+{% endblock extracss %}
+{% block contenido %}
+{% if messages %}
+    {% for i in messages %}
+        <div class="alert alert-{{ i.tags }}">{{ i }}</div>
+    {% endfor %}
+{% endif %}
+<div class="row">
+    <div class="col">
+        <div class="card py-3 border-left-primary">
+            <a href="#collapseCardExample" class="d-block card-header py-3" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="collapseCardExample">
+                <h6 class="m-0 font-weight-bold text-primary">Combo {{ Item }}</h6>
+            </a>
+            <div class="collapse show" id="collapseCardExample">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="input-group col-md-3">
+                            <div class="input-group-prepend">
+                                <button class="btn btn-outline-primary" type="button" id="btn_cliente" data-toggle="modal" data-target="#modalcliente" style="z-index:0;">
+                                    <i class="fas fa-asterisk" aria-hidden="true"></i> Codigo
+                                </button>
+                            </div>
+                            <input readonly type="text" class="form-control" value="{{ Item.id_n4 }}" > 
+                        </div>
+                        <div class="input-group col-md-3">
+                            <div class="input-group-prepend">
+                                <button class="btn btn-outline-primary" type="button" id="btn_cliente" data-toggle="modal" data-target="#modalcliente" style="z-index:0;">
+                                    <i class="fab fa-etsy" aria-hidden="true"></i> Descripcion
+                                </button>
+                            </div>
+                            <input readonly type="text" class="form-control" value="{{ Item.n3 }}" > 
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="input-group col-md-12">
+                            <div class="input-group-prepend">
+                                <button class="btn btn-outline-primary" type="button" id="btn_cliente" data-toggle="modal" data-target="#modalcliente" style="z-index:0;">
+                                    <i class="fas fa-file-signature" aria-hidden="true"></i> Nota
+                                </button>
+                            </div>
+                            <input readonly type="text" class="form-control" value="{{ Item.descripcion }}" > 
+                        </div>
+                    </div>
+                    <br>
+                </div>
+                <div class="card-footer text-muted">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<br>
+<div class="row">
+    <div class="col">
+        <div class="card py-3 border-left-primary">
+            <a href="#collapseCardExample2" class="d-block card-header py-3" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="collapseCardExample">
+                <h6 class="m-0 font-weight-bold text-primary">Detalle</h6>
+            </a>
+            <div class="collapse show" id="collapseCardExample2">
+                <div class="card-body">
+                    {% if suc.user.is_staff %}
+                    <form  id="CreateForm" method="POST">
+                        <div class="card text-center">
+                            {% csrf_token %}
+                            {{ formset.management_form }}
+                            <div class="table-responsive">
+                                <table class="table table-sm">
+                                    {% for form in formset.forms %}
+                                    {% if forloop.first %}
+                                    <thead class="thead-dark">
+                                        <tr>
+                                            <th>Item</th>
+                                            <th>Opcion</th>
+                                            <th>Cantidad</th>
+                                            <th>Precio</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% endif %}
+                                        <tr>
+                                            <td>
+                                                {% render_field form.id class="form-control form-control-sm" %}
+                                                {% render_field form.item class="form-control form-control-sm" %}
+                                                <div class="{% if form.item.errors %} invalid{% endif %}">
+                                                    {% for error in form.item.errors %}
+                                                        <p class="help-block" style="color:red;">{{ error }}</p>
+                                                    {% endfor %}
+                                                </div>
+                                            </td>
+                                            <td>
+                                                {% render_field form.opcion class="form-control form-control-sm item" %}
+                                                <div class="{% if form.opcion.errors %} invalid{% endif %}">
+                                                    {% for error in form.opcion.errors %}
+                                                        <p class="help-block" style="color:red;">{{ error }}</p>
+                                                    {% endfor %}
+                                                </div>
+                                            </td>
+                                            <td>
+                                                {% render_field form.cantidad class="form-control form-control-sm" %}
+                                                <div class="{% if form.cantidad.errors %} invalid{% endif %}">
+                                                    {% for error in form.cantidad.errors %}
+                                                        <p class="help-block" style="color:red;">{{ error }}</p>
+                                                    {% endfor %}
+                                                </div>
+                                            </td>
+                                            <td>
+                                                {% render_field form.precio class="form-control form-control-sm" %}
+                                                <div class="{% if form.precio.errors %} invalid{% endif %}">
+                                                    {% for error in form.precio.errors %}
+                                                        <p class="help-block" style="color:red;">{{ error }}</p>
+                                                    {% endfor %}
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="custom-control custom-switch" style="margin-bottom: 0.5em;">
+                                                    {% render_field form.DELETE class="custom-control-input" %}
+                                                    <label class="custom-control-label" for="{{form.DELETE.id_for_label }}">Borrar</label>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                          </div>
+                    </form>
+                    {% else %}
+                    <table  class="table table-sm table-bordered" id="Pantalla-table">
+                        <thead class="thead-dark">
+                            <tr>
+                                <!-- <th>Id</th> -->
+                                <th>Codigo</th>
+                                <th>Item</th>
+                                <th>Linea</th>
+                                <th>Cantidad</thid="td-estado">
+                                <!-- <th>Precio</th> -->
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for i in lineas %}
+                                <tr>
+                                    <td>{{ i.item.id_n4 }}</td>
+                                    <td>{{ i.item }}</td>
+                                    <td>{{ i.opcion }}</td>
+                                    <td>{{ i.cantidad }}</td>
+                                    <!-- <td>{{ i.precio }}</td> -->
+                                </tr>
+                            {% empty %}
+                                <tr><td colspan="4"><h3>No se encontraron registros</h3></td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    {% endif %}
+                </div>
+                <div class="card-footer text-muted">
+                    {% if suc.user.is_staff %}
+                    <button class="btn btn-danger btn-sm" type="submit" form="CreateForm">
+                        <i class="fas fa-ellipsis-v"></i>&nbsp;Aplicar
+                    </button>
+                    {% endif %}
+                    <a role="button" class="btn btn-secondary btn-sm"  href="{% url 'N4Item_Listar' %}">
+                        <i class="fas fa-reply"></i>&nbsp;Volver a la lista
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock contenido %}
+{% block extramodal %}
+    <div class="modal fade" id="modal-Pantalla">
+        <div class="modal-dialog">
+            <div class="modal-content"></div>
+        </div>
+    </div>
+{% endblock extramodal %}
+{% block extrascripts %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.23.0/moment.min.js" integrity="sha256-VBLiveTKyUZMEzJd6z2mhfxIqz3ZATCuVMawPZGzIfA=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.1.2/js/tempusdominus-bootstrap-4.min.js" integrity="sha256-z0oKYg6xiLq3yJGsp/LsY9XykbweQlHl42jHv2XTBz4=" crossorigin="anonymous"></script>
+    <script src="{% static 'vta/js/jquery.bootstrap.modal.forms.min.js' %}"></script>
+    <script src="{% static 'inv/js/modal.js' %}"></script> 
+    <script type="text/javascript" src="{% static 'fenimarket/vendor/datatables/jquery.dataTables.js' %}"></script>
+    <script type="text/javascript" src="{% static 'fenimarket/vendor/datatables/dataTables.bootstrap4.min.js' %}"></script>
+    <!-- buscador en el select -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+    <script>
+        $('#div_remcab').hide();
+        $('#div_facturacab').hide();
+        $('.th-penalizacion').hide();
+        $('.th-costo').hide();
+        $('.th-monto').hide();
+        $('.th-precio').hide();
+        $('.th-impuesto').hide();
+        $('.td-penalizacion').hide();
+        $('.td-costo').hide();
+        $('.td-monto').hide();
+        $('.td-precio').hide();
+        $('.td-impuesto').hide();
+        var rem = $('#p_rem').val();
+        var factura = $('#p_factura').val();
+        if(rem!='REM-001'){
+            $('#div_remcab').show();
+            $('.th-estado').hide(); 
+            $('.td-estado').hide();
+        }
+        else if(factura!='SF-001'){
+            $('#div_facturacab').show();
+        }
+    </script>
+    <script type="text/javascript">
+        var escrito;
+
+        function matchCustom(params,data){
+            // escrito = params.term;
+            // buscaritems(escrito);
+            // si no hay nada en el textbox para buscar no retornar nada
+            if ($.trim(params.term) === '') {
+                return data;
+            }
+            // si no hay propiedad text no retornar nada
+            if (typeof data.text === 'undefined') {
+                return null;
+            }
+            // `params.term` should be the term that is used for searching
+            // `data.text` is the text that is displayed for the data object
+            if (data.text.indexOf(params.term) > -1) {
+                var modifiedData = $.extend({}, data, true);
+                modifiedData.text += ' (coincide)';
+                // You can return modified objects from here
+                // This includes matching the `children` how you want in nested data sets
+                return modifiedData;
+            }
+            // Return `null` if the term should not be displayed
+            return null;
+        }
+        //flaco la caga
+        // $('.item').select2({ 
+        //     matcher:matchCustom,
+        //     placeholder: 'Buscar',
+        //     allowClear: true,
+        // });
+        // // $('.select2-search__field').val().on('change ',dame);
+        // function buscaritems(escrito){
+        //     console.log (escrito);
+        // }
+
+    </script>
+{% endblock extrascripts %}

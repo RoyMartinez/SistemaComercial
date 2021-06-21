@@ -1,0 +1,40 @@
+{% load widget_tweaks %}
+{% load humanize %}
+{% load crispy_forms_tags %}
+<form method="POST" data-url="{% url 'Sucursal_Editar' form.instance.siglas %}" class="update-form" autocomplete="off">
+    {% csrf_token %}
+    <div class="modal-header">
+        <h5 class="modal-title text-center">Saldo en sucursal {{ form.nombre.value }} </h5>
+    </div>
+    <div class="modal-body">
+        <div class="{% if form.non_field_errors %}invalid{% endif %} mb-2">
+            {% for error in form.non_field_errors %}
+                {{ error }}
+            {% endfor %}
+        </div>
+        
+        <table class="table table-sm table-bordered" id="Pantalla-table" >
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">Existencias</th>
+                    <th scope="col">Saldo</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong  style="color: green;">{{ form.existencia.value|floatformat:2|intcomma }}</strong></td>
+                    <td><strong  style="color: green;"> CS {{ form.saldo.value|floatformat:2|intcomma }}</strong></td>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="submit-btn btn btn-danger" data-dismiss="modal" aria-label="close">
+            <i class="fa fa-times"></i>&nbsp; cerrar
+        </button>
+    </div>
+</form>
+<script>
+    $('#id_siglas').prop('readonly', true);
+</script>

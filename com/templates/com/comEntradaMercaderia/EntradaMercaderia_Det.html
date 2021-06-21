@@ -1,0 +1,103 @@
+{% extends 'com/base/combase.html' %}
+{% load widget_tweaks %}
+{% load static %}
+{% block contenido %}
+<div class="row">
+    <div class="col">
+        <div class="card py-3 border-left-danger">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md">
+                        <h4 class="m-0 font-weight-bold text-primary">Entrada de Mercader&iacute;a (Detalle) - {{ EntradaMercaderia.referencia }}</h4>
+                    </div>
+                </div>
+                <div class="row">
+                <div class="row">
+                    <div class="col-md-4" >
+                        <p class="cabecera"> <strong>Creacion:</strong></p>
+                        <input readonly  class="form-control cabecera"  value="{{ EntradaMercaderia.fecha|date:'Y-m-d h:i a' }}"  type="text">
+                    </div>
+                    <div class="col-md-4">
+                        <p class="cabecera"> <strong>Condicion:</strong></p>
+                        <input readonly  class="form-control cabecera"  value="{{ EntradaMercaderia.condicion }}"  type="text">
+                    </div>
+                    <div class="col-md-4">
+                        <p class="cabecera"> <strong>Vencimiento:</strong></p>
+                        <input readonly  class="form-control cabecera"  value="{{ EntradaMercaderia.fecha_vencimiento|date:'SHORT_DATE_FORMAT' }}"  type="text">
+                    </div>
+                </div>
+                <div class="row" >
+                    <div class="col-md-12" id="div_remcab" >
+                        <p class="cabecera" ><strong>Proveedor:</strong></p>
+                        <input id="p_rem" class="form-control cabecera" value="{{ EntradaMercaderia.proveedor }}" readonly type="text">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <p class="cabecera"><strong>Facturas:</strong></p>
+                        <input class="form-control cabecera" value="{{ EntradaMercaderia.facturas }}" readonly type="text">
+                    </div>
+                    <div class="col-md-4" id="div_facturacab" >
+                        <p class="cabecera"><strong>Poliza:</strong></p>
+                        <input id="p_factura" class="form-control cabecera" value="{{ EntradaMercaderia.poliza }}" readonly type="text">
+                    </div>
+                    <div class="col-md-4" id="div_facturacab" >
+                        <p class="cabecera"><strong>Orden de compra:</strong></p>
+                        <input id="p_factura" class="form-control cabecera" value="{{ EntradaMercaderia.ordenes_compra }}" readonly type="text">
+                    </div>
+                </div>
+                <p></p>
+                <button type="button" class="btn btn-small btn-info show-form" data-url="{% url 'com_emEdit' EntradaMercaderia.referencia %}">
+                    <i class="fas fa-pencil-alt"></i>&nbsp;Editar cabecera
+                </button>
+                <p></p>
+                <br />
+                <form method="POST" autocomplete="off">
+                    {% csrf_token %}
+                    {{ formset.management_form }}
+                    <div class="table-responsive">  
+                        <table class="table table-sm">
+                            {% for form in formset.forms %}
+                                {% if forloop.first %}
+                                    <thead>
+                                        {% for field in form.visible_fields %}
+                                            <th>{{ field.label_tag }}</th>
+                                        {% endfor %}
+                                    </thead>
+                                    <tbody>
+                                {% endif %}
+                                <tr>
+                                    {% for field in form.visible_fields %}
+                                        <td>
+                                            {% if forloop.first %}
+                                                {% for hidden in form.hidden_fields %}
+                                                    {{ hidden }}
+                                                {% endfor %}
+                                            {% endif %}
+                                            {{ field.errors.as_ul }}
+                                            {% render_field field class="form-control form-control-sm" %}
+                                        </td>
+                                    {% endfor %}
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <button type="submit" class="btn btn-danger btn-sm">Aplicar</button>
+                    <a role="button" class="btn btn-secondary btn-sm" href="{% url 'com_em' %}">Regresar</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock contenido %}
+{% block extramodal %}
+    <div class="modal fade" id="modal-Pantalla">
+        <div class="modal-dialog">
+            <div class="modal-content"></div>
+        </div>
+    </div>
+{% endblock extramodal %}
+{% block extrascripts %}
+<script type="text/javascript" src="{% static 'com/js/modal.js' %}"></script>
+{% endblock extrascripts %}

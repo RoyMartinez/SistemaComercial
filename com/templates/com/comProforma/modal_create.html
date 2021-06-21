@@ -1,0 +1,62 @@
+{% load widget_tweaks %}
+<form method="post" action="" autocomplete="off">
+    {% csrf_token %}
+    <div class="modal-header">
+        <h3 class="modal-title">Nueva Proforma</h3>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="{% if form.non_field_errors %}invalid{% endif %} mb-2">
+            {% for error in form.non_field_errors %}
+                {{ error }}
+            {% endfor %}
+        </div>
+        <div class="form-group">
+            {{ form.cotizacion.label_tag }}
+            {% render_field form.cotizacion class="form-control form-control-sm" %}
+            <div class="{% if form.cotizacion.errors %} invalid{% endif %}">
+                {% for error in form.cotizacion.errors %}
+                    <p class="help-block" style="color:red;">{{ error }}</p>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="form-group">
+            {{ form.proveedor.label_tag }}
+            {% render_field form.proveedor class="form-control form-control-sm" %}
+            <div class="{% if form.proveedor.errors %} invalid{% endif %}">
+                {% for error in form.proveedor.errors %}
+                    <p class="help-block" style="color:red;">{{ error }}</p>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="form-group">
+            {{ form.notas.label_tag }}
+            {% render_field form.notas class="form-control form-control-sm" %}
+            <div class="{% if form.notas.errors %} invalid{% endif %}">
+                {% for error in form.notas.errors %}
+                    <p class="help-block" style="color:red;">{{ error }}</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="submit-btn btn btn-outline-danger">
+            <i class="fas fa-save"></i>&nbsp;Guardar
+        </button>
+    </div>
+</form>
+<script type="text/javascript">
+    $('#id_cotizacion').on('change', function(){
+        referencia = this.value;
+        var request = $.ajax({
+        type:"GET",
+        url: "{% url 'com_ajax_proveedor' %}",
+        data: {"ref":referencia,},
+    });
+    request.done(function(response){
+        $('#id_proveedor').val(response.proveedor);
+        })
+    })
+</script>

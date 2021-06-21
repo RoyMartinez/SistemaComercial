@@ -1,0 +1,77 @@
+{% extends 'incidencias/incidenciasBase.html' %}
+{% load static %}
+{% block extracss %}
+    <link rel="stylesheet" href="{% static 'fenimarket/vendor/datatables/dataTables.bootstrap4.min.css' %}">
+{% endblock extracss %}
+{% block contenido %}
+{% if messages %}
+    {% for i in messages %}
+        <div class="alert alert-{{ i.tags }}">{{ i }}</div>
+    {% endfor %}
+{% endif %}
+<div class="row">
+    <div class="col">
+        <div class="card py-3 border-left-primary">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h4 class="m-0 font-weight-bold text-primary">Informes</h4>
+                    </div>
+                </div>
+                <hr>
+                <div class="table-responsive">
+                    <table id="Pantalla-table" class="table table-bordered table-sm">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th scope="col">Descripci&oacute;n</th>
+                                <th scope="col">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for i in informes %}
+                            <tr>
+                                <td>{{ i.descripcion }}</td>
+                                <td>
+                                    <a class="btn btn-primary btn-sm" href="{% url 'inc_reporte_nuevo' i.pk %}">
+                                        <span>&nbsp;Nuevo</span>
+                                    </a>
+                                    <a class="btn btn-info btn-sm" href="{% url 'inc_reporte_lista' i.pk %}">
+                                        <span>&nbsp;Lista</span>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% empty %}
+                                <tr><td colspan="4"><h3>No se encontraron registros</h3></td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock contenido %}
+{% block extramodal %}
+<div class="modal fade" id="modal-Pantalla">
+    <div class="modal-dialog">
+        <div class="modal-content"></div>
+    </div>
+</div>
+<div class="modal fade" tabindex="-1" role="dialog" id="modal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content"></div>
+    </div>
+</div>
+{% endblock extramodal %}
+{% block extrascripts %}
+    <script src="{% static 'inv/js/modal.js' %}"></script>  
+    <script src="{% static 'vta/js/jquery.bootstrap.modal.forms.min.js' %}"></script>
+    <script src="{% static 'vta/js/jquery.bootstrap.modal.forms.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'fenimarket/vendor/datatables/jquery.dataTables.js' %}"></script>
+    <script type="text/javascript" src="{% static 'fenimarket/vendor/datatables/dataTables.bootstrap4.min.js' %}"></script>
+    <script src="{% static 'fenimarket/js/tablas.js' %}" type="text/javascript"></script>
+    <script type="text/javascript">
+        $(".nuevo").modalForm({formURL:"{% url 'vta_rubroNew' %}"});
+        $(".editar").each(function(){ $(this).modalForm({formURL: $(this).data('id')});});        
+    </script>
+{% endblock extrascripts %}
